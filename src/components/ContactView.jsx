@@ -38,7 +38,7 @@ export default function ContactView({ lang }) {
 
         <p className="text-base sm:text-lg text-[#f1eec0]/75 max-w-xl mx-auto">
           {lang === "en"
-            ? "Need a Business Analyst, System Analyst, or QA Leader for Core Bankin, Treasury or Enterprise Modernization? Reach out directly via email or WhatsApp."
+            ? "Need a Business Analyst, System Analyst, or QA Leader for Core Banking, Treasury or Enterprise Modernization? Reach out directly via email or WhatsApp."
             : "Butuh Business Analyst, System Analyst, atau QA Leader untuk Core Banking, Treasury atau Modernisasi Enterprise? Hubungi langsung lewat email atau WhatsApp."}
         </p>
 
