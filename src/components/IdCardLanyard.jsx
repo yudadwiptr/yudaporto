@@ -426,12 +426,6 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
             {/* Lanyard slot */}
             <span className="absolute top-2 sm:top-2.5 left-1/2 -translate-x-1/2 w-9 sm:w-10 h-[7px] sm:h-2 rounded-full bg-[#0a0a0a]/85 shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)]" />
 
-            {/* Open-to-work tag */}
-            <span className="absolute top-6 sm:top-7 left-2 sm:left-2.5 inline-flex items-center gap-1 rounded-full bg-[#0a0a0a]/70 backdrop-blur-[2px] px-1.5 py-[2px] text-[6.5px] sm:text-[7.5px] font-bold text-[#f1eec0] tracking-wider font-mono">
-              <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#27c93f]" />
-              OPEN TO WORK
-            </span>
-
             {/* Dark fade for the name block */}
             <span className="absolute inset-x-0 bottom-0 h-[58%] bg-gradient-to-t from-[#07121c] via-[#07121c]/85 to-transparent" />
 
@@ -442,14 +436,8 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
                 <br />
                 Dwi Putra
               </div>
-              <div className="mt-1.5 flex items-end justify-between gap-2">
-                <span className="text-[7.5px] sm:text-[9px] leading-tight text-[#f8f6e3]/70 font-ui">
-                  System &amp; Business Analyst
-                </span>
-                <svg viewBox="0 0 120 120" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" aria-hidden="true">
-                  <rect x="10" y="10" width="100" height="100" rx="22" fill="none" stroke="#ea4530" strokeWidth="9" />
-                  <path d="M28 28H46L60 56L74 28H92L68 72V94H52V72L28 28Z" fill="#ea4530" />
-                </svg>
+              <div className="mt-1.5 text-[7.5px] sm:text-[9px] leading-tight text-[#f8f6e3]/70 font-ui">
+                System &amp; Business Analyst
               </div>
             </div>
           </div>
