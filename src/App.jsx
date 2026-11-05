@@ -589,7 +589,7 @@ export default function App() {
               >
                 <span className="flex flex-col gap-1.5 sm:gap-2 min-w-0">
                   <span className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.18em] text-[#f1eec0]/45">
-                    {allProjects.length} {lang === "en" ? "projects in the archive" : "proyek di arsip"}
+                    {allProjects.length} {lang === "en" ? "case studies · 50+ projects delivered" : "studi kasus · 50+ proyek terselesaikan"}
                   </span>
                   <span className="font-stamp lowercase leading-[0.95] text-[clamp(38px,7.5vw,104px)] text-[#f1eec0] transition-colors duration-300 group-hover:text-[#ea4530]">
                     {lang === "en" ? "see all works" : "lihat semua proyek"}

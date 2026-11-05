@@ -1,4 +1,5 @@
 import React from "react";
+import { BRAND_ICONS } from "./brandIcons";
 
 /**
  * Authentic official brand SVG icons for the Software & QA marquee:
@@ -155,7 +156,6 @@ export default function SoftwareIcon({ name, className = "w-7 h-7" }) {
       );
 
     case "github":
-    case "git":
       return (
         <svg viewBox="0 0 128 128" className={className}>
           <circle cx="64" cy="64" r="64" fill="#181717" stroke="#444" strokeWidth="2" />
@@ -236,11 +236,20 @@ export default function SoftwareIcon({ name, className = "w-7 h-7" }) {
         </svg>
       );
 
-    default:
+    default: {
+      const brand = BRAND_ICONS[key];
+      if (brand) {
+        return (
+          <svg viewBox="0 0 24 24" className={className} role="img" aria-label={brand.title}>
+            <path d={brand.path} fill={brand.color} />
+          </svg>
+        );
+      }
       return (
         <div className={`${className} rounded-lg bg-[#3aa1d8] flex items-center justify-center text-xs font-black text-black shadow-md`}>
           {String(name).slice(0, 2).toUpperCase()}
         </div>
       );
+    }
   }
 }

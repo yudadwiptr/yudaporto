@@ -3,6 +3,9 @@ import { createPortal } from "react-dom";
 import ProjectVisualCard from "./ProjectVisuals";
 import { ShotFrame } from "./FeaturedProjectSection";
 import { ArrowUpRight } from "./Icons";
+import { PROJECT_LOG } from "../data/portfolioData";
+
+const LOG_TOTAL = PROJECT_LOG.reduce((n, g) => n + g.items.length, 0);
 
 const noop = () => {};
 
@@ -204,6 +207,65 @@ export default function WorkArchiveView({ projects, lang, onOpenCase }) {
             </li>
           ))}
         </ol>
+
+        {/* ---------- Project log (from CV) ---------- */}
+        <section className="mt-24 sm:mt-32" aria-labelledby="project-log-title">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-8 sm:pb-10">
+            <div className="max-w-2xl">
+              <span className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.18em] text-[#ea4530]">
+                {lang === "en" ? "project log" : "catatan proyek"}
+              </span>
+              <h2
+                id="project-log-title"
+                className="mt-2 font-stamp lowercase text-[clamp(40px,6.4vw,92px)] leading-[0.94] text-[#f1eec0]"
+              >
+                {lang === "en" ? "50+ projects delivered" : "50+ proyek terselesaikan"}
+              </h2>
+              <p className="mt-4 text-[15px] sm:text-base text-[#f1eec0]/65 leading-relaxed">
+                {lang === "en"
+                  ? "Most of them on PT Bank Mandiri's KOPRA wholesale banking platform, as tester, QA coordinator and QA leader, then analysis work for PT SMI and TNI AL."
+                  : "Sebagian besar di platform wholesale banking KOPRA PT Bank Mandiri, sebagai tester, QA coordinator, dan QA leader, lalu pekerjaan analisis untuk PT SMI dan TNI AL."}
+              </p>
+            </div>
+            <span className="text-xs font-mono text-[#3aa1d8] shrink-0">
+              {LOG_TOTAL} {lang === "en" ? "listed in CV" : "tercantum di CV"}
+            </span>
+          </div>
+
+          <div className="border-t border-[#f1eec0]/12">
+            {PROJECT_LOG.map((group) => (
+              <div
+                key={`${group.org}-${group.period}`}
+                className="grid lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] gap-5 lg:gap-12 py-8 sm:py-10 border-b border-[#f1eec0]/12"
+              >
+                <div className="space-y-1.5">
+                  <div className="text-xs font-mono" style={{ color: group.accent }}>
+                    {group.period}
+                  </div>
+                  <div className="text-lg sm:text-xl font-bold leading-snug text-[#f1eec0]">{group.org}</div>
+                  <div className="text-sm text-[#f1eec0]/55">
+                    {group.role[lang]}
+                    {group.via ? ` · ${group.via}` : ""}
+                  </div>
+                  <div className="pt-1 text-[11px] font-mono uppercase tracking-[0.14em] text-[#f1eec0]/35">
+                    {group.items.length} {lang === "en" ? (group.items.length === 1 ? "project" : "projects") : "proyek"}
+                  </div>
+                </div>
+                <ul className="flex flex-wrap content-start gap-2">
+                  {group.items.map((item) => (
+                    <li
+                      key={item}
+                      className="text-[13px] leading-snug px-3 py-1.5 rounded-full bg-[#121212] border border-[#f1eec0]/12 text-[#f1eec0]/80 transition-colors hover:text-[#f1eec0] hover:border-[color:var(--accent)]"
+                      style={{ "--accent": group.accent }}
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
 
       {finePointer && (

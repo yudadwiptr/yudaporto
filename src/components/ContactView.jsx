@@ -15,10 +15,10 @@ export default function ContactView({ lang }) {
   return (
     <div className="min-h-[85svh] flex flex-col justify-center px-[clamp(18px,4vw,40px)] pt-[calc(var(--nav-top)+24px)] pb-20">
       <div className="max-w-5xl mx-auto w-full space-y-8 sm:space-y-10 text-center">
-        <p className="text-xs sm:text-sm tracking-wide text-[#ea4530] font-bold lowercase">
+        <p className="text-xs sm:text-sm tracking-wide text-[#ea4530] font-bold">
           {lang === "en"
-            ? "* jakarta, indonesia · system & business analyst | core banking & treasury"
-            : "* jakarta, indonesia · system & business analyst | core banking & treasury"}
+            ? "Jakarta, Indonesia"
+            : "Jakarta, Indonesia"}
         </p>
 
         {/* Exact Kenji /contact lowercase headline */}
@@ -38,8 +38,8 @@ export default function ContactView({ lang }) {
 
         <p className="text-base sm:text-lg text-[#f1eec0]/75 max-w-xl mx-auto">
           {lang === "en"
-            ? "Need a Business Analyst, System Analyst, or QA Leader for Core Banking, Treasury, H2H APIs, or Enterprise Modernization? Reach out directly via email or WhatsApp."
-            : "Butuh Business Analyst, System Analyst, atau QA Leader untuk Core Banking, Treasury, H2H API, atau Modernisasi Enterprise? Hubungi langsung lewat email atau WhatsApp."}
+            ? "Need a Business Analyst, System Analyst, or QA Leader for Core Bankin, Treasury or Enterprise Modernization? Reach out directly via email or WhatsApp."
+            : "Butuh Business Analyst, System Analyst, atau QA Leader untuk Core Banking, Treasury atau Modernisasi Enterprise? Hubungi langsung lewat email atau WhatsApp."}
         </p>
 
         {/* Big Email Pill + WhatsApp + Copy Button */}
