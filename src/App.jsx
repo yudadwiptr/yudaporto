@@ -167,9 +167,9 @@ export default function App() {
             </div>
 
             {/* ==================== 2. BIO STATEMENT + SOFTWARE & QA MARQUEE ==================== */}
-            <section className="relative min-h-[88svh] flex flex-col justify-between py-[clamp(56px,10vh,110px)] overflow-hidden">
-              <div className="my-auto px-[clamp(18px,4vw,40px)]">
-                <div className="text-[clamp(22px,min(3.5vw,4.7vh),38px)] leading-[1.28] tracking-tight max-w-[19ch] sm:max-w-[28ch] md:max-w-[42ch] mx-auto text-center">
+            <section className="relative pt-24 sm:pt-32 md:pt-40 pb-12 sm:pb-16 flex flex-col overflow-hidden">
+              <div className="px-5 sm:px-8 md:px-12 mb-14 sm:mb-20 md:mb-24">
+                <div className="text-[clamp(19px,min(3.2vw,4.2vh),36px)] leading-[1.38] sm:leading-[1.3] tracking-tight max-w-[23ch] sm:max-w-[30ch] md:max-w-[42ch] mx-auto text-center">
                   {lang === "en" ? (
                     <>
                       <span className="text-[#ea4530] font-bold">* </span>

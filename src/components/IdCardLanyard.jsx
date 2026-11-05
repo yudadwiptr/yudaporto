@@ -181,7 +181,7 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
   // On mobile: position the lanyard lower down in the lower third (~45px above bottom bar)
   // so the headline text is completely open, readable, and never blocked!
   const baseClipY = isMobile
-    ? Math.max(viewport.h * 0.58, viewport.h - 225)
+    ? Math.max(viewport.h * 0.58, viewport.h - 235)
     : viewport.h * 0.54;
 
   // The strap anchor is at the EXACT same horizontal position as the card,
@@ -296,7 +296,7 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
           transform: `translate(-50%, 0px) rotate(${offset.rot}deg)`,
           transformOrigin: "50% 0%",
         }}
-        className={`pointer-events-auto absolute w-[128px] h-[182px] sm:w-[166px] sm:h-[238px] touch-none select-none z-10 ${
+        className={`pointer-events-auto absolute w-[146px] h-[210px] sm:w-[172px] sm:h-[246px] touch-none select-none z-10 ${
           isDragging ? "cursor-grabbing" : "cursor-grab"
         }`}
       >
@@ -311,19 +311,19 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
           {/* ==================== FRONT: BLUE ID BADGE WITH TRANSPARENT YUDA ENAMEL BADGE ==================== */}
           <div
             style={{ backfaceVisibility: "hidden" }}
-            className="absolute inset-0 rounded-[12px] bg-[#55aee6] shadow-[0_22px_50px_rgba(0,0,0,0.75)] border border-[#7bc4f0]/50 overflow-hidden flex flex-col justify-between p-2 sm:p-3"
+            className="absolute inset-0 rounded-[14px] bg-[#55aee6] shadow-[0_22px_50px_rgba(0,0,0,0.75)] border border-[#7bc4f0]/50 overflow-hidden flex flex-col justify-between p-2.5 sm:p-3"
           >
             {/* Top Slot Hole */}
             <div className="flex flex-col items-center">
-              <div className="w-7 sm:w-8 h-1.5 sm:h-2 rounded-full bg-[#0a0a0a]/90 border border-black/40 shadow-inner" />
+              <div className="w-8 h-1.5 sm:h-2 rounded-full bg-[#0a0a0a]/90 border border-black/40 shadow-inner" />
             </div>
 
             {/* Stacked Name (Exact Kenji typography) */}
             <div className="text-center leading-[0.92] tracking-[-0.02em] text-[#f1eec0] drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)] pt-0.5 sm:pt-1">
-              <div className="text-[20px] sm:text-[27px] font-extrabold font-ui lowercase">
+              <div className="text-[21px] sm:text-[27px] font-extrabold font-ui lowercase">
                 yuda
               </div>
-              <div className="text-[17px] sm:text-[24px] font-extrabold font-ui lowercase">
+              <div className="text-[18px] sm:text-[24px] font-extrabold font-ui lowercase">
                 dwi putra
               </div>
             </div>
@@ -333,7 +333,7 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
               <img
                 src="/yudaenamel.png"
                 alt="Yuda Dwi Putra Enamel Badge"
-                className="max-h-[96px] sm:max-h-[136px] w-auto object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.4)] pointer-events-none select-none"
+                className="max-h-[105px] sm:max-h-[136px] w-auto object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.4)] pointer-events-none select-none"
               />
             </div>
 
@@ -349,40 +349,56 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
               backfaceVisibility: "hidden",
               transform: "rotateY(180deg)",
             }}
-            className="absolute inset-0 rounded-[12px] bg-[#f1eec0] text-[#0a0a0a] shadow-[0_22px_50px_rgba(0,0,0,0.75)] border border-[#0a0a0a]/20 p-3 sm:p-3.5 flex flex-col justify-between"
+            className="absolute inset-0 rounded-[14px] bg-[#f5f2cb] text-[#0a0a0a] shadow-[0_22px_50px_rgba(0,0,0,0.75)] border border-[#0a0a0a]/25 p-2.5 sm:p-3 flex flex-col justify-between overflow-hidden"
           >
-            {/* Top Slot + Header */}
-            <div className="flex flex-col items-center">
-              <div className="w-8 h-2 rounded-full bg-[#0a0a0a] mb-2" />
-              <div className="w-full flex items-center justify-between text-[8.5px] font-extrabold tracking-wider border-b border-[#0a0a0a]/20 pb-1">
-                <span>CLEARANCE // QA-BA</span>
-                <span className="px-1.5 py-0.2 bg-[#ea4530] text-[#f1eec0] rounded text-[8px]">
+            {/* Top Slot Hole & Header */}
+            <div>
+              <div className="flex flex-col items-center mb-1.5 sm:mb-2">
+                <div className="w-8 h-1.5 sm:h-2 rounded-full bg-[#0a0a0a] shadow-inner" />
+              </div>
+              <div className="w-full flex items-center justify-between border-b border-[#0a0a0a]/15 pb-1 gap-1">
+                <span className="text-[8px] sm:text-[8.5px] font-mono tracking-wider font-extrabold text-[#0a0a0a]/70 uppercase truncate">
+                  ID BADGE // VERIFIED
+                </span>
+                <span className="px-1.5 py-0.5 bg-[#ea4530] text-[#f1eec0] rounded-[3px] text-[7.5px] sm:text-[8px] font-mono font-bold tracking-tight shrink-0">
                   ISTQB® CTFL
                 </span>
               </div>
             </div>
 
-            {/* CV Details */}
-            <div className="my-auto space-y-1.5 text-left">
-              <div className="text-[12px] sm:text-[13px] font-black leading-tight lowercase">
+            {/* Identity & Role */}
+            <div className="space-y-0.5 text-left pt-0.5">
+              <div className="text-[13px] sm:text-[15px] font-extrabold font-ui leading-none tracking-tight text-[#0a0a0a] lowercase">
                 yuda dwi putra
               </div>
-              <div className="text-[9px] sm:text-[10px] font-bold text-[#ea4530] leading-tight">
+              <div className="text-[8.5px] sm:text-[9.5px] font-bold text-[#ea4530] font-mono tracking-tight uppercase leading-tight">
                 System &amp; Business Analyst
-              </div>
-              <div className="text-[8.5px] text-[#0a0a0a]/80 leading-snug pt-0.5">
-                • Core Banking &amp; Treasury
-                <br />
-                • PT Bank Mandiri (KOPRA 5 Yrs)
-                <br />
-                • PT Adi Data (TNI AL &amp; SMI)
-                <br />• 5× 1st Place Defect Hunter
               </div>
             </div>
 
-            {/* Barcode */}
-            <div className="pt-1 border-t border-[#0a0a0a]/20 flex flex-col items-center gap-0.5">
-              <div className="w-full h-4 flex items-stretch justify-between gap-[1.5px]">
+            {/* Core Domain / Experience Highlights with Clean Colored Dots */}
+            <div className="space-y-1 text-left text-[8px] sm:text-[9px] text-[#0a0a0a]/85 font-ui leading-none py-0.5">
+              <div className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#3aa1d8] shrink-0" />
+                <span className="truncate font-medium">Core Banking &amp; Treasury</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#ea4530] shrink-0" />
+                <span className="truncate font-medium">Bank Mandiri (KOPRA)</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0a0a0a]/70 shrink-0" />
+                <span className="truncate font-medium">PT Adi Data (TNI AL &amp; SMI)</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#ea4530] shrink-0" />
+                <span className="truncate font-semibold text-[#0a0a0a]">6+ Yrs • 5× Winner</span>
+              </div>
+            </div>
+
+            {/* Bottom Barcode & Verification Number */}
+            <div className="pt-1 border-t border-[#0a0a0a]/15 flex flex-col items-center gap-0.5">
+              <div className="w-full h-3 sm:h-3.5 flex items-stretch justify-between gap-[1px]">
                 {[2, 1, 3, 1, 2, 4, 1, 2, 1, 3, 2, 1, 2, 3, 1].map((w, i) => (
                   <span
                     key={i}
@@ -391,7 +407,7 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
                   />
                 ))}
               </div>
-              <span className="text-[7.5px] font-mono tracking-widest opacity-60">
+              <span className="text-[7px] sm:text-[8px] font-mono tracking-widest text-[#0a0a0a]/65 uppercase">
                 23-CTFL-227561-12
               </span>
             </div>

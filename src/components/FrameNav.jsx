@@ -54,7 +54,7 @@ export default function FrameNav({
       {/* Top Bar: Logo Mark with animated looking eyes (Left), EN/ID (Center), work (Right) */}
       <nav
         aria-label="Primary"
-        className="fixed left-0 right-0 top-0 z-50 flex items-start justify-between px-[clamp(17px,2.9vw,34px)] py-[clamp(12px,1.7vw,22px)] pointer-events-none"
+        className="fixed left-0 right-0 top-0 z-50 flex items-start justify-between px-[clamp(17px,2.9vw,34px)] py-[clamp(12px,1.7vw,22px)] pointer-events-none bg-gradient-to-b from-[#0a0a0a]/90 via-[#0a0a0a]/40 to-transparent pb-8"
       >
         {/* Top-Left Brand Poster Mark with interactive living eyes */}
         <button
@@ -67,7 +67,7 @@ export default function FrameNav({
           }}
           onMouseEnter={cycleLogoColor}
           title="Yuda Dwi Putra — Home (Eyes follow your cursor!)"
-          className="-mt-[clamp(2px,0.6vw,7px)] -ml-[clamp(2px,0.7vw,10px)] group relative block w-[66px] h-[66px] sm:w-[78px] sm:h-[78px] text-left focus:outline-none pointer-events-auto cursor-pointer"
+          className="-mt-[clamp(2px,0.6vw,7px)] -ml-[clamp(2px,0.7vw,10px)] group relative block w-[56px] h-[56px] sm:w-[78px] sm:h-[78px] text-left focus:outline-none pointer-events-auto cursor-pointer"
         >
           <svg
             viewBox="0 0 120 120"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   EXPERIENCE_LIST,
   RECOGNITION_LIST,
@@ -7,35 +7,7 @@ import {
   CERTIFICATIONS_LIST,
 } from "../data/portfolioData";
 
-const COLLECTIBLES = [
-  {
-    id: "istqb",
-    label: "ISTQB® CTFL Badge",
-    sub: "Cert #23-CTFL-227561-12",
-    color: "#ea4530",
-  },
-  {
-    id: "as400",
-    label: "Host / AS400 & BDS",
-    sub: "Core Banking Ledger",
-    color: "#3aa1d8",
-  },
-  {
-    id: "defect",
-    label: "5× 1st Place Trophy",
-    sub: "Defect & Perf Hunter",
-    color: "#f1eec0",
-  },
-  {
-    id: "brd",
-    label: "BRD & Sequence Spec",
-    sub: "As-Is / To-Be Flows",
-    color: "#ea4530",
-  },
-];
-
 export default function AboutView({ lang, setActivePage }) {
-  const [activeArtifact, setActiveArtifact] = useState(0);
   const [selectedCert, setSelectedCert] = useState(null);
   const [certFilter, setCertFilter] = useState("all");
 
@@ -109,8 +81,8 @@ export default function AboutView({ lang, setActivePage }) {
 
       {/* Main Intro Statement (Exact Kenji /about anatomy with Yuda's CV data) */}
       <div className="px-[clamp(18px,4vw,40px)] max-w-6xl mx-auto pt-[clamp(36px,7vh,80px)] space-y-[clamp(48px,9vh,96px)]">
-        <div className="grid lg:grid-cols-[1.5fr_1fr] gap-10 items-center">
-          <div className="text-[clamp(22px,3.3vw,42px)] leading-[1.22] tracking-tight">
+        <div className="max-w-4xl">
+          <div className="text-[clamp(22px,3.3vw,42px)] leading-[1.26] tracking-tight">
             {lang === "en" ? (
               <p>
                 Hi, I&apos;m{" "}
@@ -153,60 +125,11 @@ export default function AboutView({ lang, setActivePage }) {
               </p>
             )}
 
-            <p className="mt-6 text-sm sm:text-base text-[#f1eec0]/75 font-normal leading-relaxed max-w-2xl">
+            <p className="mt-6 text-sm sm:text-base text-[#f1eec0]/75 font-normal leading-relaxed max-w-3xl">
               {lang === "en"
                 ? "Including 5 years at PT Bank Mandiri on the KOPRA wholesale banking platform. Strong hands-on exposure to core banking and treasury domains: branch and host transactions (BDS, Host/AS400), account & ledger posting, multi-currency & Non-IDR accounts, FX (e-FX), remittance, custody, escrow, cash management, balance forecasting, trade finance, and BI-FAST payments."
                 : "Termasuk 5 tahun di PT Bank Mandiri pada platform wholesale banking KOPRA. Berpengalaman mendalam pada domain core banking & treasury: transaksi cabang dan host (BDS, Host/AS400), pembukuan akun & buku besar, rekening multi-currency & Non-IDR, FX (e-FX), remitansi, kustodi, escrow, cash management, balance forecasting, trade finance, dan pembayaran BI-FAST."}
             </p>
-          </div>
-
-          {/* Interactive Desk Artifacts / Credentials Card */}
-          <div className="p-6 rounded-2xl border border-[#f1eec0]/15 bg-[#121212] space-y-4">
-            <div className="flex items-center justify-between text-xs tracking-wide text-[#f1eec0]/50">
-              <span>
-                {lang === "en"
-                  ? "core credentials (click to inspect)"
-                  : "kredensial utama (klik)"}
-              </span>
-              <span className="text-[#ea4530] font-bold">
-                0{activeArtifact + 1} / 04
-              </span>
-            </div>
-
-            <div className="h-44 rounded-xl bg-[#0a0a0a] border border-[#f1eec0]/10 flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center font-stamp text-3xl mb-3 transition-transform duration-300 hover:scale-110 hover:rotate-6"
-                style={{
-                  backgroundColor: COLLECTIBLES[activeArtifact].color,
-                  color: "#0a0a0a",
-                }}
-              >
-                0{activeArtifact + 1}
-              </div>
-              <div className="font-bold text-lg text-[#f1eec0]">
-                {COLLECTIBLES[activeArtifact].label}
-              </div>
-              <div className="text-xs tracking-wide text-[#f1eec0]/50 mt-1">
-                {COLLECTIBLES[activeArtifact].sub}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-4 gap-2">
-              {COLLECTIBLES.map((item, idx) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setActiveArtifact(idx)}
-                  className={`py-2 px-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
-                    activeArtifact === idx
-                      ? "border-[#3aa1d8] bg-[#3aa1d8]/15 text-[#f1eec0]"
-                      : "border-[#f1eec0]/10 text-[#f1eec0]/45 hover:text-[#f1eec0]"
-                  }`}
-                >
-                  #{idx + 1}
-                </button>
-              ))}
-            </div>
           </div>
         </div>
 
