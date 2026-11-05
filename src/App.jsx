@@ -11,6 +11,7 @@ import AboutView from "./components/AboutView";
 import WorkArchiveView from "./components/WorkArchiveView";
 import StudioLabView from "./components/StudioLabView";
 import ContactView from "./components/ContactView";
+import PageCurtain, { CURTAIN_COVER_MS, CURTAIN_REVEAL_MS } from "./components/PageCurtain";
 import { ArrowUpRight, ArrowRight } from "./components/Icons";
 import {
   HERO_PRESETS,
@@ -100,7 +101,34 @@ export default function App() {
     upgradeLegacyHash();
     return readLocation();
   });
-  const activePage = route.page;
+  // The page actually rendered. It lags behind the URL while the curtain covers the swap.
+  const [shownPage, setShownPage] = useState(route.page);
+  const [curtain, setCurtain] = useState({ phase: "idle", page: route.page });
+  const activePage = shownPage;
+
+  useEffect(() => {
+    if (route.page === shownPage) return undefined;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setShownPage(route.page);
+      return undefined;
+    }
+    setCurtain({ phase: "cover", page: route.page });
+    const t = setTimeout(() => {
+      setShownPage(route.page); // swap while fully covered
+      setCurtain({ phase: "reveal", page: route.page });
+    }, CURTAIN_COVER_MS);
+    return () => clearTimeout(t);
+  }, [route.page, shownPage]);
+
+  useEffect(() => {
+    if (curtain.phase !== "reveal") return undefined;
+    const t = setTimeout(
+      () => setCurtain((c) => ({ ...c, phase: "idle" })),
+      CURTAIN_REVEAL_MS + 40
+    );
+    return () => clearTimeout(t);
+  }, [curtain.phase]);
 
   // Preloader plays once per browser session
   const [isLoading, setIsLoading] = useState(
@@ -215,6 +243,9 @@ export default function App() {
         lang={lang}
       />
 
+      {/* Page-change curtain */}
+      <PageCurtain phase={curtain.phase} page={curtain.page} lang={lang} />
+
       {/* Custom Interactive Cursor */}
       <CustomCursor />
 
@@ -222,12 +253,17 @@ export default function App() {
       <FrameNav
         lang={lang}
         setLang={setLang}
-        activePage={activePage}
+        activePage={route.page}
         setActivePage={setActivePage}
       />
 
       {/* Main Content Area */}
-      <main id="conteudo" key={activePage} className="flex-1 page-enter">
+      <main
+        id="conteudo"
+        key={activePage}
+        className="flex-1 page-enter"
+        style={curtain.phase === "reveal" ? { animationDelay: "260ms" } : undefined}
+      >
         {activePage === "home" && (
           <div>
             {/* ==================== 1. HERO SECTION ==================== */}
