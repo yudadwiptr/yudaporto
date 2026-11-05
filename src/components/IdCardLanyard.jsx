@@ -405,41 +405,52 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
             transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
           }}
         >
-          {/* ==================== FRONT ==================== */}
+          {/* ==================== FRONT: full-bleed photo badge ==================== */}
           <div
             style={{ backfaceVisibility: "hidden" }}
-            className="absolute inset-0 rounded-[14px] bg-[#55aee6] shadow-[0_22px_50px_rgba(0,0,0,0.75)] border border-[#7bc4f0]/50 overflow-hidden flex flex-col justify-between p-2.5 sm:p-3"
+            className="absolute inset-0 rounded-[14px] overflow-hidden bg-gradient-to-b from-[#a8dcf8] via-[#63b6e8] to-[#3d93cc] shadow-[0_22px_50px_rgba(0,0,0,0.75)] ring-1 ring-white/25"
           >
-            <div className="flex flex-col items-center">
-              <div className="w-8 h-1.5 sm:h-2 rounded-full bg-[#0a0a0a]/90 border border-black/40 shadow-inner" />
-            </div>
+            {/* Soft light behind the head */}
+            <span className="absolute left-1/2 top-[14%] -translate-x-1/2 w-[95%] aspect-square rounded-full bg-white/30 blur-[18px]" />
 
-            {/* ID photo */}
-            <div className="flex-1 min-h-0 flex items-center justify-center pt-1.5 sm:pt-2">
-              <div className="relative h-full max-h-[100px] sm:max-h-[124px] aspect-[3/4] rounded-[8px] sm:rounded-[10px] overflow-hidden bg-gradient-to-b from-[#2f8fcf] to-[#1f6fa8] ring-1 ring-[#f1eec0]/55 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.08),0_6px_14px_rgba(0,0,0,0.25)]">
-                {/* soft light behind the head */}
-                <span className="absolute left-1/2 top-[18%] -translate-x-1/2 w-[85%] aspect-square rounded-full bg-[#9fd6f7]/35 blur-[10px]" />
-                <img
-                  src="/yuda-photo-cutout.webp"
-                  alt="Yuda Dwi Putra"
-                  draggable="false"
-                  width="480"
-                  height="640"
-                  className="relative w-full h-full object-cover object-bottom pointer-events-none select-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]"
-                />
+            {/* Photo, larger than the card and anchored to the bottom edge */}
+            <img
+              src="/yuda-photo-full.webp"
+              alt="Yuda Dwi Putra"
+              draggable="false"
+              width="720"
+              height="653"
+              className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[132%] max-w-none h-auto pointer-events-none select-none"
+            />
+
+            {/* Lanyard slot */}
+            <span className="absolute top-2 sm:top-2.5 left-1/2 -translate-x-1/2 w-9 sm:w-10 h-[7px] sm:h-2 rounded-full bg-[#0a0a0a]/85 shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)]" />
+
+            {/* Open-to-work tag */}
+            <span className="absolute top-6 sm:top-7 left-2 sm:left-2.5 inline-flex items-center gap-1 rounded-full bg-[#0a0a0a]/70 backdrop-blur-[2px] px-1.5 py-[2px] text-[6.5px] sm:text-[7.5px] font-bold text-[#f1eec0] tracking-wider font-mono">
+              <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#27c93f]" />
+              OPEN TO WORK
+            </span>
+
+            {/* Dark fade for the name block */}
+            <span className="absolute inset-x-0 bottom-0 h-[58%] bg-gradient-to-t from-[#07121c] via-[#07121c]/85 to-transparent" />
+
+            {/* Name, role and mark */}
+            <div className="absolute inset-x-0 bottom-0 px-2.5 sm:px-3 pb-2.5 sm:pb-3">
+              <div className="font-ui font-extrabold text-[#f8f6e3] leading-[0.95] tracking-[-0.02em] text-[19px] sm:text-[23px] drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+                Yuda
+                <br />
+                Dwi Putra
               </div>
-            </div>
-
-            <div className="text-center leading-[0.92] tracking-[-0.02em] text-[#f1eec0] drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)] pt-1.5 sm:pt-2">
-              <div className="text-[19px] sm:text-[23px] font-extrabold font-ui lowercase">yuda</div>
-              <div className="text-[16px] sm:text-[20px] font-extrabold font-ui lowercase">dwi putra</div>
-            </div>
-
-            <div className="flex justify-center pt-1.5">
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#0a0a0a]/85 px-2 py-[3px] text-[7.5px] sm:text-[8.5px] font-bold text-[#f1eec0] tracking-wider font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#27c93f]" />
-                OPEN TO WORK
-              </span>
+              <div className="mt-1.5 flex items-end justify-between gap-2">
+                <span className="text-[7.5px] sm:text-[9px] leading-tight text-[#f8f6e3]/70 font-ui">
+                  System &amp; Business Analyst
+                </span>
+                <svg viewBox="0 0 120 120" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" aria-hidden="true">
+                  <rect x="10" y="10" width="100" height="100" rx="22" fill="none" stroke="#ea4530" strokeWidth="9" />
+                  <path d="M28 28H46L60 56L74 28H92L68 72V94H52V72L28 28Z" fill="#ea4530" />
+                </svg>
+              </div>
             </div>
           </div>
 
