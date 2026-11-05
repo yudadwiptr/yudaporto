@@ -12,6 +12,7 @@ import AboutView from "./components/AboutView";
 import WorkArchiveView from "./components/WorkArchiveView";
 import StudioLabView from "./components/StudioLabView";
 import ContactView from "./components/ContactView";
+import { ArrowUpRight } from "./components/Icons";
 import {
   HERO_PRESETS,
   CLIENT_MARQUEE,
@@ -79,7 +80,7 @@ export default function App() {
                 key={`${mode}-${lang}-${isLoading}`}
                 className="text-[clamp(32px,5.4vw,76px)] sm:text-[clamp(38px,5.8vw,82px)] leading-[1.08] sm:leading-[1.04] tracking-[-0.02em] relative z-20 font-stamp lowercase pointer-events-none -mt-16 sm:mt-0"
               >
-                {/* Line 1: solving ( 🥁 ) chaos */}
+                {/* Line 1: solving ( art ) chaos */}
                 <span className="block">
                   <span
                     key={`l1s-${presetIndex}`}
@@ -116,7 +117,7 @@ export default function App() {
                   </span>
                 </span>
 
-                {/* Line 3: hunting bugs is the ( 🐦 ) bonus. */}
+                {/* Line 3: hunting bugs is the ( art ) bonus. */}
                 <span className="block">
                   <span
                     key={`l3r-${presetIndex}`}
@@ -347,7 +348,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Floating Right "all works ↗" Pill */}
+                {/* Floating Right "all works" Pill */}
                 <div className="absolute inset-0 flex items-center pointer-events-none justify-end pr-[clamp(18px,4vw,40px)]">
                   <div className="pointer-events-auto">
                     <button
@@ -356,9 +357,10 @@ export default function App() {
                         setActivePage("work");
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
-                      className="text-xs sm:text-sm font-semibold tracking-tight rounded-full px-4 py-2 transition-colors shadow-lg bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] cursor-pointer lowercase"
+                      className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-tight rounded-full px-4 py-2 transition-colors shadow-lg bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] cursor-pointer lowercase"
                     >
-                      {lang === "en" ? "all works ↗" : "semua proyek ↗"}
+                      <span>{lang === "en" ? "all works" : "semua proyek"}</span>
+                      <ArrowUpRight />
                     </button>
                   </div>
                 </div>
@@ -377,7 +379,7 @@ export default function App() {
               ))}
             </div>
 
-            {/* Bottom "see all works ↗" Ring Button */}
+            {/* Bottom "see all works" Ring Button */}
             <div className="py-14 flex justify-center">
               <button
                 type="button"
@@ -385,9 +387,10 @@ export default function App() {
                   setActivePage("work");
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
-                className="text-xs sm:text-sm font-semibold tracking-tight rounded-full px-5 py-2.5 transition-colors shadow-lg bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] ring-1 ring-[#ea4530] ring-offset-[3px] ring-offset-[#0a0a0a] cursor-pointer lowercase"
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-tight rounded-full px-5 py-2.5 transition-colors shadow-lg bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] ring-1 ring-[#ea4530] ring-offset-[3px] ring-offset-[#0a0a0a] cursor-pointer lowercase"
               >
-                {lang === "en" ? "see all works ↗" : "lihat semua proyek ↗"}
+                <span>{lang === "en" ? "see all works" : "lihat semua proyek"}</span>
+                <ArrowUpRight />
               </button>
             </div>
           </div>

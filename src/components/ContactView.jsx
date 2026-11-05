@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ArrowUpRight, CheckIcon } from "./Icons";
 
 export default function ContactView({ lang }) {
   const [copied, setCopied] = useState(false);
@@ -13,7 +14,7 @@ export default function ContactView({ lang }) {
 
   return (
     <div className="min-h-[85svh] flex flex-col justify-center px-[clamp(18px,4vw,40px)] pt-[calc(var(--nav-top)+24px)] pb-20">
-      <div className="max-w-5xl mx-auto w-full space-y-10 text-center">
+      <div className="max-w-5xl mx-auto w-full space-y-8 sm:space-y-10 text-center">
         <p className="text-xs sm:text-sm tracking-wide text-[#ea4530] font-bold lowercase">
           {lang === "en"
             ? "* jakarta, indonesia · system & business analyst | core banking & treasury"
@@ -21,7 +22,7 @@ export default function ContactView({ lang }) {
         </p>
 
         {/* Exact Kenji /contact lowercase headline */}
-        <h1 className="font-stamp text-[clamp(48px,9vw,122px)] leading-[0.98] lowercase text-[#f1eec0]">
+        <h1 className="font-stamp text-[clamp(44px,11vw,122px)] leading-[0.98] lowercase text-[#f1eec0] text-balance">
           {lang === "en" ? (
             <>
               got a system to build?{" "}
@@ -45,58 +46,64 @@ export default function ContactView({ lang }) {
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
           <a
             href={`mailto:${email}`}
-            className="text-lg sm:text-2xl font-bold px-7 py-4 rounded-full bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] transition-colors lowercase"
+            className="inline-flex items-center justify-center gap-2 max-w-full text-[clamp(15px,4.4vw,24px)] font-bold px-6 sm:px-7 py-3.5 sm:py-4 rounded-full bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] transition-colors lowercase break-all"
           >
-            {email} ↗
+            <span>{email}</span>
+            <ArrowUpRight />
           </a>
           <a
             href="https://wa.me/6289525214959"
             target="_blank"
             rel="noreferrer"
-            className="text-base sm:text-lg font-bold px-7 py-4 rounded-full bg-[#3aa1d8] text-[#0a0a0a] hover:bg-[#f1eec0] transition-colors"
+            className="inline-flex items-center gap-2 text-base sm:text-lg font-bold px-6 sm:px-7 py-3.5 sm:py-4 rounded-full bg-[#3aa1d8] text-[#0a0a0a] hover:bg-[#f1eec0] transition-colors"
           >
-            WhatsApp ↗
+            <span>WhatsApp</span>
+            <ArrowUpRight />
           </a>
           <button
             type="button"
             onClick={copyEmail}
-            className="text-xs font-bold px-5 py-4 rounded-full border border-[#f1eec0]/25 text-[#f1eec0] hover:border-[#3aa1d8] hover:text-[#3aa1d8] transition-colors cursor-pointer lowercase"
+            className="inline-flex items-center gap-1.5 text-xs font-bold px-5 py-3.5 sm:py-4 rounded-full border border-[#f1eec0]/25 text-[#f1eec0] hover:border-[#3aa1d8] hover:text-[#3aa1d8] transition-colors cursor-pointer lowercase"
           >
-            {copied
-              ? lang === "en"
-                ? "copied ✓"
-                : "tersalin ✓"
-              : lang === "en"
-              ? "copy email"
-              : "salin email"}
+            {copied ? (
+              <>
+                <span>{lang === "en" ? "copied" : "tersalin"}</span>
+                <CheckIcon className="text-[#27c93f]" />
+              </>
+            ) : (
+              <span>{lang === "en" ? "copy email" : "salin email"}</span>
+            )}
           </button>
         </div>
 
         {/* Social Links Row */}
-        <div className="pt-8 flex flex-wrap items-center justify-center gap-8 text-lg sm:text-xl font-bold text-[#f1eec0]/75">
+        <div className="pt-6 sm:pt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-lg sm:text-xl font-bold text-[#f1eec0]/75">
           <a
             href="https://www.linkedin.com/in/yudadputra"
             target="_blank"
             rel="noreferrer"
-            className="hover:text-[#3aa1d8] transition-colors"
+            className="inline-flex items-center gap-1.5 hover:text-[#3aa1d8] transition-colors"
           >
-            LinkedIn ↗
+            <span>LinkedIn</span>
+            <ArrowUpRight />
           </a>
           <a
             href="https://github.com/yudadwiptr"
             target="_blank"
             rel="noreferrer"
-            className="hover:text-[#3aa1d8] transition-colors"
+            className="inline-flex items-center gap-1.5 hover:text-[#3aa1d8] transition-colors"
           >
-            GitHub ↗
+            <span>GitHub</span>
+            <ArrowUpRight />
           </a>
           <a
             href="https://wa.me/6289525214959"
             target="_blank"
             rel="noreferrer"
-            className="hover:text-[#3aa1d8] transition-colors"
+            className="inline-flex items-center gap-1.5 hover:text-[#3aa1d8] transition-colors"
           >
-            WhatsApp ↗
+            <span>WhatsApp</span>
+            <ArrowUpRight />
           </a>
         </div>
       </div>

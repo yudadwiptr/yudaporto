@@ -203,7 +203,7 @@ export default function FrameNav({
       {/* Bottom Bar: about (Left) & studio (Right) */}
       <nav
         aria-label="Secondary"
-        className="fixed left-0 right-0 bottom-0 z-50 flex items-end justify-between px-[clamp(17px,2.9vw,34px)] py-[clamp(12px,1.7vw,22px)] pointer-events-none"
+        className="fixed left-0 right-0 bottom-0 z-50 flex items-end justify-between px-[clamp(17px,2.9vw,34px)] py-[clamp(12px,1.7vw,22px)] pt-10 pointer-events-none bg-gradient-to-t from-[#0a0a0a]/95 via-[#0a0a0a]/55 to-transparent"
       >
         <button
           type="button"

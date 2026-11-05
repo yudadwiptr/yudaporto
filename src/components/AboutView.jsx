@@ -6,6 +6,14 @@ import {
   ISTQB_CREDENTIAL,
   CERTIFICATIONS_LIST,
 } from "../data/portfolioData";
+import {
+  ArrowUpRight,
+  ArrowRight,
+  ArrowLeft,
+  CloseIcon,
+  ExpandIcon,
+  Dot,
+} from "./Icons";
 
 export default function AboutView({ lang, setActivePage }) {
   const [selectedCert, setSelectedCert] = useState(null);
@@ -135,13 +143,13 @@ export default function AboutView({ lang, setActivePage }) {
 
         {/* Professional Experience Table (Full CV History) */}
         <div className="space-y-6">
-          <div className="flex items-baseline justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5">
             <h2 className="text-sm tracking-wide text-[#f1eec0]/55 font-semibold lowercase">
               {lang === "en"
                 ? "professional experience (6 yrs 7 mos)"
                 : "pengalaman profesional (6 thn 7 bln)"}
             </h2>
-            <span className="text-xs text-[#3aa1d8]">
+            <span className="text-xs text-[#3aa1d8] break-words">
               yudadwiputra@gmail.com · +62 895 2521 4959
             </span>
           </div>
@@ -230,11 +238,12 @@ export default function AboutView({ lang, setActivePage }) {
               onClick={() => setSelectedCert(CERTIFICATIONS_LIST[0])}
               className="text-xs font-bold rounded-full px-4 py-2 bg-[#3aa1d8] text-[#0a0a0a] hover:bg-[#f1eec0] transition-colors cursor-pointer lowercase flex items-center gap-1.5"
             >
-              <span>{lang === "en" ? "view certificate scan ↗" : "lihat sertifikat asli ↗"}</span>
+              <span>{lang === "en" ? "view certificate scan" : "lihat sertifikat asli"}</span>
+              <ArrowUpRight />
             </button>
           </div>
 
-          <div className="p-6 sm:p-8 rounded-2xl border border-[#3aa1d8]/40 bg-[#121212] grid lg:grid-cols-[1.6fr_1fr] gap-8 items-center">
+          <div className="p-4 sm:p-8 rounded-2xl border border-[#3aa1d8]/40 bg-[#121212] grid lg:grid-cols-[1.6fr_1fr] gap-6 sm:gap-8 items-center">
             <div className="space-y-6">
               <div className="flex flex-wrap items-center gap-3">
                 <span className="px-3 py-1 rounded-full bg-[#ea4530] text-[#f1eec0] text-xs font-bold tracking-wider">
@@ -300,8 +309,8 @@ export default function AboutView({ lang, setActivePage }) {
                 className="w-full h-full object-contain rounded transition-transform duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 text-center p-4">
-                <div className="w-10 h-10 rounded-full bg-[#f1eec0] text-[#0a0a0a] flex items-center justify-center font-bold text-lg">
-                  ⤢
+                <div className="w-10 h-10 rounded-full bg-[#f1eec0] text-[#0a0a0a] flex items-center justify-center text-lg">
+                  <ExpandIcon />
                 </div>
                 <span className="text-xs font-bold text-[#f1eec0] uppercase tracking-wider">
                   {lang === "en" ? "click to inspect certificate" : "klik untuk lihat detail"}
@@ -392,7 +401,7 @@ export default function AboutView({ lang, setActivePage }) {
                   <div className="absolute inset-0 bg-black/55 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <span className="px-4 py-2 rounded-full bg-[#3aa1d8] text-[#0a0a0a] text-xs font-bold font-mono tracking-tight shadow-xl transform -translate-y-1 group-hover:translate-y-0 transition-transform duration-300 flex items-center gap-1.5">
                       <span>{lang === "en" ? "inspect credential" : "buka kartu"}</span>
-                      <span>↗</span>
+                      <ArrowUpRight />
                     </span>
                   </div>
                 </div>
@@ -419,8 +428,9 @@ export default function AboutView({ lang, setActivePage }) {
                     <span className="font-mono text-[11px] text-[#3aa1d8] truncate max-w-[60%]">
                       {cert.certNo || "verified credential"}
                     </span>
-                    <span className="text-[11px] text-[#f1eec0]/50 font-mono group-hover:text-[#f1eec0] transition-colors">
-                      {lang === "en" ? "preview →" : "detail →"}
+                    <span className="text-[11px] text-[#f1eec0]/50 font-mono group-hover:text-[#f1eec0] transition-colors inline-flex items-center gap-1">
+                      <span>{lang === "en" ? "preview" : "detail"}</span>
+                      <ArrowRight className="transition-transform group-hover:translate-x-0.5" />
                     </span>
                   </div>
                 </div>
@@ -461,7 +471,7 @@ export default function AboutView({ lang, setActivePage }) {
         </div>
 
         {/* Bottom Let's Talk Block */}
-        <div className="p-8 sm:p-10 rounded-2xl border border-[#f1eec0]/15 bg-[#121212] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div className="p-6 sm:p-10 rounded-2xl border border-[#f1eec0]/15 bg-[#121212] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="space-y-2 max-w-xl">
             <h3 className="font-stamp text-3xl sm:text-4xl lowercase text-[#f1eec0]">
               {lang === "en" ? "let's talk" : "mari ngobrol"}
@@ -478,9 +488,10 @@ export default function AboutView({ lang, setActivePage }) {
               setActivePage("contact");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="text-xs sm:text-sm font-bold rounded-full px-5 py-3 bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] transition-colors shrink-0 cursor-pointer lowercase"
+            className="text-xs sm:text-sm font-bold rounded-full px-5 py-3 bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] transition-colors shrink-0 cursor-pointer lowercase inline-flex items-center gap-1.5"
           >
-            {lang === "en" ? "contact page →" : "halaman kontak →"}
+            <span>{lang === "en" ? "contact page" : "halaman kontak"}</span>
+            <ArrowRight />
           </button>
         </div>
       </div>
@@ -504,7 +515,7 @@ export default function AboutView({ lang, setActivePage }) {
                   <span className="text-xs text-[#ea4530] font-bold font-mono">
                     {selectedCert.category}
                   </span>
-                  <span className="text-xs text-[#f1eec0]/40 font-mono">•</span>
+                  <Dot className="text-[#f1eec0]/40" />
                   <span className="text-xs text-[#3aa1d8] font-mono">
                     {selectedCert.certNo || `Credential // ${selectedCert.year}`}
                   </span>
@@ -516,14 +527,15 @@ export default function AboutView({ lang, setActivePage }) {
               <button
                 type="button"
                 onClick={() => setSelectedCert(null)}
-                className="w-9 h-9 rounded-full bg-[#0a0a0a] border border-[#f1eec0]/20 text-[#f1eec0] hover:bg-[#ea4530] hover:border-[#ea4530] transition-colors flex items-center justify-center font-bold text-sm cursor-pointer shrink-0"
+                aria-label="Close"
+                className="w-9 h-9 rounded-full bg-[#0a0a0a] border border-[#f1eec0]/20 text-[#f1eec0] hover:bg-[#ea4530] hover:border-[#ea4530] transition-colors flex items-center justify-center text-sm cursor-pointer shrink-0"
               >
-                ✕
+                <CloseIcon />
               </button>
             </div>
 
             {/* Modal Certificate Image Preview */}
-            <div className="relative flex-1 overflow-auto p-4 sm:p-6 bg-[#0a0a0a] flex items-center justify-center min-h-[320px]">
+            <div className="relative flex-1 overflow-auto p-3 sm:p-6 bg-[#0a0a0a] flex items-center justify-center min-h-[220px] sm:min-h-[320px]">
               <img
                 src={selectedCert.thumb || selectedCert.file}
                 alt={selectedCert.title}
@@ -535,25 +547,27 @@ export default function AboutView({ lang, setActivePage }) {
                 type="button"
                 onClick={handlePrevCert}
                 title="Previous certificate (Arrow Left)"
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/70 hover:bg-[#3aa1d8] hover:text-[#0a0a0a] border border-white/15 text-[#f1eec0] flex items-center justify-center transition-all duration-200 cursor-pointer shadow-lg"
+                aria-label="Previous certificate"
+                className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/70 hover:bg-[#3aa1d8] hover:text-[#0a0a0a] border border-white/15 text-[#f1eec0] flex items-center justify-center transition-all duration-200 cursor-pointer shadow-lg"
               >
-                ←
+                <ArrowLeft />
               </button>
               <button
                 type="button"
                 onClick={handleNextCert}
                 title="Next certificate (Arrow Right)"
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/70 hover:bg-[#3aa1d8] hover:text-[#0a0a0a] border border-white/15 text-[#f1eec0] flex items-center justify-center transition-all duration-200 cursor-pointer shadow-lg"
+                aria-label="Next certificate"
+                className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/70 hover:bg-[#3aa1d8] hover:text-[#0a0a0a] border border-white/15 text-[#f1eec0] flex items-center justify-center transition-all duration-200 cursor-pointer shadow-lg"
               >
-                →
+                <ArrowRight />
               </button>
             </div>
 
             {/* Modal Footer */}
             <div className="p-4 bg-[#121212] border-t border-[#f1eec0]/15 flex flex-wrap items-center justify-between gap-3 text-xs text-[#f1eec0]/70">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 min-w-0">
                 <span>Issuer: <strong className="text-[#f1eec0]">{selectedCert.issuer}</strong></span>
-                <span className="text-[#f1eec0]/30">•</span>
+                <Dot className="text-[#f1eec0]/30" />
                 <span>Year: <strong className="text-[#f1eec0]">{selectedCert.year}</strong></span>
               </div>
               <div className="flex items-center gap-3">
@@ -565,9 +579,10 @@ export default function AboutView({ lang, setActivePage }) {
                 >
                   <span>
                     {selectedCert.file.endsWith(".pdf")
-                      ? (lang === "en" ? "open original pdf ↗" : "buka dokumen pdf ↗")
-                      : (lang === "en" ? "open high-res scan ↗" : "buka gambar asli ↗")}
+                      ? (lang === "en" ? "open original pdf" : "buka dokumen pdf")
+                      : (lang === "en" ? "open high-res scan" : "buka gambar asli")}
                   </span>
+                  <ArrowUpRight />
                 </a>
               </div>
             </div>

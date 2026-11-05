@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { ArrowUpRight } from "./Icons";
 import ProjectVisualCard from "./ProjectVisuals";
 
 export default function FeaturedProjectSection({
@@ -43,7 +44,7 @@ export default function FeaturedProjectSection({
     >
       {/* Top 3-Column Header matching Kenji Lambert's exact grid */}
       <div className="px-[clamp(18px,4vw,40px)] pb-[clamp(18px,3vh,32px)]">
-        {/* Category Pills + Desktop "see full case ↗" */}
+        {/* Category Pills + Desktop "see full case" */}
         <div className="flex flex-wrap items-start justify-between gap-4 mb-[clamp(12px,2vh,22px)]">
           <div className="flex flex-wrap gap-2">
             {project.tags.map((tag, i) => (
@@ -61,9 +62,10 @@ export default function FeaturedProjectSection({
           <button
             type="button"
             onClick={() => onOpenCase(project)}
-            className="hidden md:inline-flex text-xs font-semibold tracking-tight bg-[#f1eec0] text-[#0a0a0a] rounded-full px-4 py-2 hover:bg-[#ea4530] hover:text-[#f1eec0] transition-colors shrink-0 cursor-pointer lowercase"
+            className="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold tracking-tight bg-[#f1eec0] text-[#0a0a0a] rounded-full px-4 py-2 hover:bg-[#ea4530] hover:text-[#f1eec0] transition-colors shrink-0 cursor-pointer lowercase"
           >
-            {lang === "en" ? "see full case ↗" : "lihat studi kasus ↗"}
+            <span>{lang === "en" ? "see full case" : "lihat studi kasus"}</span>
+            <ArrowUpRight />
           </button>
         </div>
 
@@ -83,9 +85,10 @@ export default function FeaturedProjectSection({
           <button
             type="button"
             onClick={() => onOpenCase(project)}
-            className="md:hidden inline-flex w-fit mb-2 text-xs font-semibold bg-[#ea4530] text-[#f1eec0] rounded-full px-3.5 py-2 cursor-pointer lowercase"
+            className="md:hidden inline-flex items-center gap-1.5 w-fit mb-2 text-xs font-semibold bg-[#ea4530] text-[#f1eec0] rounded-full px-3.5 py-2 cursor-pointer lowercase"
           >
-            {lang === "en" ? "see full case ↗" : "lihat studi kasus ↗"}
+            <span>{lang === "en" ? "see full case" : "lihat studi kasus"}</span>
+            <ArrowUpRight />
           </button>
 
           {/* Year & Client */}

@@ -699,9 +699,9 @@ export const CERTIFICATIONS_LIST = [
     featured: false,
     category: "Software Quality Engineering",
     group: "qa",
-    link: "/certified/Selenium in C# - Setup Simple Test Automation Framework.pdf",
-    file: "/certified/Selenium in C# - Setup Simple Test Automation Framework.pdf",
-    thumb: "/certified/thumbs/Selenium in C# - Setup Simple Test Automation Framework.jpg",
+    link: "/certified/Selenium in C.pdf",
+    file: "/certified/Selenium in C.pdf",
+    thumb: "/certified/thumbs/Selenium in C.jpg",
   },
   {
     id: "tester-to-qa-lead",

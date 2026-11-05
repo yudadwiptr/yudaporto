@@ -1,288 +1,376 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Dot } from "./Icons";
+
+/*
+ * Hanging ID card on a red lanyard strap.
+ *
+ * Motion model (time-based, frame-rate independent, fixed 240 Hz sub-steps):
+ *  - Vertical: while the strap is slack the card is in free fall (gravity + light
+ *    air drag). Once the strap is taut it behaves like a damped elastic spring,
+ *    so the entrance reads as "drop -> soft catch -> small rebound -> settle".
+ *  - Horizontal: a soft pendulum spring pulls the card back under its anchor.
+ *  - Rotation: a lightly damped pendulum that follows sideways motion.
+ * Positions are written straight to the DOM every frame (no React re-render per
+ * frame), and the loop sleeps once everything has settled.
+ */
+
+const GRAVITY = 1600; // px/s^2 while the strap is slack
+const AIR_DRAG = 0.8; // 1/s
+const STRAP_HZ = 1.8; // stiffness of the taut strap
+const STRAP_DAMPING = 0.55; // damping ratio (≈ one soft rebound)
+const SWAY_HZ = 0.7; // horizontal pendulum
+const SWAY_DAMPING = 0.32;
+const ROT_HZ = 0.85; // card tilt pendulum
+const ROT_DAMPING = 0.2;
+const STEP = 1 / 240;
+
+const omega = (hz) => 2 * Math.PI * hz;
+const K_Y = omega(STRAP_HZ) ** 2;
+const C_Y = 2 * STRAP_DAMPING * omega(STRAP_HZ);
+const SLACK_Y = -GRAVITY / K_Y; // offset above rest where the strap goes slack
+const K_X = omega(SWAY_HZ) ** 2;
+const C_X = 2 * SWAY_DAMPING * omega(SWAY_HZ);
+const K_R = omega(ROT_HZ) ** 2;
+const C_R = 2 * ROT_DAMPING * omega(ROT_HZ);
+
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+function computeLayout(w, h) {
+  const isMobile = w < 640;
+  const cardH = isMobile ? 210 : 246;
+  const baseX = isMobile ? w * 0.5 : Math.min(w * 0.82, w - 120);
+  // Mobile: hang the card in the lower part of the hero so the headline stays readable,
+  // while keeping it clear of the bottom navigation bar.
+  const baseY = isMobile
+    ? clamp(h - cardH - 92, h * 0.5, h * 0.62)
+    : h * 0.54;
+  return {
+    w,
+    h,
+    isMobile,
+    cardH,
+    baseX,
+    baseY,
+    anchorX: baseX,
+    anchorY: -60,
+    strapW: isMobile ? 14 : 20,
+  };
+}
 
 export default function IdCardLanyard({ lang = "en", isReady = true }) {
   const containerRef = useRef(null);
+  const cardRef = useRef(null);
+  const strapRef = useRef(null);
+  const strapShadowRef = useRef(null);
+  const claspRef = useRef(null);
+  const rafRef = useRef(0);
+  const lastTimeRef = useRef(0);
 
-  // Offset (x, y) from resting position, plus tilt angle (rot)
-  // Starts just above the ceiling so it smoothly drops down when opened
-  const [offset, setOffset] = useState({ x: 0, y: -260, rot: -4 });
   const [isDragging, setIsDragging] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [viewport, setViewport] = useState({ w: 1280, h: 800 });
+  const [viewport, setViewport] = useState(() => ({
+    w: typeof window !== "undefined" ? window.innerWidth : 1280,
+    h: typeof window !== "undefined" ? window.innerHeight : 800,
+  }));
 
+  const layout = computeLayout(viewport.w, viewport.h);
+  const layoutRef = useRef(layout);
+  layoutRef.current = layout;
+
+  // Card starts parked above the top edge (hidden) until the preloader clears.
   const physicsRef = useRef({
     x: 0,
-    y: -260,
+    y: -(layout.baseY + layout.cardH + 120),
     vx: 0,
     vy: 0,
-    rot: -4,
+    rot: 0,
     vRot: 0,
     dragging: false,
-    startX: 0,
-    startY: 0,
-    pointerDownTime: 0,
+    parked: true,
+    grabDX: 0,
+    grabDY: 0,
+    lastMoveT: 0,
+    downTime: 0,
     dragDistance: 0,
   });
 
-  // Track viewport size for accurate layout
-  useEffect(() => {
-    const updateSize = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      setViewport({
-        w: rect.width || window.innerWidth,
-        h: rect.height || window.innerHeight,
-      });
-    };
-    updateSize();
-    window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
+  // ---- DOM writer -------------------------------------------------------
+  const apply = useCallback(() => {
+    const p = physicsRef.current;
+    const L = layoutRef.current;
+    const clipX = L.baseX + p.x;
+    const clipY = L.baseY + p.y;
+
+    const dx = clipX - L.anchorX;
+    const dy = clipY - 18 - L.anchorY;
+    const len = Math.max(0, Math.hypot(dx, dy));
+    const angle = (Math.atan2(-dx, dy) * 180) / Math.PI;
+    const strapTransform = `translate(${L.anchorX} ${L.anchorY}) rotate(${angle})`;
+
+    if (strapRef.current) {
+      strapRef.current.setAttribute("transform", strapTransform);
+      strapRef.current.firstChild?.setAttribute("height", len);
+    }
+    if (strapShadowRef.current) {
+      strapShadowRef.current.setAttribute(
+        "transform",
+        `translate(${L.anchorX + 2} ${L.anchorY + 3}) rotate(${angle})`
+      );
+      strapShadowRef.current.setAttribute("height", len);
+    }
+    if (claspRef.current) {
+      claspRef.current.setAttribute(
+        "transform",
+        `translate(${clipX} ${clipY}) rotate(${p.rot * 0.45})`
+      );
+    }
+    if (cardRef.current) {
+      cardRef.current.style.transform = `translate3d(${clipX}px, ${clipY}px, 0) translateX(-50%) rotate(${p.rot}deg)`;
+    }
   }, []);
 
-  // Trigger natural falling animation from top when preloader clears or component mounts
-  // Smoothed out: gentle floaty descent with soft elastic deceleration
-  useEffect(() => {
-    if (!isReady) return;
+  // ---- Physics loop -----------------------------------------------------
+  const integrate = (p, dt) => {
+    // Vertical: free fall while slack, damped spring while taut
+    const ay = p.y > SLACK_Y ? -K_Y * p.y - C_Y * p.vy : GRAVITY - AIR_DRAG * p.vy;
+    // Horizontal pendulum toward the anchor
+    const ax = -K_X * p.x - C_X * p.vx;
+    p.vy += ay * dt;
+    p.vx += ax * dt;
+    p.y += p.vy * dt;
+    p.x += p.vx * dt;
 
-    const timer = setTimeout(() => {
+    // Tilt pendulum follows sideways offset & velocity
+    const targetRot = clamp(p.x * 0.06 + p.vx * 0.012, -28, 28);
+    const ar = -K_R * (p.rot - targetRot) - C_R * p.vRot;
+    p.vRot += ar * dt;
+    p.rot += p.vRot * dt;
+  };
+
+  const isSettled = (p) =>
+    Math.abs(p.x) < 0.05 &&
+    Math.abs(p.y) < 0.05 &&
+    Math.abs(p.vx) < 0.5 &&
+    Math.abs(p.vy) < 0.5 &&
+    Math.abs(p.rot) < 0.02 &&
+    Math.abs(p.vRot) < 0.1;
+
+  const tick = useCallback(
+    (now) => {
       const p = physicsRef.current;
-      p.x = 0;
-      p.y = -Math.min(260, viewport.h * 0.35);
-      p.vx = 0;
-      p.vy = 6.5; // gentle, graceful downward drift
-      p.rot = -3;
-      p.vRot = 0.4;
-      setOffset({ x: p.x, y: p.y, rot: p.rot });
-    }, 220);
+      const elapsed = Math.min(0.05, (now - (lastTimeRef.current || now)) / 1000);
+      lastTimeRef.current = now;
 
-    return () => clearTimeout(timer);
-  }, [isReady, viewport.h]);
-
-  // Spring physics loop: elastic spring-damper with smooth recoil & gentle natural settling
-  useEffect(() => {
-    let rafId;
-    const stiffness = 0.045; // softer spring restoring force
-    const damping = 0.91; // silky smooth damping that prevents jarring bounce
-
-    const step = () => {
-      const p = physicsRef.current;
-      if (!p.dragging) {
-        // Restoring spring force towards upright resting point (0, 0)
-        const ax = -stiffness * p.x;
-        const ay = -stiffness * p.y;
-        p.vx = (p.vx + ax) * damping;
-        p.vy = (p.vy + ay) * damping;
-        p.x += p.vx;
-        p.y += p.vy;
-
-        // Dynamic pendulum rotation coupled to movement velocity (gentle swing)
-        const targetRot = p.x * 0.03 + p.vx * 0.22 + p.vy * 0.02;
-        const aRot = (targetRot - p.rot) * 0.09;
-        p.vRot = (p.vRot + aRot) * 0.88;
-        p.rot += p.vRot;
-
-        if (
-          Math.abs(p.x) > 0.02 ||
-          Math.abs(p.y) > 0.02 ||
-          Math.abs(p.vx) > 0.02 ||
-          Math.abs(p.vy) > 0.02 ||
-          Math.abs(p.rot) > 0.02
-        ) {
-          setOffset({ x: p.x, y: p.y, rot: p.rot });
+      if (!p.dragging && !p.parked) {
+        let remaining = elapsed;
+        while (remaining > 1e-6) {
+          const dt = Math.min(STEP, remaining);
+          integrate(p, dt);
+          remaining -= dt;
+        }
+        if (isSettled(p)) {
+          p.x = p.y = p.vx = p.vy = p.rot = p.vRot = 0;
+          apply();
+          rafRef.current = 0;
+          lastTimeRef.current = 0;
+          return;
         }
       }
-      rafId = requestAnimationFrame(step);
-    };
+      apply();
+      rafRef.current = requestAnimationFrame(tick);
+    },
+    [apply]
+  );
 
-    rafId = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(rafId);
+  const wake = useCallback(() => {
+    if (!rafRef.current) {
+      lastTimeRef.current = 0;
+      rafRef.current = requestAnimationFrame(tick);
+    }
+  }, [tick]);
+
+  useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
+
+  // ---- Viewport tracking ------------------------------------------------
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => {
+      const rect = el.getBoundingClientRect();
+      const w = Math.round(rect.width || window.innerWidth);
+      const h = Math.round(rect.height || window.innerHeight);
+      setViewport((prev) => (prev.w === w && prev.h === h ? prev : { w, h }));
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
-  // Window-level dragging listeners
+  // Keep the parked card hidden above the fold if the layout changes before the drop
+  useLayoutEffect(() => {
+    const p = physicsRef.current;
+    if (p.parked) p.y = -(layout.baseY + layout.cardH + 120);
+    apply();
+  }, [layout.baseX, layout.baseY, layout.cardH, apply]);
+
+  // ---- Entrance drop ----------------------------------------------------
+  useEffect(() => {
+    if (!isReady) return;
+    const p = physicsRef.current;
+    if (!p.parked) return;
+
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const timer = setTimeout(() => {
+      const L = layoutRef.current;
+      p.parked = false;
+      if (reduceMotion) {
+        p.x = p.y = p.vx = p.vy = p.rot = p.vRot = 0;
+        apply();
+        return;
+      }
+      // Start just above the top edge with a little downward speed so the card
+      // enters the frame immediately, slightly off-centre so it sways in.
+      p.y = -(L.baseY + L.cardH + 30);
+      p.vy = 520;
+      p.x = L.isMobile ? -18 : -34;
+      p.vx = 0;
+      p.rot = L.isMobile ? -3 : -5;
+      p.vRot = 0;
+      wake();
+    }, 180);
+    return () => clearTimeout(timer);
+  }, [isReady, apply, wake]);
+
+  // ---- Dragging ---------------------------------------------------------
   const handlePointerDown = (e) => {
+    if (e.button !== undefined && e.button !== 0) return;
     e.preventDefault();
     e.stopPropagation();
 
-    const clientX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
-    const clientY = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
-
     const p = physicsRef.current;
+    p.parked = false;
     p.dragging = true;
-    p.startX = clientX - p.x;
-    p.startY = clientY - p.y;
-    p.vx = 0;
-    p.vy = 0;
-    p.pointerDownTime = Date.now();
+    p.grabDX = e.clientX - p.x;
+    p.grabDY = e.clientY - p.y;
+    p.vx = p.vy = 0;
+    p.lastMoveT = performance.now();
+    p.downTime = p.lastMoveT;
     p.dragDistance = 0;
     setIsDragging(true);
+    wake();
 
-    const handleWindowMove = (moveEvent) => {
+    const onMove = (ev) => {
       if (!p.dragging) return;
-      const curX = moveEvent.clientX ?? moveEvent.touches?.[0]?.clientX ?? 0;
-      const curY = moveEvent.clientY ?? moveEvent.touches?.[0]?.clientY ?? 0;
-
-      const rawX = curX - p.startX;
-      const rawY = curY - p.startY;
-
+      const rawX = ev.clientX - p.grabDX;
+      const rawY = ev.clientY - p.grabDY;
       const dist = Math.hypot(rawX, rawY);
       p.dragDistance = Math.max(p.dragDistance, dist);
 
-      // Elastic limit for pull
-      const maxPull = 450;
-      const scale = dist > maxPull ? maxPull / dist : 1;
-      const nextX = rawX * scale;
-      const nextY = rawY * scale;
+      // Elastic limit: resistance grows the further you pull
+      const maxPull = 420;
+      const scale = dist > maxPull ? (maxPull + (dist - maxPull) * 0.15) / dist : 1;
+      const nx = rawX * scale;
+      const ny = rawY * scale;
 
-      p.vx = nextX - p.x;
-      p.vy = nextY - p.y;
-      p.x = nextX;
-      p.y = nextY;
-      p.rot = Math.max(-30, Math.min(30, nextX * 0.05 + p.vx * 0.4));
-
-      setOffset({ x: p.x, y: p.y, rot: p.rot });
+      const now = performance.now();
+      const dt = Math.max(1 / 240, (now - p.lastMoveT) / 1000);
+      p.lastMoveT = now;
+      // Smoothed release velocity (px/s)
+      p.vx = p.vx * 0.6 + ((nx - p.x) / dt) * 0.4;
+      p.vy = p.vy * 0.6 + ((ny - p.y) / dt) * 0.4;
+      p.x = nx;
+      p.y = ny;
+      p.rot = clamp(nx * 0.05 + p.vx * 0.006, -30, 30);
+      p.vRot = 0;
     };
 
-    const handleWindowUp = () => {
+    const onUp = () => {
       if (!p.dragging) return;
       p.dragging = false;
       setIsDragging(false);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
 
-      window.removeEventListener("pointermove", handleWindowMove);
-      window.removeEventListener("pointerup", handleWindowUp);
-      window.removeEventListener("pointercancel", handleWindowUp);
-
-      const elapsed = Date.now() - p.pointerDownTime;
-      // If quick tap without dragging, flip the ID card!
-      if (p.dragDistance < 10 && elapsed < 320) {
+      // Quick tap without dragging flips the card
+      if (p.dragDistance < 8 && performance.now() - p.downTime < 320) {
         setIsFlipped((prev) => !prev);
-        return;
       }
-
-      // "terlempar gitu animasinya keatas seperti menarik id card asli"
-      // If pulled downward, release gives a smooth elastic upward recoil!
-      if (p.y > 15) {
-        p.vy = -(p.y * 0.28 + 6);
-        p.vx = -p.x * 0.18;
+      // Velocity is stale if the pointer rested before release
+      if (performance.now() - p.lastMoveT > 80) {
+        p.vx = 0;
+        p.vy = 0;
       }
+      p.vx = clamp(p.vx, -2400, 2400);
+      p.vy = clamp(p.vy, -2400, 2400);
+      wake();
     };
 
-    window.addEventListener("pointermove", handleWindowMove);
-    window.addEventListener("pointerup", handleWindowUp);
-    window.addEventListener("pointercancel", handleWindowUp);
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
   };
 
-  // Dimensions & Anchors:
-  // Perfectly straight vertical layout — NO diagonal slant!
-  const isMobile = viewport.w < 768;
-  const baseClipX = isMobile
-    ? viewport.w * 0.5
-    : Math.min(viewport.w * 0.82, viewport.w - 120);
-
-  // On mobile: position the lanyard lower down in the lower third (~45px above bottom bar)
-  // so the headline text is completely open, readable, and never blocked!
-  const baseClipY = isMobile
-    ? Math.max(viewport.h * 0.58, viewport.h - 235)
-    : viewport.h * 0.54;
-
-  // The strap anchor is at the EXACT same horizontal position as the card,
-  // starting well above the ceiling (-60px) so it hangs 100% straight down without being cut off!
-  const anchorX = baseClipX;
-  const anchorY = -60;
-
-  const currentClipX = baseClipX + offset.x;
-  const currentClipY = baseClipY + offset.y;
+  const { isMobile, strapW } = layout;
 
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 pointer-events-none select-none z-10 overflow-visible"
+      className="absolute inset-0 pointer-events-none select-none z-10 overflow-hidden"
     >
-      {/* 100% Straight Vertical Solid Lanyard Strap (Clean smooth ribbon, no stripes) */}
+      {/* Red lanyard strap + metal clasp */}
       <svg
-        className="w-full h-full overflow-visible pointer-events-none"
+        className="absolute inset-0 w-full h-full overflow-visible pointer-events-none"
         viewBox={`0 0 ${viewport.w} ${viewport.h}`}
+        aria-hidden="true"
       >
         <defs>
-          <linearGradient id="solidSmoothStrap" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#1c1c1c" />
-            <stop offset="35%" stopColor="#252525" />
-            <stop offset="65%" stopColor="#252525" />
-            <stop offset="100%" stopColor="#1a1a1a" />
+          <linearGradient id="lanyardRed" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#9e2414" />
+            <stop offset="18%" stopColor="#d7381f" />
+            <stop offset="50%" stopColor="#ef4a31" />
+            <stop offset="82%" stopColor="#d7381f" />
+            <stop offset="100%" stopColor="#8f2012" />
           </linearGradient>
         </defs>
 
-        {/* Soft drop shadow behind the vertical strap */}
-        <line
-          x1={anchorX}
-          y1={anchorY}
-          x2={currentClipX}
-          y2={currentClipY - 18}
-          stroke="rgba(0,0,0,0.45)"
-          strokeWidth={isMobile ? "16" : "22"}
-          strokeLinecap="butt"
-          transform="translate(0, 3)"
+        {/* Soft shadow behind the strap */}
+        <rect
+          ref={strapShadowRef}
+          x={-(strapW + 2) / 2}
+          y="0"
+          width={strapW + 2}
+          height="0"
+          fill="rgba(0,0,0,0.45)"
         />
 
-        {/* Smooth Solid Matte Ribbon Strap (Clean, uniform, no stripes or dashed texture) */}
-        <line
-          x1={anchorX}
-          y1={anchorY}
-          x2={currentClipX}
-          y2={currentClipY - 18}
-          stroke="url(#solidSmoothStrap)"
-          strokeWidth={isMobile ? "14" : "20"}
-          strokeLinecap="butt"
-        />
+        {/* Strap ribbon */}
+        <g ref={strapRef}>
+          <rect x={-strapW / 2} y="0" width={strapW} height="0" fill="url(#lanyardRed)" />
+        </g>
 
-        {/* Metal Lobster Hook Clasp */}
-        <g
-          transform={`translate(${currentClipX}, ${currentClipY}) rotate(${offset.rot * 0.45
-            })`}
-        >
-          {/* Clamp Fold */}
+        {/* Metal lobster clasp */}
+        <g ref={claspRef}>
           <rect
             x={isMobile ? -9 : -12}
             y="-22"
             width={isMobile ? 18 : 24}
             height="8"
             rx="2"
-            fill="#222"
-            stroke="#444"
+            fill="#a8291a"
+            stroke="#5e160c"
             strokeWidth="1.2"
           />
-          {/* Metal D-Ring */}
-          <ellipse
-            cx="0"
-            cy="-12"
-            rx="6.5"
-            ry="4.5"
-            fill="none"
-            stroke="#777"
-            strokeWidth="2.2"
-          />
-          {/* Swivel Barrel */}
-          <rect
-            x="-3.5"
-            y="-9"
-            width="7"
-            height="8"
-            rx="1.5"
-            fill="#555"
-            stroke="#999"
-            strokeWidth="1"
-          />
-          {/* Clasp Hook Passing into Card Slot */}
-          <path
-            d="M-2.5 -2 L2.5 -2 L3 7 C3 10 -3 10 -3 7 Z"
-            fill="#444"
-            stroke="#bbb"
-            strokeWidth="1.2"
-          />
+          <ellipse cx="0" cy="-12" rx="6.5" ry="4.5" fill="none" stroke="#9a9a9a" strokeWidth="2.2" />
+          <rect x="-3.5" y="-9" width="7" height="8" rx="1.5" fill="#6a6a6a" stroke="#b5b5b5" strokeWidth="1" />
+          <path d="M-2.5 -2 L2.5 -2 L3 7 C3 10 -3 10 -3 7 Z" fill="#555" stroke="#c8c8c8" strokeWidth="1.2" />
         </g>
       </svg>
 
-      {/* Draggable Blue ID Card (Upright, straight vertical, behind text) */}
+      {/* Draggable ID card (behind the headline) */}
       <div
+        ref={cardRef}
         onPointerDown={handlePointerDown}
         data-cursor="drag"
         title={
@@ -290,17 +378,12 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
             ? "Pull down & release to snap! (Or click to flip)"
             : "Tarik ke bawah & lepas untuk membal! (Atau klik untuk balik)"
         }
-        style={{
-          left: `${currentClipX}px`,
-          top: `${currentClipY}px`,
-          transform: `translate(-50%, 0px) rotate(${offset.rot}deg)`,
-          transformOrigin: "50% 0%",
-        }}
-        className={`pointer-events-auto absolute w-[146px] h-[210px] sm:w-[172px] sm:h-[246px] touch-none select-none z-10 ${
+        style={{ transformOrigin: "50% 0%", willChange: "transform" }}
+        className={`pointer-events-auto absolute left-0 top-0 w-[146px] h-[210px] sm:w-[172px] sm:h-[246px] touch-none select-none z-10 ${
           isDragging ? "cursor-grabbing" : "cursor-grab"
         }`}
       >
-        {/* Card 3D Flip Container */}
+        {/* Card 3D flip container */}
         <div
           className="relative w-full h-full transition-transform duration-500"
           style={{
@@ -308,50 +391,39 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
             transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
           }}
         >
-          {/* ==================== FRONT: BLUE ID BADGE WITH TRANSPARENT YUDA ENAMEL BADGE ==================== */}
+          {/* ==================== FRONT ==================== */}
           <div
             style={{ backfaceVisibility: "hidden" }}
             className="absolute inset-0 rounded-[14px] bg-[#55aee6] shadow-[0_22px_50px_rgba(0,0,0,0.75)] border border-[#7bc4f0]/50 overflow-hidden flex flex-col justify-between p-2.5 sm:p-3"
           >
-            {/* Top Slot Hole */}
             <div className="flex flex-col items-center">
               <div className="w-8 h-1.5 sm:h-2 rounded-full bg-[#0a0a0a]/90 border border-black/40 shadow-inner" />
             </div>
 
-            {/* Stacked Name (Exact Kenji typography) */}
             <div className="text-center leading-[0.92] tracking-[-0.02em] text-[#f1eec0] drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)] pt-0.5 sm:pt-1">
-              <div className="text-[21px] sm:text-[27px] font-extrabold font-ui lowercase">
-                yuda
-              </div>
-              <div className="text-[18px] sm:text-[24px] font-extrabold font-ui lowercase">
-                dwi putra
-              </div>
+              <div className="text-[21px] sm:text-[27px] font-extrabold font-ui lowercase">yuda</div>
+              <div className="text-[18px] sm:text-[24px] font-extrabold font-ui lowercase">dwi putra</div>
             </div>
 
-            {/* Official Transparent Yuda Enamel Pin Artwork (No white background!) */}
             <div className="relative w-full flex-1 flex items-center justify-center py-0.5 sm:py-1 overflow-hidden">
               <img
                 src="/yudaenamel.png"
                 alt="Yuda Dwi Putra Enamel Badge"
+                draggable="false"
                 className="max-h-[105px] sm:max-h-[136px] w-auto object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.4)] pointer-events-none select-none"
               />
             </div>
 
-            {/* Bottom Sub-tag */}
             <div className="text-center text-[8.5px] sm:text-[10px] font-bold text-[#0a0a0a]/80 tracking-wider font-mono">
               OPEN TO WORK
             </div>
           </div>
 
-          {/* ==================== BACK: STAFF CLEARANCE & ISTQB CREDENTIALS ==================== */}
+          {/* ==================== BACK ==================== */}
           <div
-            style={{
-              backfaceVisibility: "hidden",
-              transform: "rotateY(180deg)",
-            }}
+            style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
             className="absolute inset-0 rounded-[14px] bg-[#f5f2cb] text-[#0a0a0a] shadow-[0_22px_50px_rgba(0,0,0,0.75)] border border-[#0a0a0a]/25 p-2.5 sm:p-3 flex flex-col justify-between overflow-hidden"
           >
-            {/* Top Slot Hole & Header */}
             <div>
               <div className="flex flex-col items-center mb-1.5 sm:mb-2">
                 <div className="w-8 h-1.5 sm:h-2 rounded-full bg-[#0a0a0a] shadow-inner" />
@@ -366,7 +438,6 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
               </div>
             </div>
 
-            {/* Identity & Role */}
             <div className="space-y-0.5 text-left pt-0.5">
               <div className="text-[13px] sm:text-[15px] font-extrabold font-ui leading-none tracking-tight text-[#0a0a0a] lowercase">
                 yuda dwi putra
@@ -376,7 +447,6 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
               </div>
             </div>
 
-            {/* Core Domain / Experience Highlights with Clean Colored Dots */}
             <div className="space-y-1 text-left text-[8px] sm:text-[9px] text-[#0a0a0a]/85 font-ui leading-none py-0.5">
               <div className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#3aa1d8] shrink-0" />
@@ -392,19 +462,16 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ea4530] shrink-0" />
-                <span className="truncate font-semibold text-[#0a0a0a]">6+ Yrs • 5× Winner</span>
+                <span className="truncate font-semibold text-[#0a0a0a] inline-flex items-center gap-1">
+                  6+ Yrs <Dot /> 5× Winner
+                </span>
               </div>
             </div>
 
-            {/* Bottom Barcode & Verification Number */}
             <div className="pt-1 border-t border-[#0a0a0a]/15 flex flex-col items-center gap-0.5">
               <div className="w-full h-3 sm:h-3.5 flex items-stretch justify-between gap-[1px]">
                 {[2, 1, 3, 1, 2, 4, 1, 2, 1, 3, 2, 1, 2, 3, 1].map((w, i) => (
-                  <span
-                    key={i}
-                    className="bg-[#0a0a0a] inline-block"
-                    style={{ flex: w }}
-                  />
+                  <span key={i} className="bg-[#0a0a0a] inline-block" style={{ flex: w }} />
                 ))}
               </div>
               <span className="text-[7px] sm:text-[8px] font-mono tracking-widest text-[#0a0a0a]/65 uppercase">

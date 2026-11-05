@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ArrowUpRight, ArrowRight, CheckIcon } from "./Icons";
 
 export default function FooterSection({ lang, setActivePage }) {
   const [copied, setCopied] = useState(false);
@@ -69,18 +70,18 @@ export default function FooterSection({ lang, setActivePage }) {
               setActivePage("contact");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="inline-flex min-h-[44px] items-center text-xs sm:text-sm tracking-wide text-[#f1eec0]/60 underline-offset-4 hover:text-[#f1eec0] hover:underline cursor-pointer lowercase"
+            className="inline-flex min-h-[44px] items-center gap-1.5 text-xs sm:text-sm tracking-wide text-[#f1eec0]/60 underline-offset-4 hover:text-[#f1eec0] hover:underline cursor-pointer lowercase"
           >
-            <span>
-              {lang === "en" ? "contact page" : "halaman kontak"} →
-            </span>
+            <span>{lang === "en" ? "contact page" : "halaman kontak"}</span>
+            <ArrowRight />
           </button>
 
           <a
             href={`mailto:${email}`}
-            className="md:hidden text-xs font-semibold rounded-full px-4 py-2 transition-colors shadow-lg bg-[#3aa1d8] text-[#0a0a0a] hover:bg-[#f1eec0] lowercase"
+            className="md:hidden inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-4 py-2 transition-colors shadow-lg bg-[#3aa1d8] text-[#0a0a0a] hover:bg-[#f1eec0] lowercase"
           >
-            {lang === "en" ? "let's talk ↗" : "mari ngobrol ↗"}
+            <span>{lang === "en" ? "let's talk" : "mari ngobrol"}</span>
+            <ArrowUpRight />
           </a>
         </div>
       </div>
@@ -126,21 +127,23 @@ export default function FooterSection({ lang, setActivePage }) {
             <button
               type="button"
               onClick={handleCopyEmail}
-              className="hidden md:inline-flex text-xs font-semibold rounded-full px-4 py-2 transition-colors shadow-lg bg-[#f1eec0] text-[#0a0a0a] hover:bg-[#ea4530] hover:text-[#f1eec0] cursor-pointer lowercase"
+              className="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-4 py-2 transition-colors shadow-lg bg-[#f1eec0] text-[#0a0a0a] hover:bg-[#ea4530] hover:text-[#f1eec0] cursor-pointer lowercase"
             >
-              {copied
-                ? lang === "en"
-                  ? "copied to clipboard ✓"
-                  : "email tersalin ✓"
-                : lang === "en"
-                ? "copy email"
-                : "salin email"}
+              {copied ? (
+                <>
+                  <span>{lang === "en" ? "copied to clipboard" : "email tersalin"}</span>
+                  <CheckIcon />
+                </>
+              ) : (
+                <span>{lang === "en" ? "copy email" : "salin email"}</span>
+              )}
             </button>
             <a
               href={`mailto:${email}`}
-              className="hidden md:inline-flex text-xs font-semibold rounded-full px-4 py-2 transition-colors shadow-lg bg-[#3aa1d8] text-[#0a0a0a] hover:bg-[#f1eec0] hover:text-[#0a0a0a] lowercase"
+              className="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-4 py-2 transition-colors shadow-lg bg-[#3aa1d8] text-[#0a0a0a] hover:bg-[#f1eec0] hover:text-[#0a0a0a] lowercase"
             >
-              {lang === "en" ? "let's talk ↗" : "mari ngobrol ↗"}
+              <span>{lang === "en" ? "let's talk" : "mari ngobrol"}</span>
+              <ArrowUpRight />
             </a>
           </div>
         </div>

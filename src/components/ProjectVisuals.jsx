@@ -1,4 +1,5 @@
 import React from "react";
+import { ArrowUpRight } from "./Icons";
 
 export default function ProjectVisualCard({ slide, project, index, onOpenCase }) {
   const accent = slide.accent || project.themeColor || "#ea4530";
@@ -78,7 +79,7 @@ export default function ProjectVisualCard({ slide, project, index, onOpenCase })
                   <span className="font-stamp text-sm tracking-wide lowercase">
                     artifact // 0{index + 1}
                   </span>
-                  <span className="text-lg font-bold">↗</span>
+                  <ArrowUpRight className="text-lg" />
                 </div>
                 <div className="h-12 w-12 rounded-full border-2 border-current flex items-center justify-center font-stamp text-sm">
                   *
@@ -192,9 +193,7 @@ export default function ProjectVisualCard({ slide, project, index, onOpenCase })
           <p className="text-xs leading-snug opacity-80 line-clamp-2">
             {slide.sub}
           </p>
-          <span className="text-xs font-bold shrink-0 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all">
-            ↗
-          </span>
+          <ArrowUpRight className="text-sm opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
         </div>
       </div>
     </div>

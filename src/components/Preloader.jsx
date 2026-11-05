@@ -186,7 +186,7 @@ export default function Preloader({ isOpen, onComplete, lang = "en" }) {
                   strokeWidth="2.5"
                 />
                 <text
-                  x="0"
+                  x="-8"
                   y="5"
                   textAnchor="middle"
                   fill="#0a0a0a"
@@ -194,8 +194,16 @@ export default function Preloader({ isOpen, onComplete, lang = "en" }) {
                   fontWeight="900"
                   className="font-ui uppercase tracking-wider"
                 >
-                  0 DEFECTS ✓
+                  0 DEFECTS
                 </text>
+                <path
+                  d="M35 0.5 L39.5 5 L47 -4.5"
+                  fill="none"
+                  stroke="#0a0a0a"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </g>
             )}
           </svg>

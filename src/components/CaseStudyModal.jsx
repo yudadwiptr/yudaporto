@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { ArrowUpRight, CloseIcon } from "./Icons";
 import ProjectVisualCard from "./ProjectVisuals";
 
 export default function CaseStudyModal({ project, lang, onClose }) {
@@ -23,23 +24,27 @@ export default function CaseStudyModal({ project, lang, onClose }) {
       <div className="min-h-full px-[clamp(18px,4vw,44px)] py-[clamp(24px,4vh,48px)] max-w-7xl mx-auto flex flex-col justify-between">
         {/* Top Bar */}
         <div className="flex items-center justify-between gap-4 pb-6 border-b border-[#f1eec0]/15">
-          <div className="flex items-center gap-3">
-            <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#ea4530]" />
-            <span className="text-xs text-[#f1eec0]/60 font-semibold">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#ea4530] shrink-0" />
+            <span className="text-xs text-[#f1eec0]/60 font-semibold truncate">
               {project.year} — {project.client}
             </span>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-xs font-bold rounded-full px-4 py-2 bg-[#f1eec0] text-[#0a0a0a] hover:bg-[#ea4530] hover:text-[#f1eec0] transition-colors cursor-pointer lowercase"
+            className="inline-flex items-center gap-1.5 shrink-0 text-xs font-bold rounded-full px-4 py-2 bg-[#f1eec0] text-[#0a0a0a] hover:bg-[#ea4530] hover:text-[#f1eec0] transition-colors cursor-pointer lowercase"
           >
-            {lang === "en" ? "close [esc] ✕" : "tutup [esc] ✕"}
+            <span>
+              {lang === "en" ? "close" : "tutup"}
+              <span className="hidden sm:inline"> [esc]</span>
+            </span>
+            <CloseIcon />
           </button>
         </div>
 
         {/* Main Content */}
-        <div className="py-10 space-y-10">
+        <div className="py-8 sm:py-10 space-y-8 sm:space-y-10">
           {/* Tags */}
           <div className="flex flex-wrap gap-2">
             {project.tags.map((tag, i) => (
@@ -53,12 +58,12 @@ export default function CaseStudyModal({ project, lang, onClose }) {
           </div>
 
           {/* Massive Title */}
-          <h2 className="font-stamp text-[clamp(42px,7vw,92px)] leading-[0.98] lowercase text-[#f1eec0]">
+          <h2 className="font-stamp text-[clamp(38px,9vw,92px)] leading-[0.98] lowercase text-[#f1eec0] break-words text-balance">
             {project.title}
           </h2>
 
           {/* "Built Around a Single Idea" Callout Box */}
-          <div className="grid md:grid-cols-[1fr_1.5fr] gap-8 p-6 sm:p-8 rounded-xl border border-[#f1eec0]/15 bg-[#121212]">
+          <div className="grid md:grid-cols-[1fr_1.5fr] gap-6 sm:gap-8 p-5 sm:p-8 rounded-xl border border-[#f1eec0]/15 bg-[#121212]">
             <div>
               <p className="text-xs text-[#ea4530] font-bold mb-2 lowercase">
                 {lang === "en" ? "* the single idea" : "* satu ide tunggal"}
@@ -120,22 +125,24 @@ export default function CaseStudyModal({ project, lang, onClose }) {
               ? "Want to discuss this banking / enterprise case study in detail?"
               : "Ingin mendiskusikan studi kasus perbankan / sistem ini lebih lanjut?"}
           </p>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             {project.liveUrl && project.liveUrl.startsWith("http") && (
               <a
                 href={project.liveUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-xs font-bold rounded-full px-4 py-2 bg-[#3aa1d8] text-[#0a0a0a] hover:bg-[#f1eec0] transition-colors lowercase"
+                className="inline-flex items-center gap-1.5 text-xs font-bold rounded-full px-4 py-2 bg-[#3aa1d8] text-[#0a0a0a] hover:bg-[#f1eec0] transition-colors lowercase"
               >
-                {lang === "en" ? "view repository ↗" : "lihat repository ↗"}
+                <span>{lang === "en" ? "view repository" : "lihat repository"}</span>
+                <ArrowUpRight />
               </a>
             )}
             <a
               href="mailto:yudadwiputra@gmail.com"
-              className="text-xs font-bold rounded-full px-4 py-2 bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] transition-colors lowercase"
+              className="inline-flex items-center gap-1.5 text-xs font-bold rounded-full px-4 py-2 bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] transition-colors lowercase"
             >
-              {lang === "en" ? "start a conversation ↗" : "mulai diskusi ↗"}
+              <span>{lang === "en" ? "start a conversation" : "mulai diskusi"}</span>
+              <ArrowUpRight />
             </a>
           </div>
         </div>
