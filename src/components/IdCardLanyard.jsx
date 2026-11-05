@@ -416,14 +416,16 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
 
             {/* ID photo */}
             <div className="flex-1 min-h-0 flex items-center justify-center pt-1.5 sm:pt-2">
-              <div className="h-full max-h-[100px] sm:max-h-[124px] aspect-[3/4] rounded-[8px] sm:rounded-[10px] overflow-hidden bg-white ring-2 ring-[#f1eec0]/90 shadow-[0_6px_14px_rgba(0,0,0,0.3)]">
+              <div className="relative h-full max-h-[100px] sm:max-h-[124px] aspect-[3/4] rounded-[8px] sm:rounded-[10px] overflow-hidden bg-gradient-to-b from-[#2f8fcf] to-[#1f6fa8] ring-1 ring-[#f1eec0]/55 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.08),0_6px_14px_rgba(0,0,0,0.25)]">
+                {/* soft light behind the head */}
+                <span className="absolute left-1/2 top-[18%] -translate-x-1/2 w-[85%] aspect-square rounded-full bg-[#9fd6f7]/35 blur-[10px]" />
                 <img
-                  src="/yuda-photo-id.jpg"
+                  src="/yuda-photo-cutout.webp"
                   alt="Yuda Dwi Putra"
                   draggable="false"
                   width="480"
                   height="640"
-                  className="w-full h-full object-cover pointer-events-none select-none"
+                  className="relative w-full h-full object-cover object-bottom pointer-events-none select-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]"
                 />
               </div>
             </div>
