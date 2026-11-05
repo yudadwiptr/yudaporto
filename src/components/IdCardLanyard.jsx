@@ -4,18 +4,18 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
   const containerRef = useRef(null);
 
   // Offset (x, y) from resting position, plus tilt angle (rot)
-  // Starts high above the screen ceiling (-800px) so it naturally falls down when opened
-  const [offset, setOffset] = useState({ x: 0, y: -800, rot: -10 });
+  // Starts just above the ceiling so it smoothly drops down when opened
+  const [offset, setOffset] = useState({ x: 0, y: -260, rot: -4 });
   const [isDragging, setIsDragging] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
   const [viewport, setViewport] = useState({ w: 1280, h: 800 });
 
   const physicsRef = useRef({
     x: 0,
-    y: -800,
+    y: -260,
     vx: 0,
     vy: 0,
-    rot: -10,
+    rot: -4,
     vRot: 0,
     dragging: false,
     startX: 0,
@@ -40,29 +40,29 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
   }, []);
 
   // Trigger natural falling animation from top when preloader clears or component mounts
+  // Smoothed out: gentle floaty descent with soft elastic deceleration
   useEffect(() => {
     if (!isReady) return;
 
-    // Small delay so the preloader reveal happens smoothly first
     const timer = setTimeout(() => {
       const p = physicsRef.current;
       p.x = 0;
-      p.y = -Math.max(520, viewport.h * 0.75);
-      p.vx = (Math.random() - 0.5) * 6; // subtle organic horizontal drift
-      p.vy = 28; // strong downward falling velocity
-      p.rot = -12;
-      p.vRot = 3.2;
+      p.y = -Math.min(260, viewport.h * 0.35);
+      p.vx = 0;
+      p.vy = 6.5; // gentle, graceful downward drift
+      p.rot = -3;
+      p.vRot = 0.4;
       setOffset({ x: p.x, y: p.y, rot: p.rot });
-    }, 180);
+    }, 220);
 
     return () => clearTimeout(timer);
   }, [isReady, viewport.h]);
 
-  // Spring physics loop: elastic spring-damper with sharp upward snap recoil & realistic bounce
+  // Spring physics loop: elastic spring-damper with smooth recoil & gentle natural settling
   useEffect(() => {
     let rafId;
-    const stiffness = 0.075;
-    const damping = 0.86;
+    const stiffness = 0.045; // softer spring restoring force
+    const damping = 0.91; // silky smooth damping that prevents jarring bounce
 
     const step = () => {
       const p = physicsRef.current;
@@ -75,10 +75,10 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
         p.x += p.vx;
         p.y += p.vy;
 
-        // Dynamic pendulum rotation coupled to movement velocity
-        const targetRot = p.x * 0.04 + p.vx * 0.38 + p.vy * 0.04;
-        const aRot = (targetRot - p.rot) * 0.15;
-        p.vRot = (p.vRot + aRot) * 0.84;
+        // Dynamic pendulum rotation coupled to movement velocity (gentle swing)
+        const targetRot = p.x * 0.03 + p.vx * 0.22 + p.vy * 0.02;
+        const aRot = (targetRot - p.rot) * 0.09;
+        p.vRot = (p.vRot + aRot) * 0.88;
         p.rot += p.vRot;
 
         if (
@@ -159,10 +159,10 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
       }
 
       // "terlempar gitu animasinya keatas seperti menarik id card asli"
-      // If pulled downward, release gives an immediate upward fling velocity!
+      // If pulled downward, release gives a smooth elastic upward recoil!
       if (p.y > 15) {
-        p.vy = -(p.y * 0.44 + 16);
-        p.vx = -p.x * 0.25;
+        p.vy = -(p.y * 0.28 + 6);
+        p.vx = -p.x * 0.18;
       }
     };
 

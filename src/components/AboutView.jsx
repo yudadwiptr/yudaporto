@@ -36,7 +36,51 @@ const COLLECTIBLES = [
 
 export default function AboutView({ lang, setActivePage }) {
   const [activeArtifact, setActiveArtifact] = useState(0);
-  const [certModalOpen, setCertModalOpen] = useState(false);
+  const [selectedCert, setSelectedCert] = useState(null);
+  const [certFilter, setCertFilter] = useState("all");
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setSelectedCert(null);
+      }
+      if (selectedCert) {
+        if (e.key === "ArrowLeft") handlePrevCert();
+        if (e.key === "ArrowRight") handleNextCert();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedCert]);
+
+  const filteredCerts =
+    certFilter === "all"
+      ? CERTIFICATIONS_LIST
+      : CERTIFICATIONS_LIST.filter((c) => c.group === certFilter);
+
+  const filterTabs = [
+    { id: "all", label: lang === "en" ? "all credentials" : "semua sertifikat", count: CERTIFICATIONS_LIST.length },
+    { id: "qa", label: "QA & Testing", count: CERTIFICATIONS_LIST.filter((c) => c.group === "qa").length },
+    { id: "agile", label: "Agile & Product", count: CERTIFICATIONS_LIST.filter((c) => c.group === "agile").length },
+    { id: "engineering", label: "Engineering & DB", count: CERTIFICATIONS_LIST.filter((c) => c.group === "engineering").length },
+    { id: "security", label: "Security & Pentest", count: CERTIFICATIONS_LIST.filter((c) => c.group === "security").length },
+  ];
+
+  const handlePrevCert = (e) => {
+    e?.stopPropagation?.();
+    if (!selectedCert) return;
+    const curIdx = CERTIFICATIONS_LIST.findIndex((c) => c.id === selectedCert.id);
+    const prevIdx = (curIdx - 1 + CERTIFICATIONS_LIST.length) % CERTIFICATIONS_LIST.length;
+    setSelectedCert(CERTIFICATIONS_LIST[prevIdx]);
+  };
+
+  const handleNextCert = (e) => {
+    e?.stopPropagation?.();
+    if (!selectedCert) return;
+    const curIdx = CERTIFICATIONS_LIST.findIndex((c) => c.id === selectedCert.id);
+    const nextIdx = (curIdx + 1) % CERTIFICATIONS_LIST.length;
+    setSelectedCert(CERTIFICATIONS_LIST[nextIdx]);
+  };
 
   return (
     <div className="pt-[calc(var(--nav-top)+24px)] pb-16">
@@ -260,7 +304,7 @@ export default function AboutView({ lang, setActivePage }) {
             </div>
             <button
               type="button"
-              onClick={() => setCertModalOpen(true)}
+              onClick={() => setSelectedCert(CERTIFICATIONS_LIST[0])}
               className="text-xs font-bold rounded-full px-4 py-2 bg-[#3aa1d8] text-[#0a0a0a] hover:bg-[#f1eec0] transition-colors cursor-pointer lowercase flex items-center gap-1.5"
             >
               <span>{lang === "en" ? "view certificate scan ↗" : "lihat sertifikat asli ↗"}</span>
@@ -324,7 +368,7 @@ export default function AboutView({ lang, setActivePage }) {
 
             {/* Clickable Certificate Preview Card */}
             <div
-              onClick={() => setCertModalOpen(true)}
+              onClick={() => setSelectedCert(CERTIFICATIONS_LIST[0])}
               className="relative group cursor-pointer rounded-xl overflow-hidden border border-[#f1eec0]/20 bg-[#0a0a0a] shadow-[0_15px_35px_rgba(0,0,0,0.6)] aspect-[3/4] max-h-[360px] mx-auto w-full flex items-center justify-center p-2"
             >
               <img
@@ -347,41 +391,115 @@ export default function AboutView({ lang, setActivePage }) {
           </div>
         </div>
 
-        {/* ==================== OTHER PROFESSIONAL CERTIFICATIONS ==================== */}
+        {/* ==================== ALL PROFESSIONAL CERTIFICATION CARDS ==================== */}
         <div className="space-y-6">
-          <div className="flex items-baseline justify-between">
-            <h2 className="text-sm tracking-wide text-[#f1eec0]/55 font-semibold lowercase">
-              {lang === "en"
-                ? "other professional certifications & qualifications"
-                : "sertifikasi profesional & kualifikasi lainnya"}
-            </h2>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <span className="text-xs text-[#ea4530] font-bold lowercase tracking-wider">
+                {lang === "en" ? "credentials & qualifications" : "kredensial & kualifikasi"}
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-stamp lowercase text-[#f1eec0] mt-0.5">
+                {lang === "en"
+                  ? "professional certifications"
+                  : "sertifikasi profesional"}
+              </h2>
+            </div>
             <span className="text-xs text-[#3aa1d8] font-mono">
-              {CERTIFICATIONS_LIST.length} {lang === "en" ? "credentials" : "sertifikat"}
+              {filteredCerts.length} {lang === "en" ? "of" : "dari"} {CERTIFICATIONS_LIST.length} {lang === "en" ? "verified credentials" : "sertifikat terverifikasi"}
             </span>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-3.5">
-            {CERTIFICATIONS_LIST.map((cert, idx) => (
+          {/* Filter Pills */}
+          <div className="flex flex-wrap items-center gap-2 pt-1 pb-2">
+            {filterTabs.map((tab) => {
+              const active = certFilter === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setCertFilter(tab.id)}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-mono lowercase transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+                    active
+                      ? "bg-[#ea4530] text-[#f1eec0] font-bold shadow-md"
+                      : "bg-[#141414] text-[#f1eec0]/60 hover:text-[#f1eec0] hover:bg-[#1a1a1a] border border-[#f1eec0]/10"
+                  }`}
+                >
+                  <span>{tab.label}</span>
+                  <span
+                    className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                      active
+                        ? "bg-black/30 text-[#f1eec0]"
+                        : "bg-white/10 text-[#f1eec0]/70"
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Certificate Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {filteredCerts.map((cert) => (
               <div
-                key={idx}
-                className="p-4 sm:p-5 rounded-xl border border-[#f1eec0]/12 bg-[#121212] flex flex-col justify-between space-y-2 hover:border-[#f1eec0]/30 transition-colors"
+                key={cert.id}
+                onClick={() => setSelectedCert(cert)}
+                className="group relative rounded-2xl border border-[#f1eec0]/15 bg-[#121212] overflow-hidden flex flex-col justify-between hover:border-[#3aa1d8]/70 hover:shadow-[0_14px_34px_rgba(0,0,0,0.7)] transition-all duration-300 hover:-translate-y-1 cursor-pointer"
               >
-                <div>
-                  <div className="flex items-center justify-between text-[11px] font-mono text-[#ea4530] mb-1">
-                    <span>{cert.category}</span>
-                    <span className="text-[#f1eec0]/45">{cert.year}</span>
-                  </div>
-                  <h3 className="font-bold text-base text-[#f1eec0] leading-snug">
-                    {cert.title}
-                  </h3>
-                </div>
-                <div className="flex items-center justify-between pt-1 border-t border-[#f1eec0]/10 text-xs text-[#f1eec0]/60">
-                  <span>{cert.issuer}</span>
-                  {cert.certNo && (
-                    <span className="text-[#3aa1d8] font-mono text-[11px]">
-                      {cert.certNo}
+                {/* Thumbnail Preview Area */}
+                <div className="relative aspect-[16/10] w-full bg-[#0a0a0a] overflow-hidden border-b border-[#f1eec0]/10 flex items-center justify-center p-2.5">
+                  <img
+                    src={cert.thumb}
+                    alt={cert.title}
+                    loading="lazy"
+                    className="w-full h-full object-contain rounded-lg transition-transform duration-500 group-hover:scale-105"
+                  />
+                  {/* Floating Top Badges */}
+                  <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-black/80 backdrop-blur-md text-[#3aa1d8] border border-[#3aa1d8]/30 font-semibold truncate max-w-[70%]">
+                      {cert.category}
                     </span>
-                  )}
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-black/80 backdrop-blur-md text-[#f1eec0]/80 border border-[#f1eec0]/20">
+                      {cert.year}
+                    </span>
+                  </div>
+
+                  {/* Hover Overlay Button */}
+                  <div className="absolute inset-0 bg-black/55 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <span className="px-4 py-2 rounded-full bg-[#3aa1d8] text-[#0a0a0a] text-xs font-bold font-mono tracking-tight shadow-xl transform -translate-y-1 group-hover:translate-y-0 transition-transform duration-300 flex items-center gap-1.5">
+                      <span>{lang === "en" ? "inspect credential" : "buka kartu"}</span>
+                      <span>↗</span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Card Info Body */}
+                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px] font-mono">
+                      <span className="text-[#ea4530] font-semibold truncate max-w-[75%]">
+                        {cert.issuer}
+                      </span>
+                      {cert.badge && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#ea4530]/20 text-[#ea4530] font-bold shrink-0">
+                          {cert.badge}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-bold text-base text-[#f1eec0] leading-snug group-hover:text-[#3aa1d8] transition-colors line-clamp-2">
+                      {cert.title}
+                    </h3>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#f1eec0]/10 flex items-center justify-between text-xs text-[#f1eec0]/60">
+                    <span className="font-mono text-[11px] text-[#3aa1d8] truncate max-w-[60%]">
+                      {cert.certNo || "verified credential"}
+                    </span>
+                    <span className="text-[11px] text-[#f1eec0]/50 font-mono group-hover:text-[#f1eec0] transition-colors">
+                      {lang === "en" ? "preview →" : "detail →"}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -444,61 +562,91 @@ export default function AboutView({ lang, setActivePage }) {
         </div>
       </div>
 
-      {/* ==================== OFFICIAL ISTQB CERTIFICATE LIGHTBOX MODAL ==================== */}
-      {certModalOpen && (
+      {/* ==================== CERTIFICATE LIGHTBOX MODAL ==================== */}
+      {selectedCert && (
         <div
           role="dialog"
           aria-modal="true"
-          onClick={() => setCertModalOpen(false)}
-          className="fixed inset-0 z-[250] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-8"
+          onClick={() => setSelectedCert(null)}
+          className="fixed inset-0 z-[250] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative bg-[#121212] border border-[#f1eec0]/25 rounded-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.9)] animate-in fade-in zoom-in-95 duration-200"
+            className="relative bg-[#121212] border border-[#f1eec0]/25 rounded-2xl max-w-4xl w-full max-h-[94vh] flex flex-col overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.9)] animate-in fade-in zoom-in-95 duration-200"
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-[#f1eec0]/15">
-              <div>
-                <span className="text-xs text-[#ea4530] font-bold font-mono">
-                  VERIFIED CREDENTIAL // {ISTQB_CREDENTIAL.certNo}
-                </span>
-                <h3 className="text-lg sm:text-xl font-bold text-[#f1eec0]">
-                  {ISTQB_CREDENTIAL.title}
+            <div className="flex items-start justify-between p-4 sm:p-5 border-b border-[#f1eec0]/15 gap-4">
+              <div className="space-y-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs text-[#ea4530] font-bold font-mono">
+                    {selectedCert.category}
+                  </span>
+                  <span className="text-xs text-[#f1eec0]/40 font-mono">•</span>
+                  <span className="text-xs text-[#3aa1d8] font-mono">
+                    {selectedCert.certNo || `Credential // ${selectedCert.year}`}
+                  </span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-[#f1eec0] leading-snug">
+                  {selectedCert.title}
                 </h3>
               </div>
               <button
                 type="button"
-                onClick={() => setCertModalOpen(false)}
-                className="w-9 h-9 rounded-full bg-[#0a0a0a] border border-[#f1eec0]/20 text-[#f1eec0] hover:bg-[#ea4530] hover:border-[#ea4530] transition-colors flex items-center justify-center font-bold text-sm cursor-pointer"
+                onClick={() => setSelectedCert(null)}
+                className="w-9 h-9 rounded-full bg-[#0a0a0a] border border-[#f1eec0]/20 text-[#f1eec0] hover:bg-[#ea4530] hover:border-[#ea4530] transition-colors flex items-center justify-center font-bold text-sm cursor-pointer shrink-0"
               >
                 ✕
               </button>
             </div>
 
-            {/* Modal Certificate Image */}
-            <div className="flex-1 overflow-auto p-4 sm:p-6 bg-[#0a0a0a] flex items-center justify-center">
+            {/* Modal Certificate Image Preview */}
+            <div className="relative flex-1 overflow-auto p-4 sm:p-6 bg-[#0a0a0a] flex items-center justify-center min-h-[320px]">
               <img
-                src={ISTQB_CREDENTIAL.certImage}
-                alt="Official ISTQB Certified Tester Foundation Level Certificate - Yuda Dwi Putra"
-                className="max-h-[72vh] w-auto object-contain rounded-lg shadow-2xl border border-white/10"
+                src={selectedCert.thumb || selectedCert.file}
+                alt={selectedCert.title}
+                className="max-h-[68vh] w-auto max-w-full object-contain rounded-lg shadow-2xl border border-white/10"
               />
+
+              {/* Prev / Next Floating Navigation Arrows */}
+              <button
+                type="button"
+                onClick={handlePrevCert}
+                title="Previous certificate (Arrow Left)"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/70 hover:bg-[#3aa1d8] hover:text-[#0a0a0a] border border-white/15 text-[#f1eec0] flex items-center justify-center transition-all duration-200 cursor-pointer shadow-lg"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={handleNextCert}
+                title="Next certificate (Arrow Right)"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/70 hover:bg-[#3aa1d8] hover:text-[#0a0a0a] border border-white/15 text-[#f1eec0] flex items-center justify-center transition-all duration-200 cursor-pointer shadow-lg"
+              >
+                →
+              </button>
             </div>
 
             {/* Modal Footer */}
             <div className="p-4 bg-[#121212] border-t border-[#f1eec0]/15 flex flex-wrap items-center justify-between gap-3 text-xs text-[#f1eec0]/70">
-              <div>
-                <span>Passed: <strong>{ISTQB_CREDENTIAL.datePassed}</strong></span>
-                <span className="mx-2 text-[#f1eec0]/30">•</span>
-                <span>Issuer: <strong>iSQI GmbH, Potsdam, Germany</strong></span>
+              <div className="flex items-center gap-2">
+                <span>Issuer: <strong className="text-[#f1eec0]">{selectedCert.issuer}</strong></span>
+                <span className="text-[#f1eec0]/30">•</span>
+                <span>Year: <strong className="text-[#f1eec0]">{selectedCert.year}</strong></span>
               </div>
-              <a
-                href={ISTQB_CREDENTIAL.certImage}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3.5 py-1.5 rounded-full bg-[#3aa1d8] text-[#0a0a0a] font-bold hover:bg-[#f1eec0] transition-colors lowercase"
-              >
-                {lang === "en" ? "open high-res scan ↗" : "buka gambar resolusi penuh ↗"}
-              </a>
+              <div className="flex items-center gap-3">
+                <a
+                  href={encodeURI(selectedCert.file)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-full bg-[#3aa1d8] text-[#0a0a0a] font-bold hover:bg-[#f1eec0] transition-colors lowercase flex items-center gap-1.5"
+                >
+                  <span>
+                    {selectedCert.file.endsWith(".pdf")
+                      ? (lang === "en" ? "open original pdf ↗" : "buka dokumen pdf ↗")
+                      : (lang === "en" ? "open high-res scan ↗" : "buka gambar asli ↗")}
+                  </span>
+                </a>
+              </div>
             </div>
           </div>
         </div>

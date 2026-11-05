@@ -305,9 +305,6 @@ export default function App() {
                             className="w-6 h-6 sm:w-7 sm:h-7 shrink-0 transition-transform duration-300 group-hover:scale-110"
                           />
                           <span className="font-ui">{tool.name}</span>
-                          <span className="text-[10px] tracking-wide px-2 py-0.5 rounded-full bg-white/5 text-[#f1eec0]/35 font-mono lowercase">
-                            {tool.tag}
-                          </span>
                         </span>
                       ))}
                     </span>
