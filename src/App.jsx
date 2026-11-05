@@ -70,14 +70,14 @@ export default function App() {
         {activePage === "home" && (
           <div>
             {/* ==================== 1. HERO SECTION ==================== */}
-            <div className="min-h-[max(100svh,700px)] flex flex-col items-center justify-center text-center px-[clamp(18px,4vw,40px)] relative overflow-hidden bg-[#0a0a0a] select-none">
+            <div className="h-[100dvh] min-h-[100dvh] max-h-[100dvh] md:h-auto md:min-h-[max(100svh,700px)] md:max-h-none flex flex-col items-center justify-center text-center px-[clamp(18px,4vw,40px)] relative overflow-hidden bg-[#0a0a0a] select-none">
               {/* Straight Vertical Lanyard hanging behind the headline (drops down on entrance) */}
               <IdCardLanyard lang={lang} isReady={!isLoading} />
 
               {/* Headline strictly in FRONT of ID card (z-20 with pointer-events-none so pulling the card behind works effortlessly) */}
               <h1
                 key={`${mode}-${lang}-${isLoading}`}
-                className="text-[clamp(34px,5.4vw,76px)] sm:text-[clamp(38px,5.8vw,82px)] leading-[1.08] sm:leading-[1.04] tracking-[-0.02em] relative z-20 font-stamp lowercase pointer-events-none"
+                className="text-[clamp(32px,5.4vw,76px)] sm:text-[clamp(38px,5.8vw,82px)] leading-[1.08] sm:leading-[1.04] tracking-[-0.02em] relative z-20 font-stamp lowercase pointer-events-none -mt-16 sm:mt-0"
               >
                 {/* Line 1: solving ( 🥁 ) chaos */}
                 <span className="block">
@@ -143,10 +143,10 @@ export default function App() {
                 </span>
               </h1>
 
-              {/* Scroll Down Bounce Chevron */}
+              {/* Scroll Down Bounce Chevron (Desktop only to prevent mobile overlap with center card) */}
               <div
                 aria-hidden="true"
-                className="absolute bottom-[clamp(28px,4.4vh,46px)] left-1/2 -translate-x-1/2 z-10 scroll-hint"
+                className="hidden sm:block absolute bottom-[clamp(28px,4.4vh,46px)] left-1/2 -translate-x-1/2 z-10 scroll-hint pointer-events-none"
               >
                 <svg
                   width="30"

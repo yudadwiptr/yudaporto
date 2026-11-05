@@ -177,7 +177,12 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
   const baseClipX = isMobile
     ? viewport.w * 0.5
     : Math.min(viewport.w * 0.82, viewport.w - 120);
-  const baseClipY = isMobile ? viewport.h * 0.52 : viewport.h * 0.54;
+
+  // On mobile: position the lanyard lower down in the lower third (~45px above bottom bar)
+  // so the headline text is completely open, readable, and never blocked!
+  const baseClipY = isMobile
+    ? Math.max(viewport.h * 0.58, viewport.h - 225)
+    : viewport.h * 0.54;
 
   // The strap anchor is at the EXACT same horizontal position as the card,
   // starting well above the ceiling (-60px) so it hangs 100% straight down without being cut off!
@@ -291,8 +296,9 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
           transform: `translate(-50%, 0px) rotate(${offset.rot}deg)`,
           transformOrigin: "50% 0%",
         }}
-        className={`pointer-events-auto absolute w-[138px] h-[196px] sm:w-[166px] sm:h-[238px] touch-none select-none z-10 ${isDragging ? "cursor-grabbing" : "cursor-grab"
-          }`}
+        className={`pointer-events-auto absolute w-[128px] h-[182px] sm:w-[166px] sm:h-[238px] touch-none select-none z-10 ${
+          isDragging ? "cursor-grabbing" : "cursor-grab"
+        }`}
       >
         {/* Card 3D Flip Container */}
         <div
@@ -305,34 +311,34 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
           {/* ==================== FRONT: BLUE ID BADGE WITH TRANSPARENT YUDA ENAMEL BADGE ==================== */}
           <div
             style={{ backfaceVisibility: "hidden" }}
-            className="absolute inset-0 rounded-[12px] bg-[#55aee6] shadow-[0_22px_50px_rgba(0,0,0,0.75)] border border-[#7bc4f0]/50 overflow-hidden flex flex-col justify-between p-2.5 sm:p-3"
+            className="absolute inset-0 rounded-[12px] bg-[#55aee6] shadow-[0_22px_50px_rgba(0,0,0,0.75)] border border-[#7bc4f0]/50 overflow-hidden flex flex-col justify-between p-2 sm:p-3"
           >
             {/* Top Slot Hole */}
             <div className="flex flex-col items-center">
-              <div className="w-8 h-2 rounded-full bg-[#0a0a0a]/90 border border-black/40 shadow-inner" />
+              <div className="w-7 sm:w-8 h-1.5 sm:h-2 rounded-full bg-[#0a0a0a]/90 border border-black/40 shadow-inner" />
             </div>
 
             {/* Stacked Name (Exact Kenji typography) */}
-            <div className="text-center leading-[0.92] tracking-[-0.02em] text-[#f1eec0] drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)] pt-1">
-              <div className="text-[23px] sm:text-[27px] font-extrabold font-ui lowercase">
+            <div className="text-center leading-[0.92] tracking-[-0.02em] text-[#f1eec0] drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)] pt-0.5 sm:pt-1">
+              <div className="text-[20px] sm:text-[27px] font-extrabold font-ui lowercase">
                 yuda
               </div>
-              <div className="text-[20px] sm:text-[24px] font-extrabold font-ui lowercase">
+              <div className="text-[17px] sm:text-[24px] font-extrabold font-ui lowercase">
                 dwi putra
               </div>
             </div>
 
             {/* Official Transparent Yuda Enamel Pin Artwork (No white background!) */}
-            <div className="relative w-full flex-1 flex items-center justify-center py-1 overflow-hidden">
+            <div className="relative w-full flex-1 flex items-center justify-center py-0.5 sm:py-1 overflow-hidden">
               <img
                 src="/yudaenamel.png"
                 alt="Yuda Dwi Putra Enamel Badge"
-                className="max-h-[110px] sm:max-h-[136px] w-auto object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.4)] pointer-events-none select-none"
+                className="max-h-[96px] sm:max-h-[136px] w-auto object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.4)] pointer-events-none select-none"
               />
             </div>
 
             {/* Bottom Sub-tag */}
-            <div className="text-center text-[9px] sm:text-[10px] font-bold text-[#0a0a0a]/80 tracking-wider font-mono">
+            <div className="text-center text-[8.5px] sm:text-[10px] font-bold text-[#0a0a0a]/80 tracking-wider font-mono">
               OPEN TO WORK
             </div>
           </div>
