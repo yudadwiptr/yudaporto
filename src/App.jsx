@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomCursor from "./components/CustomCursor";
+import Preloader from "./components/Preloader";
 import FrameNav from "./components/FrameNav";
 import ParenthesisArt from "./components/ParenthesisArt";
+import IdCardLanyard from "./components/IdCardLanyard";
+import SoftwareIcon from "./components/SoftwareIcon";
 import FeaturedProjectSection from "./components/FeaturedProjectSection";
 import CaseStudyModal from "./components/CaseStudyModal";
 import FooterSection from "./components/FooterSection";
@@ -19,13 +22,24 @@ import {
 export default function App() {
   const [lang, setLang] = useState("en"); // "en" | "id"
   const [mode, setMode] = useState("personal"); // "personal" | "agency"
-  const [presetIndex, setPresetIndex] = useState(0);
+  const [presetIndex, setPresetIndex] = useState(2); // Option 03 selected by default
   const [activePage, setActivePage] = useState("home"); // "home" | "work" | "about" | "studio" | "contact"
   const [selectedProject, setSelectedProject] = useState(null);
+
+  // Opening Defect Hunter Bug Preloader
+  const [isLoading, setIsLoading] = useState(true);
 
   const presets = HERO_PRESETS[mode] || HERO_PRESETS.personal;
   const activePreset = presets[presetIndex % presets.length] || presets[0];
   const heroCopy = activePreset[lang];
+
+  // Auto-rotate hero copy smoothly without manual 01 02 03 buttons
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setPresetIndex((prev) => (prev + 1) % presets.length);
+    }, 6500);
+    return () => clearInterval(timer);
+  }, [presets.length]);
 
   const allProjects =
     mode === "personal" ? PROJECTS_PERSONAL : PROJECTS_AGENCY;
@@ -33,20 +47,22 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0a0a0a] text-[#f1eec0] selection:bg-[#ea4530] selection:text-[#f1eec0]">
+      {/* Opening Preloader Screen (Defect Hunter Bug) */}
+      <Preloader
+        isOpen={isLoading}
+        onComplete={() => setIsLoading(false)}
+        lang={lang}
+      />
+
       {/* Custom Interactive Cursor */}
       <CustomCursor />
 
-      {/* 4-Corner Fixed Frame Navigation */}
+      {/* 4-Corner Fixed Frame Navigation (Logo with no dot/text, centered EN/ID) */}
       <FrameNav
         lang={lang}
         setLang={setLang}
         activePage={activePage}
         setActivePage={setActivePage}
-        mode={mode}
-        setMode={(newMode) => {
-          setMode(newMode);
-          setPresetIndex(0);
-        }}
       />
 
       {/* Main Content Area */}
@@ -55,13 +71,18 @@ export default function App() {
           <div>
             {/* ==================== 1. HERO SECTION ==================== */}
             <div className="min-h-[max(100svh,700px)] flex flex-col items-center justify-center text-center px-[clamp(18px,4vw,40px)] relative overflow-hidden bg-[#0a0a0a] select-none">
+              {/* Straight Vertical Lanyard hanging behind the headline (drops down on entrance) */}
+              <IdCardLanyard lang={lang} isReady={!isLoading} />
+
+              {/* Headline strictly in FRONT of ID card (z-20 with pointer-events-none so pulling the card behind works effortlessly) */}
               <h1
-                key={`${mode}-${presetIndex}-${lang}`}
-                className="text-[clamp(44px,8.1vw,119px)] leading-[1.06] sm:leading-[1.02] tracking-tight relative z-10 font-stamp uppercase"
+                key={`${mode}-${lang}-${isLoading}`}
+                className="text-[clamp(34px,5.4vw,76px)] sm:text-[clamp(38px,5.8vw,82px)] leading-[1.08] sm:leading-[1.04] tracking-[-0.02em] relative z-20 font-stamp lowercase pointer-events-none"
               >
-                {/* Line 1: making ( ) things */}
+                {/* Line 1: solving ( 🥁 ) chaos */}
                 <span className="block">
                   <span
+                    key={`l1s-${presetIndex}`}
                     className="hero-word inline-block text-[#f1eec0]"
                     style={{ animationDelay: "0ms" }}
                   >
@@ -69,6 +90,7 @@ export default function App() {
                   </span>{" "}
                   <ParenthesisArt initialIndex={0} delayMs={90} />{" "}
                   <span
+                    key={`l1a-${presetIndex}`}
                     className="hero-word inline-block text-[#ea4530]"
                     style={{ animationDelay: "140ms" }}
                   >
@@ -79,12 +101,14 @@ export default function App() {
                 {/* Line 2: is the job. */}
                 <span className="block">
                   <span
+                    key={`l2m-${presetIndex}`}
                     className="hero-word inline-block text-[#f1eec0]"
                     style={{ animationDelay: "220ms" }}
                   >
                     {heroCopy.line2Mid}
                   </span>{" "}
                   <span
+                    key={`l2b-${presetIndex}`}
                     className="hero-word inline-block text-[#3aa1d8]"
                     style={{ animationDelay: "310ms" }}
                   >
@@ -92,15 +116,17 @@ export default function App() {
                   </span>
                 </span>
 
-                {/* Line 3: loving it is the ( ) bonus. */}
+                {/* Line 3: hunting bugs is the ( 🐦 ) bonus. */}
                 <span className="block">
                   <span
+                    key={`l3r-${presetIndex}`}
                     className="hero-word inline-block text-[#ea4530]"
                     style={{ animationDelay: "400ms" }}
                   >
                     {heroCopy.line3Red}
                   </span>{" "}
                   <span
+                    key={`l3m-${presetIndex}`}
                     className="hero-word inline-block text-[#f1eec0]"
                     style={{ animationDelay: "490ms" }}
                   >
@@ -108,6 +134,7 @@ export default function App() {
                   </span>{" "}
                   <ParenthesisArt initialIndex={1} delayMs={580} />{" "}
                   <span
+                    key={`l3b-${presetIndex}`}
                     className="hero-word inline-block text-[#3aa1d8]"
                     style={{ animationDelay: "670ms" }}
                   >
@@ -115,29 +142,6 @@ export default function App() {
                   </span>
                 </span>
               </h1>
-
-              {/* Subtle Headline Variation Pill Selector */}
-              {mode === "personal" && (
-                <div className="relative z-10 mt-8 flex items-center gap-1.5 bg-[#121212]/90 border border-[#f1eec0]/15 rounded-full px-2.5 py-1">
-                  <span className="text-[9px] uppercase tracking-widest text-[#f1eec0]/45 px-1.5">
-                    {lang === "en" ? "Copy Vibe:" : "Gaya Copy:"}
-                  </span>
-                  {HERO_PRESETS.personal.map((p, idx) => (
-                    <button
-                      key={p.id}
-                      type="button"
-                      onClick={() => setPresetIndex(idx)}
-                      className={`text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full font-semibold transition-colors cursor-pointer ${
-                        presetIndex === idx
-                          ? "bg-[#f1eec0] text-[#0a0a0a]"
-                          : "text-[#f1eec0]/55 hover:text-[#f1eec0]"
-                      }`}
-                    >
-                      0{idx + 1}
-                    </button>
-                  ))}
-                </div>
-              )}
 
               {/* Scroll Down Bounce Chevron */}
               <div
@@ -160,162 +164,59 @@ export default function App() {
                   />
                 </svg>
               </div>
-
-              {/* Micro Version Status (Exact Kenji bottom note) */}
-              <p className="absolute bottom-[8px] left-0 right-0 z-10 text-center text-[10px] font-light tracking-wide text-[#f1eec0]/35">
-                {lang === "en"
-                  ? "(v2.0) - Click inside ( ) to swap artifacts · More projects on the way."
-                  : "(v2.0) - Klik di dalam ( ) untuk ganti ikon · Proyek baru segera hadir."}
-              </p>
             </div>
 
-            {/* ==================== 2. BIO STATEMENT + CLIENT MARQUEE ==================== */}
+            {/* ==================== 2. BIO STATEMENT + SOFTWARE & QA MARQUEE ==================== */}
             <section className="relative min-h-[88svh] flex flex-col justify-between py-[clamp(56px,10vh,110px)] overflow-hidden">
               <div className="my-auto px-[clamp(18px,4vw,40px)]">
-                <div className="text-[clamp(22px,min(3.6vw,4.9vh),40px)] leading-[1.26] tracking-tight max-w-[19ch] sm:max-w-[28ch] md:max-w-[40ch] mx-auto text-center">
-                  {mode === "personal" ? (
-                    lang === "en" ? (
-                      <>
-                        <span className="text-[#ea4530] font-bold">* </span>
-                        I&apos;m{" "}
-                        <strong className="font-bold text-[#f1eec0]">
-                          Yuda Dwi Putra
-                        </strong>
-                        , a multidisciplinary designer and creative developer
-                        who moves between{" "}
-                        <em className="font-accent-serif italic font-normal text-[1.12em]">
-                          UI/UX,
-                        </em>{" "}
-                        <em className="font-accent-serif italic font-normal text-[1.12em]">
-                          interactive web,
-                        </em>{" "}
-                        <em className="font-accent-serif italic font-normal text-[1.12em]">
-                          motion
-                        </em>{" "}
-                        and{" "}
-                        <strong className="font-bold text-[#ea4530]">
-                          design systems
-                        </strong>{" "}
-                        — always in love with functional, beautiful craft.
-                        Currently{" "}
-                        <strong className="font-bold text-[#3aa1d8]">
-                          Product &amp; Web Builder
-                        </strong>{" "}
-                        at Studio Yuma, with work spanning{" "}
-                        <strong className="font-bold text-[#ea4530]">
-                          Gojek
-                        </strong>
-                        ,{" "}
-                        <strong className="font-bold text-[#3aa1d8]">
-                          Tokopedia
-                        </strong>
-                        ,{" "}
-                        <strong className="font-bold text-[#ea4530]">
-                          Mandiri Kopra
-                        </strong>
-                        ,{" "}
-                        <strong className="font-bold text-[#3aa1d8]">
-                          YUMASHOP
-                        </strong>{" "}
-                        and{" "}
-                        <strong className="font-bold text-[#ea4530]">
-                          Freelance
-                        </strong>
-                        . Make yourself at{" "}
-                        <span className="inline-block bg-[#ea4530] text-[#0a0a0a] rounded-full px-[0.5em] py-[0.05em] text-[0.76em] font-bold align-[0.06em]">
-                          home
-                        </span>
-                        !
-                      </>
-                    ) : (
-                      <>
-                        <span className="text-[#ea4530] font-bold">* </span>
-                        Saya{" "}
-                        <strong className="font-bold text-[#f1eec0]">
-                          Yuda Dwi Putra
-                        </strong>
-                        , desainer dan pengembang kreatif multidisiplin yang
-                        bergerak di antara{" "}
-                        <em className="font-accent-serif italic font-normal text-[1.12em]">
-                          UI/UX,
-                        </em>{" "}
-                        <em className="font-accent-serif italic font-normal text-[1.12em]">
-                          web interaktif,
-                        </em>{" "}
-                        <em className="font-accent-serif italic font-normal text-[1.12em]">
-                          motion
-                        </em>{" "}
-                        dan{" "}
-                        <strong className="font-bold text-[#ea4530]">
-                          sistem desain
-                        </strong>{" "}
-                        — selalu percaya desain harus fungsional sekaligus
-                        indah. Saat ini{" "}
-                        <strong className="font-bold text-[#3aa1d8]">
-                          Product &amp; Web Builder
-                        </strong>{" "}
-                        independen, dengan pengalaman bersama ekosistem{" "}
-                        <strong className="font-bold text-[#ea4530]">
-                          Gojek
-                        </strong>
-                        ,{" "}
-                        <strong className="font-bold text-[#3aa1d8]">
-                          Tokopedia
-                        </strong>
-                        ,{" "}
-                        <strong className="font-bold text-[#ea4530]">
-                          Mandiri Kopra
-                        </strong>
-                        ,{" "}
-                        <strong className="font-bold text-[#3aa1d8]">
-                          YUMASHOP
-                        </strong>{" "}
-                        dan{" "}
-                        <strong className="font-bold text-[#ea4530]">
-                          Freelance
-                        </strong>
-                        . Anggap rumah{" "}
-                        <span className="inline-block bg-[#ea4530] text-[#0a0a0a] rounded-full px-[0.5em] py-[0.05em] text-[0.76em] font-bold align-[0.06em]">
-                          sendiri
-                        </span>
-                        !
-                      </>
-                    )
-                  ) : lang === "en" ? (
+                <div className="text-[clamp(22px,min(3.5vw,4.7vh),38px)] leading-[1.28] tracking-tight max-w-[19ch] sm:max-w-[28ch] md:max-w-[42ch] mx-auto text-center">
+                  {lang === "en" ? (
                     <>
                       <span className="text-[#ea4530] font-bold">* </span>
-                      We are{" "}
+                      I&apos;m{" "}
                       <strong className="font-bold text-[#f1eec0]">
-                        Studio Yuma
+                        Yuda Dwi Putra
                       </strong>
-                      , a creative video production &amp; direction house that
-                      moves between{" "}
+                      , a{" "}
+                      <strong className="font-bold text-[#3aa1d8]">
+                        System &amp; Business Analyst
+                      </strong>{" "}
+                      who moves between{" "}
                       <em className="font-accent-serif italic font-normal text-[1.12em]">
-                        commercial film,
+                        core banking,
                       </em>{" "}
                       <em className="font-accent-serif italic font-normal text-[1.12em]">
-                        3D motion,
+                        treasury &amp; e-FX,
                       </em>{" "}
                       <em className="font-accent-serif italic font-normal text-[1.12em]">
-                        documentary
+                        functional specifications
                       </em>{" "}
                       and{" "}
                       <strong className="font-bold text-[#ea4530]">
-                        visual systems
+                        end-to-end quality validation
                       </strong>{" "}
-                      — always obsessed with the frame. Trusted by{" "}
+                      — translating complex banking processes into clear BRDs,
+                      as-is / to-be flows, and reliable host integrations. With{" "}
+                      <strong className="font-bold text-[#f1eec0]">
+                        6+ years
+                      </strong>{" "}
+                      in financial software delivery, including{" "}
                       <strong className="font-bold text-[#3aa1d8]">
-                        Gojek
-                      </strong>
-                      ,{" "}
+                        5 years at PT Bank Mandiri (KOPRA)
+                      </strong>{" "}
+                      and enterprise modernization at{" "}
                       <strong className="font-bold text-[#ea4530]">
-                        Tokopedia
-                      </strong>
-                      ,{" "}
-                      <strong className="font-bold text-[#3aa1d8]">
-                        Disney+
+                        PT Adi Data Informatika
                       </strong>{" "}
-                      and bold brands. Make yourself at{" "}
+                      for{" "}
+                      <strong className="font-bold text-[#3aa1d8]">
+                        TNI AL (TABPLIN)
+                      </strong>{" "}
+                      &amp;{" "}
+                      <strong className="font-bold text-[#ea4530]">
+                        PT SMI
+                      </strong>
+                      . Make yourself at{" "}
                       <span className="inline-block bg-[#ea4530] text-[#0a0a0a] rounded-full px-[0.5em] py-[0.05em] text-[0.76em] font-bold align-[0.06em]">
                         home
                       </span>
@@ -324,35 +225,51 @@ export default function App() {
                   ) : (
                     <>
                       <span className="text-[#ea4530] font-bold">* </span>
-                      Kami adalah{" "}
+                      Saya{" "}
                       <strong className="font-bold text-[#f1eec0]">
-                        Studio Yuma
+                        Yuda Dwi Putra
                       </strong>
-                      , rumah produksi video kreatif &amp; arahan visual yang
-                      bergerak di antara{" "}
+                      , seorang{" "}
+                      <strong className="font-bold text-[#3aa1d8]">
+                        System &amp; Business Analyst
+                      </strong>{" "}
+                      yang bergerak di antara{" "}
                       <em className="font-accent-serif italic font-normal text-[1.12em]">
-                        film komersial,
+                        core banking,
                       </em>{" "}
                       <em className="font-accent-serif italic font-normal text-[1.12em]">
-                        3D motion,
+                        treasury &amp; e-FX,
                       </em>{" "}
                       <em className="font-accent-serif italic font-normal text-[1.12em]">
-                        dokumenter
+                        spesifikasi fungsional
                       </em>{" "}
                       dan{" "}
                       <strong className="font-bold text-[#ea4530]">
-                        identitas sinematik
+                        validasi kualitas end-to-end
                       </strong>{" "}
-                      — selalu terobsesi pada kekuatan setiap frame. Dipercaya
-                      oleh{" "}
+                      — menerjemahkan proses bisnis perbankan yang kompleks
+                      menjadi BRD, alur proses, dan integrasi host yang jernih.
+                      Berbekal{" "}
+                      <strong className="font-bold text-[#f1eec0]">
+                        6+ tahun
+                      </strong>{" "}
+                      di industri finansial, termasuk{" "}
                       <strong className="font-bold text-[#3aa1d8]">
-                        Gojek
-                      </strong>
-                      ,{" "}
+                        5 tahun di PT Bank Mandiri (KOPRA)
+                      </strong>{" "}
+                      serta modernisasi sistem di{" "}
                       <strong className="font-bold text-[#ea4530]">
-                        Tokopedia
+                        PT Adi Data Informatika
+                      </strong>{" "}
+                      untuk{" "}
+                      <strong className="font-bold text-[#3aa1d8]">
+                        TNI AL (TABPLIN)
+                      </strong>{" "}
+                      &amp;{" "}
+                      <strong className="font-bold text-[#ea4530]">
+                        PT SMI
                       </strong>
-                      , dan berbagai brand. Anggap rumah{" "}
+                      . Anggap rumah{" "}
                       <span className="inline-block bg-[#ea4530] text-[#0a0a0a] rounded-full px-[0.5em] py-[0.05em] text-[0.76em] font-bold align-[0.06em]">
                         sendiri
                       </span>
@@ -362,9 +279,9 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Client & Ecosystem Infinite Marquee */}
+              {/* Software & QA Tools Infinite Marquee with 3D Icons */}
               <div
-                className="overflow-hidden whitespace-nowrap select-none py-8"
+                className="overflow-hidden whitespace-nowrap select-none py-8 border-y border-[#f1eec0]/8"
                 style={{
                   maskImage:
                     "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
@@ -376,20 +293,21 @@ export default function App() {
                   {[0, 1].map((dup) => (
                     <span
                       key={dup}
-                      className="flex items-center gap-[clamp(32px,6vw,64px)] shrink-0 pr-[clamp(32px,6vw,64px)]"
+                      className="flex items-center gap-[clamp(28px,5vw,56px)] shrink-0 pr-[clamp(28px,5vw,56px)]"
                     >
-                      {CLIENT_MARQUEE.map((client, idx) => (
+                      {CLIENT_MARQUEE.map((tool, idx) => (
                         <span
                           key={idx}
-                          className="flex items-center gap-2.5 text-lg sm:text-xl md:text-2xl font-medium tracking-tight text-[#f1eec0]/40 hover:text-[#f1eec0]/80 transition-colors whitespace-nowrap"
+                          className="flex items-center gap-3 text-base sm:text-lg md:text-xl font-semibold tracking-tight text-[#f1eec0]/50 hover:text-[#f1eec0] transition-colors whitespace-nowrap group"
                         >
-                          <span
-                            className="h-5 w-5 md:h-6 md:w-6 rounded-[4px] flex items-center justify-center text-[11px] font-black text-[#0a0a0a]"
-                            style={{ backgroundColor: client.color }}
-                          >
-                            {client.name.slice(0, 1)}
+                          <SoftwareIcon
+                            name={tool.id || tool.name}
+                            className="w-6 h-6 sm:w-7 sm:h-7 shrink-0 transition-transform duration-300 group-hover:scale-110"
+                          />
+                          <span className="font-ui">{tool.name}</span>
+                          <span className="text-[10px] tracking-wide px-2 py-0.5 rounded-full bg-white/5 text-[#f1eec0]/35 font-mono lowercase">
+                            {tool.tag}
                           </span>
-                          {client.name}
                         </span>
                       ))}
                     </span>
@@ -410,14 +328,14 @@ export default function App() {
                       "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
                   }}
                 >
-                  <div className="flex animate-marquee text-[clamp(44px,11vw,140px)] tracking-tight uppercase font-stamp leading-[1.06]">
+                  <div className="flex animate-marquee text-[clamp(48px,11vw,144px)] tracking-tight lowercase font-stamp leading-[1.04]">
                     {[0, 1, 2, 3].map((i) => (
                       <span
                         key={i}
                         className="flex items-center gap-[clamp(14px,1.85vw,26px)] shrink-0 pr-[clamp(14px,1.85vw,26px)]"
                       >
                         <span>
-                          {lang === "en" ? "featured works" : "karya pilihan"}
+                          {lang === "en" ? "featured works" : "proyek pilihan"}
                         </span>
                         <span
                           style={{
@@ -441,9 +359,9 @@ export default function App() {
                         setActivePage("work");
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
-                      className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.01em] rounded-full px-4 py-2 transition-colors shadow-lg bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] cursor-pointer"
+                      className="text-xs sm:text-sm font-semibold tracking-tight rounded-full px-4 py-2 transition-colors shadow-lg bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] cursor-pointer lowercase"
                     >
-                      {lang === "en" ? "all works ↗" : "semua karya ↗"}
+                      {lang === "en" ? "all works ↗" : "semua proyek ↗"}
                     </button>
                   </div>
                 </div>
@@ -470,9 +388,9 @@ export default function App() {
                   setActivePage("work");
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
-                className="text-xs font-semibold uppercase tracking-[0.02em] rounded-full px-5 py-2.5 transition-colors shadow-lg bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] ring-1 ring-[#ea4530] ring-offset-[3px] ring-offset-[#0a0a0a] cursor-pointer"
+                className="text-xs sm:text-sm font-semibold tracking-tight rounded-full px-5 py-2.5 transition-colors shadow-lg bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] ring-1 ring-[#ea4530] ring-offset-[3px] ring-offset-[#0a0a0a] cursor-pointer lowercase"
               >
-                {lang === "en" ? "see all works ↗" : "lihat semua karya ↗"}
+                {lang === "en" ? "see all works ↗" : "lihat semua proyek ↗"}
               </button>
             </div>
           </div>
@@ -516,4 +434,3 @@ export default function App() {
     </div>
   );
 }
-

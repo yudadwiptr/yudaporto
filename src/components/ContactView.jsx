@@ -3,6 +3,7 @@ import React, { useState } from "react";
 export default function ContactView({ lang }) {
   const [copied, setCopied] = useState(false);
   const email = "yudadwiputra@gmail.com";
+  const phone = "+62 895 2521 4959";
 
   const copyEmail = () => {
     navigator.clipboard?.writeText(email);
@@ -13,22 +14,22 @@ export default function ContactView({ lang }) {
   return (
     <div className="min-h-[85svh] flex flex-col justify-center px-[clamp(18px,4vw,40px)] pt-[calc(var(--nav-top)+24px)] pb-20">
       <div className="max-w-5xl mx-auto w-full space-y-10 text-center">
-        <p className="text-xs uppercase tracking-[0.18em] text-[#ea4530] font-bold">
+        <p className="text-xs sm:text-sm tracking-wide text-[#ea4530] font-bold lowercase">
           {lang === "en"
-            ? "* AVAILABLE FOR SELECTED PROJECTS & COLLABORATIONS"
-            : "* TERSEDIA UNTUK PROYEK & KOLABORASI PILIHAN"}
+            ? "* jakarta, indonesia · system & business analyst | core banking & treasury"
+            : "* jakarta, indonesia · system & business analyst | core banking & treasury"}
         </p>
 
-        {/* Exact Kenji /contact headline */}
-        <h1 className="font-stamp text-[clamp(44px,8.5vw,116px)] leading-[0.98] uppercase text-[#f1eec0]">
+        {/* Exact Kenji /contact lowercase headline */}
+        <h1 className="font-stamp text-[clamp(48px,9vw,122px)] leading-[0.98] lowercase text-[#f1eec0]">
           {lang === "en" ? (
             <>
-              got a project in mind?{" "}
+              got a system to build?{" "}
               <span className="text-[#3aa1d8]">let&apos;s talk</span>
             </>
           ) : (
             <>
-              punya ide proyek?{" "}
+              punya sistem untuk dirancang?{" "}
               <span className="text-[#3aa1d8]">mari ngobrol</span>
             </>
           )}
@@ -36,35 +37,51 @@ export default function ContactView({ lang }) {
 
         <p className="text-base sm:text-lg text-[#f1eec0]/75 max-w-xl mx-auto">
           {lang === "en"
-            ? "Got a product to design, a web experience to engineer, or just want to say hi? Drop a line directly."
-            : "Punya produk untuk dirancang, web interaktif untuk dibangun, atau sekadar ingin menyapa? Kirim pesan langsung."}
+            ? "Need a Business Analyst, System Analyst, or QA Leader for Core Banking, Treasury, H2H APIs, or Enterprise Modernization? Reach out directly via email or WhatsApp."
+            : "Butuh Business Analyst, System Analyst, atau QA Leader untuk Core Banking, Treasury, H2H API, atau Modernisasi Enterprise? Hubungi langsung lewat email atau WhatsApp."}
         </p>
 
-        {/* Big Email Pill + Copy Button */}
+        {/* Big Email Pill + WhatsApp + Copy Button */}
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
           <a
             href={`mailto:${email}`}
-            className="text-lg sm:text-2xl font-bold px-7 py-4 rounded-full bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] transition-colors"
+            className="text-lg sm:text-2xl font-bold px-7 py-4 rounded-full bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] transition-colors lowercase"
           >
             {email} ↗
+          </a>
+          <a
+            href="https://wa.me/6289525214959"
+            target="_blank"
+            rel="noreferrer"
+            className="text-base sm:text-lg font-bold px-7 py-4 rounded-full bg-[#3aa1d8] text-[#0a0a0a] hover:bg-[#f1eec0] transition-colors"
+          >
+            WhatsApp ↗
           </a>
           <button
             type="button"
             onClick={copyEmail}
-            className="text-xs font-bold uppercase tracking-[0.1em] px-5 py-4 rounded-full border border-[#f1eec0]/25 text-[#f1eec0] hover:border-[#3aa1d8] hover:text-[#3aa1d8] transition-colors cursor-pointer"
+            className="text-xs font-bold px-5 py-4 rounded-full border border-[#f1eec0]/25 text-[#f1eec0] hover:border-[#3aa1d8] hover:text-[#3aa1d8] transition-colors cursor-pointer lowercase"
           >
             {copied
               ? lang === "en"
-                ? "Copied ✓"
-                : "Tersalin ✓"
+                ? "copied ✓"
+                : "tersalin ✓"
               : lang === "en"
-              ? "Copy Email"
-              : "Salin Email"}
+              ? "copy email"
+              : "salin email"}
           </button>
         </div>
 
         {/* Social Links Row */}
         <div className="pt-8 flex flex-wrap items-center justify-center gap-8 text-lg sm:text-xl font-bold text-[#f1eec0]/75">
+          <a
+            href="https://www.linkedin.com/in/yudadputra"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-[#3aa1d8] transition-colors"
+          >
+            LinkedIn ↗
+          </a>
           <a
             href="https://github.com/yudadwiptr"
             target="_blank"
@@ -74,32 +91,15 @@ export default function ContactView({ lang }) {
             GitHub ↗
           </a>
           <a
-            href="https://www.linkedin.com/"
+            href="https://wa.me/6289525214959"
             target="_blank"
             rel="noreferrer"
             className="hover:text-[#3aa1d8] transition-colors"
           >
-            LinkedIn ↗
-          </a>
-          <a
-            href="https://www.instagram.com/"
-            target="_blank"
-            rel="noreferrer"
-            className="hover:text-[#3aa1d8] transition-colors"
-          >
-            Instagram ↗
-          </a>
-          <a
-            href="https://www.behance.net/"
-            target="_blank"
-            rel="noreferrer"
-            className="hover:text-[#3aa1d8] transition-colors"
-          >
-            Behance ↗
+            WhatsApp ↗
           </a>
         </div>
       </div>
     </div>
   );
 }
-

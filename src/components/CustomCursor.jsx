@@ -39,7 +39,7 @@ export default function CustomCursor() {
       currentX += (targetX - currentX) * 0.28;
       currentY += (targetY - currentY) * 0.28;
       if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${currentX - 8}px, ${currentY - 8}px, 0)`;
+        dotRef.current.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
       }
       rafId = requestAnimationFrame(render);
     };

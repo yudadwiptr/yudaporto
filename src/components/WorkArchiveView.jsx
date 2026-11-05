@@ -2,21 +2,21 @@ import React, { useState } from "react";
 import FeaturedProjectSection from "./FeaturedProjectSection";
 
 export default function WorkArchiveView({ projects, lang, onOpenCase }) {
-  const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
   const categories = [
-    "ALL",
+    "all",
     ...Array.from(new Set(projects.map((p) => p.category))),
   ];
 
   const filtered =
-    selectedCategory === "ALL"
+    selectedCategory === "all"
       ? projects
       : projects.filter((p) => p.category === selectedCategory);
 
   return (
     <div className="pt-[calc(var(--nav-top)+24px)] pb-16">
-      {/* Giant WORK * Marquee */}
+      {/* Giant work * Marquee (lowercase matching Kenji original) */}
       <div
         className="overflow-hidden whitespace-nowrap select-none py-2 border-b border-[#f1eec0]/10"
         style={{
@@ -26,7 +26,7 @@ export default function WorkArchiveView({ projects, lang, onOpenCase }) {
             "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
         }}
       >
-        <div className="flex animate-marquee text-[clamp(48px,11vw,144px)] tracking-tight uppercase font-stamp leading-[1.04]">
+        <div className="flex animate-marquee text-[clamp(48px,11vw,144px)] tracking-tight lowercase font-stamp leading-[1.04]">
           {[0, 1, 2, 3, 4, 5].map((i) => (
             <span
               key={i}
@@ -47,7 +47,7 @@ export default function WorkArchiveView({ projects, lang, onOpenCase }) {
               key={cat}
               type="button"
               onClick={() => setSelectedCategory(cat)}
-              className={`text-xs uppercase tracking-[0.06em] font-semibold px-3.5 py-1.5 rounded-full transition-colors cursor-pointer ${
+              className={`text-xs font-semibold px-3.5 py-1.5 rounded-full transition-colors cursor-pointer lowercase ${
                 selectedCategory === cat
                   ? "bg-[#ea4530] text-[#f1eec0]"
                   : "bg-[#f1eec0]/10 text-[#f1eec0]/70 hover:bg-[#f1eec0]/20"
@@ -57,8 +57,8 @@ export default function WorkArchiveView({ projects, lang, onOpenCase }) {
             </button>
           ))}
         </div>
-        <span className="text-xs uppercase tracking-[0.12em] text-[#f1eec0]/45">
-          {filtered.length} {lang === "en" ? "selected works" : "karya pilihan"}
+        <span className="text-xs text-[#f1eec0]/45 lowercase">
+          {filtered.length} {lang === "en" ? "selected works" : "proyek pilihan"}
         </span>
       </div>
 
@@ -76,4 +76,3 @@ export default function WorkArchiveView({ projects, lang, onOpenCase }) {
     </div>
   );
 }
-

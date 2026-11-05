@@ -43,13 +43,13 @@ export default function FeaturedProjectSection({
     >
       {/* Top 3-Column Header matching Kenji Lambert's exact grid */}
       <div className="px-[clamp(18px,4vw,40px)] pb-[clamp(18px,3vh,32px)]">
-        {/* Category Pills + Desktop "See full case ↗" */}
+        {/* Category Pills + Desktop "see full case ↗" */}
         <div className="flex flex-wrap items-start justify-between gap-4 mb-[clamp(12px,2vh,22px)]">
           <div className="flex flex-wrap gap-2">
             {project.tags.map((tag, i) => (
               <span
                 key={i}
-                className={`text-[10px] sm:text-[11px] uppercase tracking-[0.02em] rounded-full px-2.5 sm:px-3 py-1 font-semibold ${getTagToneClasses(
+                className={`text-[11px] sm:text-xs tracking-tight rounded-full px-3 py-1 font-semibold ${getTagToneClasses(
                   tag.tone
                 )}`}
               >
@@ -61,15 +61,15 @@ export default function FeaturedProjectSection({
           <button
             type="button"
             onClick={() => onOpenCase(project)}
-            className="hidden md:inline-flex text-[11px] sm:text-xs font-semibold uppercase tracking-[0.01em] bg-[#f1eec0] text-[#0a0a0a] rounded-full px-3.5 sm:px-4 py-2 hover:bg-[#ea4530] hover:text-[#f1eec0] transition-colors shrink-0 cursor-pointer"
+            className="hidden md:inline-flex text-xs font-semibold tracking-tight bg-[#f1eec0] text-[#0a0a0a] rounded-full px-4 py-2 hover:bg-[#ea4530] hover:text-[#f1eec0] transition-colors shrink-0 cursor-pointer lowercase"
           >
-            {lang === "en" ? "See full case ↗" : "Lihat studi kasus ↗"}
+            {lang === "en" ? "see full case ↗" : "lihat studi kasus ↗"}
           </button>
         </div>
 
         {/* 3-Column Grid: Title (1.55fr) | Year & Client (auto) | Single-Idea Copy (1.15fr) */}
         <div className="grid md:grid-cols-[1.55fr_auto_1.15fr] gap-x-[clamp(20px,3vw,44px)] gap-y-3 items-start">
-          <h3 className="text-[clamp(30px,5.2vw,60px)] leading-[1.0] tracking-[-0.02em] mb-2 md:mb-0 text-balance">
+          <h3 className="text-[clamp(28px,4.8vw,56px)] leading-[1.02] tracking-[-0.02em] mb-2 md:mb-0 text-balance">
             <button
               type="button"
               onClick={() => onOpenCase(project)}
@@ -83,20 +83,20 @@ export default function FeaturedProjectSection({
           <button
             type="button"
             onClick={() => onOpenCase(project)}
-            className="md:hidden inline-flex w-fit mb-2 text-[11px] font-semibold uppercase tracking-[0.01em] bg-[#ea4530] text-[#f1eec0] rounded-full px-3.5 py-2 cursor-pointer"
+            className="md:hidden inline-flex w-fit mb-2 text-xs font-semibold bg-[#ea4530] text-[#f1eec0] rounded-full px-3.5 py-2 cursor-pointer lowercase"
           >
-            {lang === "en" ? "See full case ↗" : "Lihat studi kasus ↗"}
+            {lang === "en" ? "see full case ↗" : "lihat studi kasus ↗"}
           </button>
 
           {/* Year & Client */}
-          <div className="text-[11px] uppercase tracking-[0.04em] text-[#f1eec0]/45 leading-[1.5] md:min-w-[110px] md:pt-[0.5em]">
-            <div className="text-[#f1eec0]/75 font-semibold">{project.year}</div>
+          <div className="text-xs text-[#f1eec0]/50 leading-[1.5] md:min-w-[130px] md:pt-[0.5em]">
+            <div className="text-[#f1eec0]/80 font-semibold">{project.year}</div>
             <div>{project.client}</div>
           </div>
 
           {/* 1-2 Sentence "Built Around a Single Idea" Description */}
           <div className="md:pt-[0.5em]">
-            <p className="text-[13px] sm:text-sm text-[#f1eec0]/85 leading-[1.5]">
+            <p className="text-[13px] sm:text-sm text-[#f1eec0]/85 leading-[1.55]">
               {project.summary[lang]}
             </p>
           </div>
@@ -130,4 +130,3 @@ export default function FeaturedProjectSection({
     </section>
   );
 }
-

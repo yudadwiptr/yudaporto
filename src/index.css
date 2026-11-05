@@ -7,7 +7,7 @@
   --foreground: #f1eec0;
   --accent-red: #ea4530;
   --accent-blue: #3aa1d8;
-  --font-stamp: "Anton", Impact, sans-serif;
+  --font-stamp: Impact, "Haettenschweiler", "Sofia Sans Extra Condensed", "Barlow Condensed", "Archivo Narrow", sans-serif;
   --font-display: "Archivo", Arial, sans-serif;
   --font-ui: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-accent-serif: "Instrument Serif", Georgia, serif;
@@ -46,9 +46,10 @@ body {
   border-radius: 2px;
 }
 
-/* Typography Helper Classes */
+/* Typography Helper Classes — True Lowercase Condensed Display */
 .font-stamp {
   font-family: var(--font-stamp);
+  font-weight: 900;
   letter-spacing: -0.015em;
 }
 
@@ -96,9 +97,11 @@ body {
     filter: blur(12px);
     transform: translateY(34px) rotate(-4deg) scale(0.94);
   }
+
   60% {
     filter: blur(0px);
   }
+
   100% {
     opacity: 1;
     filter: blur(0px);
@@ -113,9 +116,12 @@ body {
 
 /* Scroll Hint Bounce */
 @keyframes scrollHintBounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(8px);
   }
@@ -130,6 +136,7 @@ body {
   0% {
     transform: translate3d(0, 0, 0);
   }
+
   100% {
     transform: translate3d(-50%, 0, 0);
   }
@@ -159,12 +166,16 @@ body {
 
 /* Playful Sticker Wiggle on Hover */
 @keyframes tremorPeca {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: rotate(0deg) scale(1);
   }
+
   25% {
     transform: rotate(4deg) scale(1.06);
   }
+
   75% {
     transform: rotate(-4deg) scale(1.06);
   }
@@ -178,6 +189,7 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -186,40 +198,39 @@ body {
 /* Custom Cursor Dot */
 @media (pointer: fine) {
   .cursor-dot {
-    background: var(--accent-blue);
+    background: #f1eec0;
     pointer-events: none;
     z-index: 9999;
     mix-blend-mode: difference;
-    outline-offset: 5px;
     will-change: transform;
-    border-radius: 999px;
-    outline: 1.5px solid transparent;
-    width: 16px;
-    height: 16px;
+    border-radius: 9999px;
+    width: 12px;
+    height: 12px;
     transition:
-      background-color 0.15s,
-      border-radius 0.15s,
-      width 0.15s,
-      height 0.15s,
-      outline-color 0.15s,
-      outline-offset 0.15s;
+      background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+      width 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+      height 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     position: fixed;
     top: 0;
     left: 0;
   }
 
   .cursor-dot.is-active {
-    background: var(--accent-red);
-    border-radius: 4px;
-    width: 22px;
-    height: 22px;
+    background: rgba(58, 161, 216, 0.12);
+    border: 1.5px solid #3aa1d8;
+    border-radius: 9999px;
+    width: 36px;
+    height: 36px;
+    mix-blend-mode: normal;
   }
 
   .cursor-dot.is-drag {
-    outline-color: var(--accent-blue);
-    outline-offset: 7px;
-    width: 20px;
-    height: 20px;
+    background: rgba(234, 69, 48, 0.15);
+    border: 1.5px solid #ea4530;
+    border-radius: 9999px;
+    width: 32px;
+    height: 32px;
+    mix-blend-mode: normal;
   }
 }
-

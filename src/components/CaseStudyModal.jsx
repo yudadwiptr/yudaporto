@@ -25,16 +25,16 @@ export default function CaseStudyModal({ project, lang, onClose }) {
         <div className="flex items-center justify-between gap-4 pb-6 border-b border-[#f1eec0]/15">
           <div className="flex items-center gap-3">
             <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#ea4530]" />
-            <span className="text-xs uppercase tracking-[0.14em] text-[#f1eec0]/60 font-semibold">
+            <span className="text-xs text-[#f1eec0]/60 font-semibold">
               {project.year} — {project.client}
             </span>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-xs font-bold uppercase tracking-[0.08em] rounded-full px-4 py-2 bg-[#f1eec0] text-[#0a0a0a] hover:bg-[#ea4530] hover:text-[#f1eec0] transition-colors cursor-pointer"
+            className="text-xs font-bold rounded-full px-4 py-2 bg-[#f1eec0] text-[#0a0a0a] hover:bg-[#ea4530] hover:text-[#f1eec0] transition-colors cursor-pointer lowercase"
           >
-            {lang === "en" ? "Close [ESC] ✕" : "Tutup [ESC] ✕"}
+            {lang === "en" ? "close [esc] ✕" : "tutup [esc] ✕"}
           </button>
         </div>
 
@@ -45,7 +45,7 @@ export default function CaseStudyModal({ project, lang, onClose }) {
             {project.tags.map((tag, i) => (
               <span
                 key={i}
-                className="text-[11px] uppercase tracking-[0.04em] rounded-full px-3 py-1 font-semibold border border-[#f1eec0]/25 text-[#f1eec0]"
+                className="text-xs rounded-full px-3 py-1 font-semibold border border-[#f1eec0]/25 text-[#f1eec0]"
               >
                 {tag[lang]}
               </span>
@@ -53,15 +53,15 @@ export default function CaseStudyModal({ project, lang, onClose }) {
           </div>
 
           {/* Massive Title */}
-          <h2 className="font-stamp text-[clamp(42px,7vw,92px)] leading-[0.98] uppercase text-[#f1eec0]">
+          <h2 className="font-stamp text-[clamp(42px,7vw,92px)] leading-[0.98] lowercase text-[#f1eec0]">
             {project.title}
           </h2>
 
           {/* "Built Around a Single Idea" Callout Box */}
           <div className="grid md:grid-cols-[1fr_1.5fr] gap-8 p-6 sm:p-8 rounded-xl border border-[#f1eec0]/15 bg-[#121212]">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.14em] text-[#ea4530] font-bold mb-2">
-                {lang === "en" ? "* THE SINGLE IDEA" : "* SATU IDE TUNGGAL"}
+              <p className="text-xs text-[#ea4530] font-bold mb-2 lowercase">
+                {lang === "en" ? "* the single idea" : "* satu ide tunggal"}
               </p>
               <p className="font-accent-serif italic text-2xl sm:text-3xl text-[#f1eec0] leading-snug">
                 “{project.singleIdea[lang]}”
@@ -79,7 +79,7 @@ export default function CaseStudyModal({ project, lang, onClose }) {
                       key={idx}
                       className="p-3 rounded-lg bg-[#0a0a0a] border border-[#f1eec0]/10"
                     >
-                      <div className="text-[10px] uppercase tracking-wider text-[#f1eec0]/50">
+                      <div className="text-[11px] text-[#f1eec0]/50">
                         {m.label}
                       </div>
                       <div className="text-lg font-bold text-[#3aa1d8] mt-0.5">
@@ -94,10 +94,10 @@ export default function CaseStudyModal({ project, lang, onClose }) {
 
           {/* Visual Artboards Grid */}
           <div>
-            <p className="text-[11px] uppercase tracking-[0.14em] text-[#f1eec0]/45 mb-4">
+            <p className="text-xs text-[#f1eec0]/45 mb-4 lowercase">
               {lang === "en"
-                ? "PROJECT ARTIFACTS & VISUAL BREAKDOWN"
-                : "ARTEFAK PROYEK & VISUAL"}
+                ? "project artifacts & system breakdown"
+                : "artefak proyek & rincian sistem"}
             </p>
             <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4">
               {project.slides.map((slide, idx) => (
@@ -117,8 +117,8 @@ export default function CaseStudyModal({ project, lang, onClose }) {
         <div className="pt-6 border-t border-[#f1eec0]/15 flex flex-wrap items-center justify-between gap-4">
           <p className="text-xs text-[#f1eec0]/60">
             {lang === "en"
-              ? "Want to build something with this level of craft?"
-              : "Ingin membangun produk dengan ketelitian seperti ini?"}
+              ? "Want to discuss this banking / enterprise case study in detail?"
+              : "Ingin mendiskusikan studi kasus perbankan / sistem ini lebih lanjut?"}
           </p>
           <div className="flex items-center gap-3">
             {project.liveUrl && project.liveUrl.startsWith("http") && (
@@ -126,16 +126,16 @@ export default function CaseStudyModal({ project, lang, onClose }) {
                 href={project.liveUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-xs font-bold uppercase tracking-[0.06em] rounded-full px-4 py-2 bg-[#3aa1d8] text-[#0a0a0a] hover:bg-[#f1eec0] transition-colors"
+                className="text-xs font-bold rounded-full px-4 py-2 bg-[#3aa1d8] text-[#0a0a0a] hover:bg-[#f1eec0] transition-colors lowercase"
               >
-                {lang === "en" ? "View Repository ↗" : "Lihat Repository ↗"}
+                {lang === "en" ? "view repository ↗" : "lihat repository ↗"}
               </a>
             )}
             <a
               href="mailto:yudadwiputra@gmail.com"
-              className="text-xs font-bold uppercase tracking-[0.06em] rounded-full px-4 py-2 bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] transition-colors"
+              className="text-xs font-bold rounded-full px-4 py-2 bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] transition-colors lowercase"
             >
-              {lang === "en" ? "Start a conversation ↗" : "Mulai diskusi ↗"}
+              {lang === "en" ? "start a conversation ↗" : "mulai diskusi ↗"}
             </a>
           </div>
         </div>
@@ -143,4 +143,3 @@ export default function CaseStudyModal({ project, lang, onClose }) {
     </div>
   );
 }
-
