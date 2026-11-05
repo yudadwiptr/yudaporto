@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import CustomCursor from "./components/CustomCursor";
 import Preloader from "./components/Preloader";
 import FrameNav from "./components/FrameNav";
-import ParenthesisArt from "./components/ParenthesisArt";
 import IdCardLanyard from "./components/IdCardLanyard";
 import SoftwareIcon from "./components/SoftwareIcon";
 import FeaturedProjectSection from "./components/FeaturedProjectSection";
@@ -71,91 +70,100 @@ export default function App() {
         {activePage === "home" && (
           <div>
             {/* ==================== 1. HERO SECTION ==================== */}
-            <div className="h-[100dvh] min-h-[100dvh] max-h-[100dvh] md:h-auto md:min-h-[max(100svh,700px)] md:max-h-none flex flex-col items-center justify-center text-center px-[clamp(18px,4vw,40px)] relative overflow-hidden bg-[#0a0a0a] select-none">
-              {/* Straight Vertical Lanyard hanging behind the headline (drops down on entrance) */}
+            <div className="relative h-[100dvh] md:h-auto md:min-h-[max(100svh,700px)] flex flex-col justify-start md:justify-center px-[clamp(20px,5vw,96px)] pt-[max(118px,17dvh)] md:pt-0 overflow-hidden bg-[#0a0a0a] select-none">
+              {/* Lanyard ID card hanging on the right (drops in on entrance) */}
               <IdCardLanyard lang={lang} isReady={!isLoading} />
 
-              {/* Headline strictly in FRONT of ID card (z-20 with pointer-events-none so pulling the card behind works effortlessly) */}
-              <h1
-                key={`${mode}-${lang}-${isLoading}`}
-                className="text-[clamp(32px,5.4vw,76px)] sm:text-[clamp(38px,5.8vw,82px)] leading-[1.08] sm:leading-[1.04] tracking-[-0.02em] relative z-20 font-stamp lowercase pointer-events-none -mt-16 sm:mt-0"
-              >
-                {/* Line 1: solving ( art ) chaos */}
-                <span className="block">
-                  <span
-                    key={`l1s-${presetIndex}`}
-                    className="hero-word inline-block text-[#f1eec0]"
-                    style={{ animationDelay: "0ms" }}
-                  >
-                    {heroCopy.line1Start}
-                  </span>{" "}
-                  <ParenthesisArt initialIndex={0} delayMs={90} />{" "}
-                  <span
-                    key={`l1a-${presetIndex}`}
-                    className="hero-word inline-block text-[#ea4530]"
-                    style={{ animationDelay: "140ms" }}
-                  >
-                    {heroCopy.line1Accent}
-                  </span>
-                </span>
+              {/* Left-aligned headline block, in front of the card (pointer-events-none so the card stays draggable) */}
+              <div className="relative z-20 pointer-events-none w-full md:max-w-[66vw]">
+                <p
+                  key={`eyebrow-${lang}-${isLoading}`}
+                  className="hero-word flex items-center gap-2.5 mb-5 sm:mb-7 text-[11px] sm:text-xs font-mono uppercase tracking-[0.2em] text-[#f1eec0]/55"
+                >
+                  <span className="w-2 h-2 rounded-full bg-[#27c93f] shadow-[0_0_10px_#27c93f] shrink-0" />
+                  {lang === "en"
+                    ? "system & business analyst · jakarta"
+                    : "system & business analyst · jakarta"}
+                </p>
 
-                {/* Line 2: is the job. */}
-                <span className="block">
-                  <span
-                    key={`l2m-${presetIndex}`}
-                    className="hero-word inline-block text-[#f1eec0]"
-                    style={{ animationDelay: "220ms" }}
-                  >
-                    {heroCopy.line2Mid}
-                  </span>{" "}
-                  <span
-                    key={`l2b-${presetIndex}`}
-                    className="hero-word inline-block text-[#3aa1d8]"
-                    style={{ animationDelay: "310ms" }}
-                  >
-                    {heroCopy.line2Blue}
+                <h1
+                  key={`${mode}-${lang}-${isLoading}`}
+                  className="text-left text-[clamp(46px,5.6vw,112px)] leading-[0.98] tracking-[-0.015em] font-stamp lowercase"
+                >
+                  <span className="block">
+                    <span
+                      key={`l1s-${presetIndex}`}
+                      className="hero-word inline-block text-[#f1eec0]"
+                      style={{ animationDelay: "0ms" }}
+                    >
+                      {heroCopy.line1Start}
+                    </span>{" "}
+                    <span
+                      key={`l1a-${presetIndex}`}
+                      className="hero-word inline-block text-[#ea4530]"
+                      style={{ animationDelay: "110ms" }}
+                    >
+                      {heroCopy.line1Accent}
+                    </span>
                   </span>
-                </span>
-
-                {/* Line 3: hunting bugs is the ( art ) bonus. */}
-                <span className="block">
-                  <span
-                    key={`l3r-${presetIndex}`}
-                    className="hero-word inline-block text-[#ea4530]"
-                    style={{ animationDelay: "400ms" }}
-                  >
-                    {heroCopy.line3Red}
-                  </span>{" "}
-                  <span
-                    key={`l3m-${presetIndex}`}
-                    className="hero-word inline-block text-[#f1eec0]"
-                    style={{ animationDelay: "490ms" }}
-                  >
-                    {heroCopy.line3Mid}
-                  </span>{" "}
-                  <ParenthesisArt initialIndex={1} delayMs={580} />{" "}
-                  <span
-                    key={`l3b-${presetIndex}`}
-                    className="hero-word inline-block text-[#3aa1d8]"
-                    style={{ animationDelay: "670ms" }}
-                  >
-                    {heroCopy.line3Blue}
+                  <span className="block">
+                    <span
+                      key={`l2m-${presetIndex}`}
+                      className="hero-word inline-block text-[#f1eec0]"
+                      style={{ animationDelay: "200ms" }}
+                    >
+                      {heroCopy.line2Mid}
+                    </span>{" "}
+                    <span
+                      key={`l2b-${presetIndex}`}
+                      className="hero-word inline-block text-[#3aa1d8]"
+                      style={{ animationDelay: "290ms" }}
+                    >
+                      {heroCopy.line2Blue}
+                    </span>
                   </span>
-                </span>
-              </h1>
+                  <span className="block">
+                    <span
+                      key={`l3r-${presetIndex}`}
+                      className="hero-word inline-block text-[#ea4530]"
+                      style={{ animationDelay: "380ms" }}
+                    >
+                      {heroCopy.line3Red}
+                    </span>{" "}
+                    <span
+                      key={`l3m-${presetIndex}`}
+                      className="hero-word inline-block text-[#f1eec0]"
+                      style={{ animationDelay: "470ms" }}
+                    >
+                      {heroCopy.line3Mid}
+                    </span>{" "}
+                    <span
+                      key={`l3b-${presetIndex}`}
+                      className="hero-word inline-block text-[#3aa1d8]"
+                      style={{ animationDelay: "560ms" }}
+                    >
+                      {heroCopy.line3Blue}
+                    </span>
+                  </span>
+                </h1>
 
-              {/* Scroll Down Bounce Chevron (Desktop only to prevent mobile overlap with center card) */}
+                <p
+                  key={`sub-${lang}-${isLoading}`}
+                  className="hero-word hidden sm:block mt-7 max-w-[44ch] text-[clamp(15px,1.15vw,18px)] leading-relaxed text-[#f1eec0]/60 font-ui"
+                  style={{ animationDelay: "650ms" }}
+                >
+                  {lang === "en"
+                    ? "Core banking, treasury & enterprise systems — from BRDs and as-is / to-be flows to end-to-end quality validation."
+                    : "Core banking, treasury & sistem enterprise — dari BRD dan alur as-is / to-be hingga validasi kualitas end-to-end."}
+                </p>
+              </div>
+
+              {/* Scroll hint (desktop) */}
               <div
                 aria-hidden="true"
-                className="hidden sm:block absolute bottom-[clamp(28px,4.4vh,46px)] left-1/2 -translate-x-1/2 z-10 scroll-hint pointer-events-none"
+                className="hidden md:block absolute bottom-[clamp(28px,4.4vh,46px)] left-1/2 -translate-x-1/2 z-10 scroll-hint pointer-events-none"
               >
-                <svg
-                  width="30"
-                  height="30"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M4 9L12 17L20 9"
                     stroke="var(--accent-blue)"
@@ -349,7 +357,7 @@ export default function App() {
                 </div>
 
                 {/* Floating Right "all works" Pill */}
-                <div className="absolute inset-0 flex items-center pointer-events-none justify-end pr-[clamp(18px,4vw,40px)]">
+                <div className="absolute inset-0 hidden md:flex items-center pointer-events-none justify-end pr-[clamp(18px,4vw,40px)]">
                   <div className="pointer-events-auto">
                     <button
                       type="button"
@@ -379,18 +387,27 @@ export default function App() {
               ))}
             </div>
 
-            {/* Bottom "see all works" Ring Button */}
-            <div className="py-14 flex justify-center">
+            {/* Bottom "see all works" — full-width CTA row (clear of the fixed bottom nav) */}
+            <div className="px-[clamp(18px,4vw,40px)] pt-6 sm:pt-10 pb-20 sm:pb-28">
               <button
                 type="button"
                 onClick={() => {
                   setActivePage("work");
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
-                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-tight rounded-full px-5 py-2.5 transition-colors shadow-lg bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] ring-1 ring-[#ea4530] ring-offset-[3px] ring-offset-[#0a0a0a] cursor-pointer lowercase"
+                className="group w-full flex items-center justify-between gap-4 border-y border-[#f1eec0]/12 py-5 sm:py-8 text-left cursor-pointer"
               >
-                <span>{lang === "en" ? "see all works" : "lihat semua proyek"}</span>
-                <ArrowUpRight />
+                <span className="flex flex-col gap-1.5 sm:gap-2 min-w-0">
+                  <span className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.18em] text-[#f1eec0]/45">
+                    {allProjects.length} {lang === "en" ? "projects in the archive" : "proyek di arsip"}
+                  </span>
+                  <span className="font-stamp lowercase leading-[0.95] text-[clamp(38px,7.5vw,104px)] text-[#f1eec0] transition-colors duration-300 group-hover:text-[#ea4530]">
+                    {lang === "en" ? "see all works" : "lihat semua proyek"}
+                  </span>
+                </span>
+                <span className="shrink-0 w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#ea4530] text-[#f1eec0] flex items-center justify-center text-xl sm:text-3xl transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105">
+                  <ArrowUpRight />
+                </span>
               </button>
             </div>
           </div>

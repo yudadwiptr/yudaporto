@@ -16,7 +16,7 @@ export default function FooterSection({ lang, setActivePage }) {
   return (
     <footer className="relative overflow-hidden flex flex-col justify-end pt-[clamp(40px,8vh,110px)] pb-[clamp(56px,8vh,84px)] border-t border-white/10 bg-[#0a0a0a]">
       {/* Top Row: Elsewhere list + Contact page link */}
-      <div className="relative z-10 px-[clamp(18px,4vw,40px)] pb-[clamp(24px,6vh,90px)] flex items-start sm:items-center justify-between gap-6 flex-wrap">
+      <div className="relative z-10 px-[clamp(18px,4vw,40px)] pb-[clamp(24px,6vh,90px)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div className="flex flex-col gap-[clamp(14px,2.4vh,26px)] sm:flex-row sm:items-start sm:justify-between">
           <p className="text-xs tracking-wide text-[#f1eec0]/45 lowercase">
             {lang === "en" ? "elsewhere" : "di tempat lain"}
