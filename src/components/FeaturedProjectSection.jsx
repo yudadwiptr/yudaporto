@@ -1,58 +1,111 @@
-import React, { useRef, useState } from "react";
-import { ArrowUpRight } from "./Icons";
+import React from "react";
 import ProjectVisualCard from "./ProjectVisuals";
+import { ArrowUpRight, CheckIcon } from "./Icons";
 
-export default function FeaturedProjectSection({
-  project,
-  lang,
-  onOpenCase,
-}) {
-  const scrollRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
+const TAG_TONES = {
+  cream: "bg-[#f1eec0] text-[#0a0a0a]",
+  blue: "bg-[#3aa1d8] text-[#0a0a0a]",
+  red: "bg-[#ea4530] text-[#f1eec0]",
+};
 
-  const handleMouseDown = (e) => {
-    if (!scrollRef.current) return;
-    setIsDragging(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft);
-  };
+// Screenshot in a browser-style (or plain) frame
+export function ShotFrame({ shot, label, className = "", sizes = "(min-width: 1024px) 56vw, 100vw", eager = false }) {
+  const browser = shot.frame !== "plain";
+  return (
+    <div
+      className={`rounded-xl sm:rounded-2xl overflow-hidden border border-[#f1eec0]/12 bg-[#141414] shadow-[0_24px_60px_rgba(0,0,0,0.65)] ${className}`}
+    >
+      {browser && (
+        <div className="flex items-center gap-3 h-7 sm:h-9 px-3 sm:px-4 bg-[#0d0d0d] border-b border-[#f1eec0]/10">
+          <span className="flex gap-1.5 shrink-0">
+            <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#ff5f56]" />
+            <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#ffbd2e]" />
+            <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#27c93f]" />
+          </span>
+          {label && (
+            <span className="mx-auto max-w-[60%] truncate rounded-full bg-[#1a1a1a] px-3 py-0.5 text-[9px] sm:text-[10px] font-mono text-[#f1eec0]/45">
+              {label}
+            </span>
+          )}
+        </div>
+      )}
+      <div className={`overflow-hidden ${browser ? "aspect-[16/9]" : "aspect-[4/3] bg-white"}`}>
+        <img
+          src={shot.sm || shot.src}
+          srcSet={shot.sm ? `${shot.sm} 820w, ${shot.src} 1600w` : undefined}
+          sizes={sizes}
+          alt={shot.alt || ""}
+          loading={eager ? "eager" : "lazy"}
+          decoding="async"
+          className={`w-full h-full ${browser ? "object-cover object-top" : "object-cover object-center"} transition-transform duration-700 ease-out group-hover:scale-[1.03]`}
+        />
+      </div>
+    </div>
+  );
+}
 
-  const handleMouseLeaveOrUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging || !scrollRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1.4;
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const getTagToneClasses = (tone) => {
-    if (tone === "cream") return "bg-[#f1eec0] text-[#0a0a0a]";
-    if (tone === "blue") return "bg-[#3aa1d8] text-[#0a0a0a]";
-    return "bg-[#ea4530] text-[#f1eec0]";
-  };
+export default function FeaturedProjectSection({ project, lang, onOpenCase, index = 0, total = 1 }) {
+  const reverse = index % 2 === 1;
+  const gallery = project.gallery || [];
+  const [main, second] = gallery;
+  const shortName = project.title.split(/[—(:]/)[0].trim();
+  const open = () => onOpenCase(project);
 
   return (
     <section
       aria-label={project.title}
-      className="relative py-[clamp(36px,6vh,72px)] border-t border-[#f1eec0]/10"
+      className="relative py-[clamp(56px,10vh,120px)] border-t border-[#f1eec0]/10"
     >
-      {/* Top 3-Column Header matching Kenji Lambert's exact grid */}
-      <div className="px-[clamp(18px,4vw,40px)] pb-[clamp(18px,3vh,32px)]">
-        {/* Category Pills + Desktop "see full case" */}
-        <div className="flex flex-wrap items-start justify-between gap-4 mb-[clamp(12px,2vh,22px)]">
-          <div className="flex flex-wrap gap-2">
+      <div className="px-[clamp(18px,4vw,40px)] grid lg:grid-cols-12 gap-y-10 lg:gap-x-14 items-center">
+        {/* ---------- Text ---------- */}
+        <div className={`lg:col-span-5 min-w-0 ${reverse ? "lg:order-2" : ""}`}>
+          <div className="flex items-center gap-3 text-[11px] font-mono uppercase tracking-[0.18em]">
+            <span className="text-[#ea4530] font-bold">
+              {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+            </span>
+            <span className="h-px w-10 bg-[#f1eec0]/20" />
+            <span className="text-[#f1eec0]/50 truncate">{project.category}</span>
+          </div>
+
+          <h3 className="mt-4 font-stamp lowercase text-[clamp(36px,4.4vw,64px)] leading-[0.96] text-balance">
+            <button
+              type="button"
+              onClick={open}
+              className="text-left lowercase text-[#f1eec0] hover:text-[#ea4530] transition-colors cursor-pointer"
+            >
+              {project.title}
+            </button>
+          </h3>
+
+          <p className="mt-3 text-sm text-[#f1eec0]/55">
+            {project.client} <span className="text-[#f1eec0]/25">·</span> {project.year}
+          </p>
+
+          <p className="mt-5 text-[15px] sm:text-base text-[#f1eec0]/75 leading-relaxed line-clamp-5">
+            {project.summary[lang]}
+          </p>
+
+          {project.highlights?.length > 0 && (
+            <ul className="mt-6 space-y-2.5">
+              {project.highlights.slice(0, 4).map((h, i) => (
+                <li key={i} className="flex items-start gap-3 text-[14px] leading-snug text-[#f1eec0]/80">
+                  <span
+                    className="mt-[1px] w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[11px]"
+                    style={{ backgroundColor: `${project.themeColor || "#ea4530"}26`, color: project.themeColor || "#ea4530" }}
+                  >
+                    <CheckIcon />
+                  </span>
+                  <span>{h[lang]}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div className="mt-6 flex flex-wrap gap-2">
             {project.tags.map((tag, i) => (
               <span
                 key={i}
-                className={`text-[11px] sm:text-xs tracking-tight rounded-full px-3 py-1 font-semibold ${getTagToneClasses(
-                  tag.tone
-                )}`}
+                className={`text-[11px] sm:text-xs tracking-tight rounded-full px-3 py-1 font-semibold ${TAG_TONES[tag.tone] || TAG_TONES.red}`}
               >
                 {tag[lang]}
               </span>
@@ -61,73 +114,44 @@ export default function FeaturedProjectSection({
 
           <button
             type="button"
-            onClick={() => onOpenCase(project)}
-            className="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold tracking-tight bg-[#f1eec0] text-[#0a0a0a] rounded-full px-4 py-2 hover:bg-[#ea4530] hover:text-[#f1eec0] transition-colors shrink-0 cursor-pointer lowercase"
+            onClick={open}
+            className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#ea4530] text-[#f1eec0] px-5 py-3 text-sm font-bold lowercase hover:bg-[#f1eec0] hover:text-[#0a0a0a] transition-colors cursor-pointer"
           >
             <span>{lang === "en" ? "see full case" : "lihat studi kasus"}</span>
             <ArrowUpRight />
           </button>
         </div>
 
-        {/* 3-Column Grid: Title (1.55fr) | Year & Client (auto) | Single-Idea Copy (1.15fr) */}
-        <div className="grid md:grid-cols-[1.55fr_auto_1.15fr] gap-x-[clamp(20px,3vw,44px)] gap-y-3 items-start">
-          <h3 className="font-stamp lowercase text-[clamp(34px,4.6vw,64px)] leading-[0.96] mb-2 md:mb-0 text-balance">
+        {/* ---------- Showcase ---------- */}
+        <div className={`lg:col-span-7 min-w-0 ${reverse ? "lg:order-1" : ""}`}>
+          {main ? (
             <button
               type="button"
-              onClick={() => onOpenCase(project)}
-              className="text-left hover:text-[#ea4530] transition-colors cursor-pointer"
+              onClick={open}
+              aria-label={`${project.title} — ${lang === "en" ? "open case study" : "buka studi kasus"}`}
+              className={`group relative block w-full text-left cursor-pointer ${second ? "pb-[16%]" : ""}`}
             >
-              {project.title}
+              <ShotFrame
+                shot={main}
+                label={shortName}
+                className={second ? (reverse ? "w-[88%] ml-auto" : "w-[88%]") : ""}
+              />
+              {second && (
+                <ShotFrame
+                  shot={second}
+                  label={shortName}
+                  sizes="(min-width: 1024px) 28vw, 55vw"
+                  className={`absolute bottom-0 w-[52%] ring-4 ring-[#0a0a0a] ${reverse ? "left-0" : "right-0"}`}
+                />
+              )}
             </button>
-          </h3>
-
-          {/* Mobile CTA */}
-          <button
-            type="button"
-            onClick={() => onOpenCase(project)}
-            className="md:hidden inline-flex items-center gap-1.5 w-fit mb-2 text-xs font-semibold bg-[#ea4530] text-[#f1eec0] rounded-full px-3.5 py-2 cursor-pointer lowercase"
-          >
-            <span>{lang === "en" ? "see full case" : "lihat studi kasus"}</span>
-            <ArrowUpRight />
-          </button>
-
-          {/* Year & Client */}
-          <div className="text-xs text-[#f1eec0]/50 leading-[1.5] md:min-w-[130px] md:pt-[0.5em]">
-            <div className="text-[#f1eec0]/80 font-semibold">{project.year}</div>
-            <div>{project.client}</div>
-          </div>
-
-          {/* 1-2 Sentence "Built Around a Single Idea" Description */}
-          <div className="md:pt-[0.5em]">
-            <p className="text-[13px] sm:text-sm text-[#f1eec0]/85 leading-[1.55]">
-              {project.summary[lang]}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Horizontal Draggable Visual Cards Strip */}
-      <div
-        ref={scrollRef}
-        data-cursor="drag"
-        onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeaveOrUp}
-        onMouseUp={handleMouseLeaveOrUp}
-        onMouseMove={handleMouseMove}
-        className={`overflow-x-auto no-scrollbar px-[clamp(18px,4vw,40px)] pb-4 select-none ${
-          isDragging ? "cursor-grabbing" : "cursor-grab"
-        }`}
-      >
-        <div className="flex gap-3.5 w-max">
-          {project.slides.map((slide, idx) => (
-            <ProjectVisualCard
-              key={idx}
-              slide={slide}
-              project={project}
-              index={idx}
-              onOpenCase={onOpenCase}
-            />
-          ))}
+          ) : (
+            project.slides?.[0] && (
+              <div className="flex justify-center">
+                <ProjectVisualCard slide={project.slides[0]} project={project} index={index} onOpenCase={onOpenCase} />
+              </div>
+            )
+          )}
         </div>
       </div>
     </section>

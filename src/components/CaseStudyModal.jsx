@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { ArrowUpRight, CloseIcon } from "./Icons";
+import { ArrowUpRight, CloseIcon, CheckIcon } from "./Icons";
+import { ShotFrame } from "./FeaturedProjectSection";
 import ProjectVisualCard from "./ProjectVisuals";
 
 export default function CaseStudyModal({ project, lang, onClose }) {
@@ -102,24 +103,70 @@ export default function CaseStudyModal({ project, lang, onClose }) {
             </div>
           </div>
 
-          {/* Visual Artboards Grid */}
-          <div>
-            <p className="text-xs text-[#f1eec0]/45 mb-4 lowercase">
-              {lang === "en"
-                ? "project artifacts & system breakdown"
-                : "artefak proyek & rincian sistem"}
-            </p>
-            <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4">
-              {project.slides.map((slide, idx) => (
-                <ProjectVisualCard
-                  key={idx}
-                  slide={slide}
-                  project={project}
-                  index={idx}
-                  onOpenCase={() => {}}
-                />
-              ))}
+          {/* What I did */}
+          {project.highlights?.length > 0 && (
+            <div>
+              <p className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#f1eec0]/45 mb-4">
+                {lang === "en" ? "scope & contribution" : "lingkup & kontribusi"}
+              </p>
+              <ul className="grid sm:grid-cols-2 gap-3">
+                {project.highlights.map((h, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-3 p-4 rounded-xl bg-[#121212] border border-[#f1eec0]/10 text-sm leading-snug text-[#f1eec0]/85"
+                  >
+                    <span
+                      className="mt-[1px] w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[11px]"
+                      style={{ backgroundColor: `${project.themeColor || "#ea4530"}26`, color: project.themeColor || "#ea4530" }}
+                    >
+                      <CheckIcon />
+                    </span>
+                    <span>{h[lang]}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
+          )}
+
+          {/* Screens / artifacts */}
+          <div>
+            <p className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#f1eec0]/45 mb-4">
+              {project.gallery?.length
+                ? lang === "en" ? "screens" : "tampilan"
+                : lang === "en" ? "project artifacts & system breakdown" : "artefak proyek & rincian sistem"}
+            </p>
+            {project.gallery?.length ? (
+              <div className={`grid gap-5 ${project.gallery.length > 1 ? "lg:grid-cols-2" : ""}`}>
+                {project.gallery.map((shot, i) => (
+                  <a
+                    key={i}
+                    href={shot.src}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`group block ${project.gallery.length === 1 && shot.frame === "plain" ? "max-w-3xl" : ""}`}
+                  >
+                    <ShotFrame
+                      shot={shot}
+                      label={project.title.split(/[—(:]/)[0].trim()}
+                      sizes={project.gallery.length > 1 ? "(min-width: 1024px) 45vw, 100vw" : "(min-width: 1280px) 1200px, 100vw"}
+                      eager
+                    />
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4">
+                {project.slides.map((slide, idx) => (
+                  <ProjectVisualCard
+                    key={idx}
+                    slide={slide}
+                    project={project}
+                    index={idx}
+                    onOpenCase={() => {}}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

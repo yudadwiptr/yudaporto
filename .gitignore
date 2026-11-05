@@ -23,3 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
+
+# Original full-size work screenshots (optimised copies in public/work/*.jpg are used)
+public/work/*.jfif
+public/work/*.png

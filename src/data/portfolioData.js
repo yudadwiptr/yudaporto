@@ -114,126 +114,256 @@ export const CLIENT_MARQUEE = SOFTWARE_MARQUEE;
 
 export const PROJECTS_PERSONAL = [
   {
+    id: "mandiri-cs-machine",
+    featured: true,
+    year: "2020–2022",
+    client: "PT Bank Mandiri Tbk",
+    category: "Self-Service Banking",
+    tags: [
+      { en: "Self-Service Banking", id: "Layanan Mandiri", tone: "cream" },
+      { en: "Account Opening", id: "Pembukaan Rekening", tone: "blue" },
+      { en: "Card Replacement", id: "Penggantian Kartu", tone: "red" },
+    ],
+    title: "CS Machine (CSM)",
+    summary: {
+      en: "A self-service customer-service machine for PT Bank Mandiri branches. Customers open a savings account or replace an ATM/debit card on their own in a few minutes, without queueing for a teller.",
+      id: "Mesin customer service mandiri untuk kantor cabang PT Bank Mandiri. Nasabah bisa membuka rekening tabungan atau mengganti kartu ATM/debit sendiri dalam hitungan menit, tanpa antre ke teller.",
+    },
+    singleIdea: {
+      en: "Opening a savings account or replacing a debit card in minutes, with no teller needed.",
+      id: "Buka tabungan atau ganti kartu debit dalam hitungan menit, tanpa perlu teller.",
+    },
+    highlights: [
+      {
+        en: "Open a savings account: customers create a new account automatically.",
+        id: "Buka rekening tabungan: nasabah membuat rekening baru secara otomatis.",
+      },
+      {
+        en: "Replace debit cards: instant ATM/debit card replacement in minutes.",
+        id: "Ganti kartu debit: penggantian kartu ATM/debit instan dalam hitungan menit.",
+      },
+      {
+        en: "Self-service banking: banking services without needing a teller.",
+        id: "Layanan mandiri: akses layanan perbankan tanpa perlu ke teller.",
+      },
+      {
+        en: "Fast & efficient: transactions complete quickly with minimal waiting.",
+        id: "Cepat & efisien: transaksi selesai cepat dengan waktu tunggu minimal.",
+      },
+    ],
+    metrics: [
+      { label: "Channel", value: "Branch Kiosk" },
+      { label: "Services", value: "Account + Card" },
+      { label: "Teller", value: "Not Required" },
+    ],
+    gallery: [
+      { src: "/work/csm.jpg", sm: "/work/csm-sm.jpg", frame: "plain", alt: "Mandiri CS Machine kiosk promotion: open a savings account and replace a debit card in minutes" },
+    ],
+    liveUrl: "",
+    themeColor: "#f1eec0",
+    slides: [],
+  },
+  {
+    id: "kopra-by-mandiri",
+    featured: true,
+    year: "2022–2024",
+    client: "PT Bank Mandiri Tbk",
+    category: "Wholesale Banking",
+    tags: [
+      { en: "Wholesale Digital Banking", id: "Wholesale Digital Banking", tone: "cream" },
+      { en: "Security & Auth Testing", id: "Uji Keamanan & Autentikasi", tone: "blue" },
+      { en: "Migration Performance", id: "Performa Migrasi", tone: "red" },
+    ],
+    title: "Kopra by Mandiri",
+    summary: {
+      en: "Implementation and testing of Kopra by Mandiri, an integrated digital wholesale banking platform for corporates and large institutions. It brings corporate banking transactions into one entry point, secured with DigiCert certification.",
+      id: "Implementasi dan pengujian Kopra by Mandiri, platform perbankan wholesale digital terpadu untuk perusahaan dan institusi besar. Platform ini menyederhanakan transaksi perbankan korporat melalui satu pintu dengan keamanan bersertifikasi DigiCert.",
+    },
+    singleIdea: {
+      en: "One secure front door for every corporate banking transaction.",
+      id: "Satu pintu yang aman untuk seluruh transaksi perbankan korporat.",
+    },
+    highlights: [
+      {
+        en: "Analysed and reviewed the login process and user-interface integration.",
+        id: "Analisis dan review proses login serta integrasi user interface.",
+      },
+      {
+        en: "Validated security features such as user authentication (Company ID, User ID, Password).",
+        id: "Validasi fitur keamanan seperti autentikasi pengguna (Company ID, User ID, Password).",
+      },
+      {
+        en: "Tested platform resilience and performance during the service migration phase.",
+        id: "Uji ketahanan dan performa platform selama fase migrasi layanan.",
+      },
+      {
+        en: "Coordinated with the development team to support an optimal user experience.",
+        id: "Koordinasi dengan tim pengembangan untuk mendukung user experience yang optimal.",
+      },
+    ],
+    metrics: [
+      { label: "Login", value: "Company · User ID" },
+      { label: "Security", value: "DigiCert Certified" },
+      { label: "Phase", value: "Service Migration" },
+    ],
+    gallery: [
+      { src: "/work/kopra.jpg", sm: "/work/kopra-sm.jpg", frame: "browser", alt: "Kopra by Mandiri login page with Company ID and User ID fields" },
+    ],
+    liveUrl: "",
+    themeColor: "#3aa1d8",
+    slides: [],
+  },
+  {
+    id: "smi-ecms",
+    featured: true,
+    year: "2025",
+    client: "PT Sarana Multi Infrastruktur",
+    category: "HR Platform & QA",
+    tags: [
+      { en: "Enterprise QA", id: "QA Enterprise", tone: "cream" },
+      { en: "Employee Well-being", id: "Kondisi Karyawan", tone: "blue" },
+      { en: "13 Agile Sprints", id: "13 Sprint Agile", tone: "red" },
+    ],
+    title: "Employee Condition Monitoring System (ECMS)",
+    summary: {
+      en: "A comprehensive platform that tracks and assesses the well-being, productivity and overall condition of employees. It gives real-time insight into employee health, work performance and workplace satisfaction, so the organisation can make data-driven decisions that improve workforce efficiency and well-being.",
+      id: "Platform komprehensif untuk memantau dan menilai kesejahteraan, produktivitas, dan kondisi karyawan secara menyeluruh. Sistem ini memberikan insight real-time tentang kesehatan, kinerja, dan kepuasan kerja karyawan, sehingga organisasi dapat mengambil keputusan berbasis data untuk meningkatkan efisiensi dan kesejahteraan tenaga kerja.",
+    },
+    singleIdea: {
+      en: "Real-time insight into how the workforce is really doing.",
+      id: "Insight real-time tentang kondisi tenaga kerja yang sebenarnya.",
+    },
+    highlights: [
+      {
+        en: "Tracks employee health, work performance and workplace satisfaction.",
+        id: "Memantau kesehatan, kinerja, dan kepuasan kerja karyawan.",
+      },
+      {
+        en: "Real-time insight for data-driven workforce decisions.",
+        id: "Insight real-time untuk keputusan SDM berbasis data.",
+      },
+      {
+        en: "Led QA across 13 sprints: test strategy, functional, regression and performance testing.",
+        id: "Memimpin QA selama 13 sprint: strategi uji, functional, regression, dan performance testing.",
+      },
+    ],
+    metrics: [
+      { label: "Delivery", value: "13 Agile Sprints" },
+      { label: "Focus", value: "Well-being Data" },
+      { label: "Tooling", value: "Azure & Jira" },
+    ],
+    gallery: [
+      { src: "/work/ecms.jpg", sm: "/work/ecms-sm.jpg", frame: "browser", alt: "ECMS (Sistem Pengelolaan SDM) login page for PT Sarana Multi Infrastruktur" },
+    ],
+    liveUrl: "",
+    themeColor: "#27c93f",
+    slides: [],
+  },
+  {
+    id: "pt-smi-travel-operational-os",
+    featured: true,
+    year: "2025–2026",
+    client: "PT Sarana Multi Infrastruktur",
+    category: "System Analysis & QA",
+    tags: [
+      { en: "Requirement Analysis", id: "Analisis Kebutuhan", tone: "cream" },
+      { en: "Test Scenarios", id: "Skenario Uji", tone: "blue" },
+      { en: "End-to-End Validation", id: "Validasi End-to-End", tone: "red" },
+    ],
+    title: "Integrated Operational & Self Service (IOSS)",
+    summary: {
+      en: "An integrated operational and employee self-service platform for PT SMI, including business-travel (perjalanan dinas) requests and approvals. Responsibilities included requirement analysis, test scenario creation, functional testing and end-to-end validation across multiple operational modules to ensure quality, stability and a seamless user experience.",
+      id: "Platform operasional terintegrasi dan layanan mandiri karyawan untuk PT SMI, termasuk pengajuan dan persetujuan perjalanan dinas. Tanggung jawab mencakup analisis kebutuhan, pembuatan skenario uji, functional testing, dan validasi end-to-end di berbagai modul operasional untuk memastikan kualitas, stabilitas, dan pengalaman pengguna yang mulus.",
+    },
+    singleIdea: {
+      en: "Every operational request, from submission to approval, mapped into one clear flow.",
+      id: "Setiap pengajuan operasional, dari pengajuan hingga persetujuan, dipetakan dalam satu alur yang jelas.",
+    },
+    highlights: [
+      {
+        en: "Requirement analysis with BRDs, user stories and acceptance criteria.",
+        id: "Analisis kebutuhan lewat BRD, user stories, dan acceptance criteria.",
+      },
+      {
+        en: "Test scenario creation and functional testing per operational module.",
+        id: "Pembuatan skenario uji dan functional testing per modul operasional.",
+      },
+      {
+        en: "End-to-end validation across modules for quality and stability.",
+        id: "Validasi end-to-end lintas modul untuk kualitas dan stabilitas.",
+      },
+      {
+        en: "Sequence diagrams for business travel from request to approval and booking.",
+        id: "Sequence diagram perjalanan dinas dari pengajuan, persetujuan, hingga pemesanan.",
+      },
+    ],
+    metrics: [
+      { label: "Artifacts", value: "BRD + Sequence Flows" },
+      { label: "Testing", value: "Functional & E2E" },
+      { label: "Scope", value: "Multi-Module" },
+    ],
+    gallery: [
+      { src: "/work/ioss.jpg", sm: "/work/ioss-sm.jpg", frame: "browser", alt: "IOSS Integrated Operational & Self Service login page for PT SMI" },
+    ],
+    liveUrl: "",
+    themeColor: "#3aa1d8",
+    slides: [],
+  },
+  {
     id: "tabplin-tni-al-modernization",
     featured: true,
     year: "2026",
-    client: "PT Adi Data Informatika – TNI AL",
+    client: "TNI Angkatan Laut",
     category: "Business Analysis",
     tags: [
       { en: "Business Analysis (BRD)", id: "Analisis Bisnis (BRD)", tone: "cream" },
       { en: "Legacy Reverse-Engineering", id: "Reverse-Engineering Legacy", tone: "blue" },
       { en: "H2H API & Settlement", id: "Integrasi API & Settlement", tone: "red" },
     ],
-    title: "TABPLIN: 1987 Navy Savings Ledger to Modern Web",
+    title: "TABPLIN — Tabungan Disiplin TNI AL",
     summary: {
-      en: "A core savings modernization program for TNI AL (Indonesian Navy) with PT Bank Mandiri as settlement bank, built around a single idea: migrating a 1987 text-based ledger into a modern web platform for ~80,000 members without losing a single cent of interest logic. Reverse-engineered original source code to document daily interest accrual, leap-year divisor handling, tax rules, and designed end-to-end payroll auto-debit, inquiry, registration, disbursement, and API integration flows.",
-      id: "Program modernisasi Tabungan Disiplin (TABPLIN) bersama TNI AL dengan PT Bank Mandiri sebagai bank penyelesai, dibangun di atas satu ide tunggal: memigrasikan buku besar berbasis teks tahun 1987 ke platform web modern untuk ~80.000 anggota tanpa kehilangan presisi rumus bunga sedikit pun. Melakukan reverse-engineering source code asli untuk mendokumentasikan rumus akrual bunga harian, pembagi tahun kabisat, aturan pajak, serta merancang alur end-to-end auto-debit gaji, inquiry, registrasi, pencairan, dan integrasi API.",
+      en: "TABPLIN (Tabungan Disiplin) is the Indonesian Navy's discipline savings programme, modernised with PT Bank Mandiri as settlement bank. A 1987 text-based ledger moves into a modern web platform for ~80,000 members without losing a cent of interest logic: daily accrual, leap-year divisors, tax rules, payroll auto-debit, inquiry, registration, disbursement and API integration.",
+      id: "TABPLIN (Tabungan Disiplin) adalah program tabungan disiplin TNI Angkatan Laut yang dimodernisasi bersama PT Bank Mandiri sebagai bank penyelesai. Buku besar berbasis teks tahun 1987 dipindahkan ke platform web modern untuk ~80.000 anggota tanpa kehilangan presisi rumus bunga: akrual harian, pembagi tahun kabisat, aturan pajak, auto-debit gaji, inquiry, registrasi, pencairan, dan integrasi API.",
     },
     singleIdea: {
-      en: "Reverse-engineering a 1987 text-based ledger into a modern web banking platform for 80,000+ Navy personnel.",
-      id: "Reverse-engineering buku besar berbasis teks tahun 1987 menjadi platform web perbankan modern untuk 80.000+ personel TNI AL.",
+      en: "Reverse-engineering a 1987 ledger into a modern savings platform for 80,000+ Navy personnel.",
+      id: "Reverse-engineering buku besar tahun 1987 menjadi platform tabungan modern untuk 80.000+ personel TNI AL.",
     },
+    highlights: [
+      {
+        en: "Reverse-engineered the original source code: daily interest accrual, leap-year divisor and tax rules.",
+        id: "Reverse-engineering source code asli: akrual bunga harian, pembagi tahun kabisat, dan aturan pajak.",
+      },
+      {
+        en: "Designed end-to-end payroll auto-debit, inquiry, registration and disbursement flows.",
+        id: "Merancang alur end-to-end auto-debit gaji, inquiry, registrasi, dan pencairan.",
+      },
+      {
+        en: "API integration model with PT Bank Mandiri as settlement bank.",
+        id: "Model integrasi API dengan PT Bank Mandiri sebagai bank penyelesai.",
+      },
+      {
+        en: "Data migration of closing balances and history, with BRD and stakeholder UAT sign-off.",
+        id: "Migrasi data saldo akhir dan histori, lengkap dengan BRD dan UAT sign-off stakeholder.",
+      },
+    ],
     metrics: [
       { label: "Active Scale", value: "~80,000 Members" },
       { label: "Ledger Scope", value: "112 Navy Accounts" },
       { label: "Core Heritage", value: "1987 → 2026 Web" },
     ],
-    liveUrl: "#work",
+    gallery: [
+      { src: "/work/tabplin-2.jpg", sm: "/work/tabplin-2-sm.jpg", frame: "browser", alt: "TABPLIN TNI AL login page with role selection" },
+      { src: "/work/tabplin-1.jpg", sm: "/work/tabplin-1-sm.jpg", frame: "browser", alt: "TABPLIN official announcements page" },
+    ],
+    liveUrl: "",
     themeColor: "#ea4530",
-    secondaryColor: "#3aa1d8",
-    slides: [
-      {
-        type: "poster-hero",
-        kicker: "01 / THE SINGLE IDEA",
-        headline: "1987 LEDGER → MODERN WEB",
-        sub: "112 Settlement Accounts · ~80,000 TNI AL Members · PT Bank Mandiri Settlement",
-        accent: "#ea4530",
-      },
-      {
-        type: "ui-flow",
-        kicker: "02 / SOURCE CODE REVERSE-ENGINEERING",
-        headline: "DAILY ACCRUAL & LEAP DIVISOR",
-        sub: "Extracted exact interest accrual formulas, tax rules & deposit/withdrawal posting logic",
-        accent: "#3aa1d8",
-      },
-      {
-        type: "type-specimen",
-        kicker: "03 / END-TO-END FLOWS & BRD",
-        headline: "AUTO-DEBIT → DISBURSEMENT",
-        sub: "Payroll auto-debit collection, account inquiry, maintenance, refund & Mandiri API model",
-        accent: "#f1eec0",
-      },
-      {
-        type: "metrics-card",
-        kicker: "04 / DATA MIGRATION & UAT",
-        headline: "CLOSING BALANCE + HISTORY",
-        sub: "BRD, as-is / to-be flows, user stories, acceptance criteria & stakeholder UAT sign-off",
-        accent: "#ea4530",
-      },
-    ],
+    slides: [],
   },
-  {
-    id: "pt-smi-travel-operational-os",
-    featured: true,
-    year: "2025–2026",
-    client: "PT Adi Data Informatika – PT SMI",
-    category: "System Analysis",
-    tags: [
-      { en: "System Analysis", id: "Analisis Sistem", tone: "cream" },
-      { en: "Sequence Diagramming", id: "Diagram Sekuens", tone: "blue" },
-      { en: "Enterprise QA (13 Sprints)", id: "QA Enterprise (13 Sprint)", tone: "red" },
-    ],
-    title: "PT SMI: Integrated Operational & Travel Self-Service",
-    summary: {
-      en: "An enterprise Integrated Operational & Self-Service (Travel Agent / Perjalanan Dinas) platform for PT Sarana Multi Infrastruktur (PT SMI), built around a single idea: translating multi-tier institutional policy into one clear sequence from request to booking. Authored BRDs, user stories, acceptance criteria, and system interaction sequence diagrams, while leading QA across 13 sprints for the Employee Condition Monitoring System (ECMS).",
-      id: "Sistem Integrated Operational & Self-Service (Perjalanan Dinas) untuk PT Sarana Multi Infrastruktur (PT SMI), dibangun di atas satu ide tunggal: menerjemahkan kebijakan korporat berlapis menjadi satu alur sekuens yang jernih dari pengajuan hingga pemesanan. Menyusun BRD, user stories, acceptance criteria, dan sequence diagram interaksi sistem, serta memimpin QA selama 13 sprint untuk Employee Condition Monitoring System (ECMS).",
-    },
-    singleIdea: {
-      en: "Every business travel approval and booking mapped into one unambiguous system sequence.",
-      id: "Setiap persetujuan dan pemesanan perjalanan dinas dipetakan dalam satu sekuens sistem tanpa celah.",
-    },
-    metrics: [
-      { label: "Artifacts", value: "BRD + Sequence Flows" },
-      { label: "ECMS Delivery", value: "13 Agile Sprints" },
-      { label: "Traceability", value: "End-to-End UAT" },
-    ],
-    liveUrl: "#work",
-    themeColor: "#3aa1d8",
-    secondaryColor: "#f1eec0",
-    slides: [
-      {
-        type: "grid-system",
-        kicker: "01 / SYSTEM ARCHITECTURE",
-        headline: "PERJALANAN DINAS WORKFLOW",
-        sub: "End-to-end sequence diagramming from request submission through approval and booking",
-        accent: "#3aa1d8",
-      },
-      {
-        type: "token-matrix",
-        kicker: "02 / SPECIFICATION ARTIFACTS",
-        headline: "BRD · STORIES · AC",
-        sub: "Actionable functional specifications bridging stakeholders, PM, UI/UX, and developers",
-        accent: "#f1eec0",
-      },
-      {
-        type: "ui-flow",
-        kicker: "03 / CHANGE IMPACT & VALIDATION",
-        headline: "REQUEST → APPROVAL → BOOK",
-        sub: "Change request impact analysis, backlog refinement, sprint planning & UAT execution",
-        accent: "#ea4530",
-      },
-      {
-        type: "poster-hero",
-        kicker: "04 / ECMS ENTERPRISE QA",
-        headline: "13 SPRINTS DELIVERED",
-        sub: "Comprehensive test strategies, functional/regression/performance testing via Azure & Jira",
-        accent: "#3aa1d8",
-      },
-    ],
-  },
+  // ---- Archive (listed on /work only) ----
   {
     id: "kopra-wholesale-core-banking",
-    featured: true,
+    featured: false,
     year: "2022–2024",
     client: "PT Bank Mandiri – KOPRA",
     category: "Core Banking & QA",
@@ -292,7 +422,7 @@ export const PROJECTS_PERSONAL = [
   },
   {
     id: "mandiri-treasury-efx-engine",
-    featured: true,
+    featured: false,
     year: "2022–2024",
     client: "PT Bank Mandiri – Treasury",
     category: "Treasury & FX",
@@ -344,7 +474,7 @@ export const PROJECTS_PERSONAL = [
   },
   {
     id: "bifast-escrow-h2h-integrations",
-    featured: true,
+    featured: false,
     year: "2020–2022",
     client: "PT Bank Mandiri – Wholesale",
     category: "Payments & H2H",
@@ -442,11 +572,7 @@ export const PROJECTS_PERSONAL = [
   },
 ];
 
-export const PROJECTS_AGENCY = [
-  PROJECTS_PERSONAL[5],
-  PROJECTS_PERSONAL[0],
-  PROJECTS_PERSONAL[1],
-];
+export const PROJECTS_AGENCY = PROJECTS_PERSONAL.filter((p) => p.featured);
 
 export const EXPERIENCE_LIST = [
   {

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import ProjectVisualCard from "./ProjectVisuals";
+import { ShotFrame } from "./FeaturedProjectSection";
 import { ArrowUpRight } from "./Icons";
 
 const noop = () => {};
@@ -30,7 +31,7 @@ function HoverPreview({ project, index }) {
       x += (tx - x) * 0.16;
       y += (ty - y) * 0.16;
       if (ref.current) {
-        const px = Math.min(x + 28, window.innerWidth - 240);
+        const px = Math.min(x + 28, window.innerWidth - 370);
         const py = Math.max(12, Math.min(y - 150, window.innerHeight - 290));
         ref.current.style.transform = `translate3d(${px}px, ${py}px, 0)`;
       }
@@ -56,7 +57,12 @@ function HoverPreview({ project, index }) {
           project ? "opacity-100" : "opacity-0"
         }`}
       >
-        {project && (
+        {project?.gallery?.length > 0 && (
+          <div className="w-[560px]">
+            <ShotFrame shot={project.gallery[0]} label={project.title.split(/[—(:]/)[0].trim()} sizes="560px" eager />
+          </div>
+        )}
+        {project && !project.gallery?.length && project.slides?.[0] && (
           <ProjectVisualCard
             key={project.id}
             slide={project.slides[0]}

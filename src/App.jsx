@@ -11,7 +11,6 @@ import AboutView from "./components/AboutView";
 import WorkArchiveView from "./components/WorkArchiveView";
 import StudioLabView from "./components/StudioLabView";
 import ContactView from "./components/ContactView";
-import PageCurtain, { CURTAIN_COVER_MS, CURTAIN_REVEAL_MS } from "./components/PageCurtain";
 import { ArrowUpRight, ArrowRight } from "./components/Icons";
 import {
   HERO_PRESETS,
@@ -23,6 +22,7 @@ import {
 // ---------- Path routing: / , /work , /about , /studio , /contact , /work/<caseId> ----------
 // Vercel rewrites every non-file path to index.html (see vercel.json).
 const PAGES = ["home", "work", "about", "studio", "contact"];
+const PAGE_LEAVE_MS = 220;
 const ALL_PROJECTS = [...PROJECTS_PERSONAL, ...PROJECTS_AGENCY];
 
 const PAGE_TITLES = {
@@ -101,9 +101,10 @@ export default function App() {
     upgradeLegacyHash();
     return readLocation();
   });
-  // The page actually rendered. It lags behind the URL while the curtain covers the swap.
+  // The page actually rendered. On navigation the old page fades out briefly,
+  // then the new one is swapped in (scrolled to top) and fades up.
   const [shownPage, setShownPage] = useState(route.page);
-  const [curtain, setCurtain] = useState({ phase: "idle", page: route.page });
+  const [leaving, setLeaving] = useState(false);
   const activePage = shownPage;
 
   useEffect(() => {
@@ -113,22 +114,13 @@ export default function App() {
       setShownPage(route.page);
       return undefined;
     }
-    setCurtain({ phase: "cover", page: route.page });
+    setLeaving(true);
     const t = setTimeout(() => {
-      setShownPage(route.page); // swap while fully covered
-      setCurtain({ phase: "reveal", page: route.page });
-    }, CURTAIN_COVER_MS);
+      setShownPage(route.page);
+      setLeaving(false);
+    }, PAGE_LEAVE_MS);
     return () => clearTimeout(t);
   }, [route.page, shownPage]);
-
-  useEffect(() => {
-    if (curtain.phase !== "reveal") return undefined;
-    const t = setTimeout(
-      () => setCurtain((c) => ({ ...c, phase: "idle" })),
-      CURTAIN_REVEAL_MS + 40
-    );
-    return () => clearTimeout(t);
-  }, [curtain.phase]);
 
   // Preloader plays once per browser session
   const [isLoading, setIsLoading] = useState(
@@ -243,9 +235,6 @@ export default function App() {
         lang={lang}
       />
 
-      {/* Page-change curtain */}
-      <PageCurtain phase={curtain.phase} page={curtain.page} lang={lang} />
-
       {/* Custom Interactive Cursor */}
       <CustomCursor />
 
@@ -261,28 +250,17 @@ export default function App() {
       <main
         id="conteudo"
         key={activePage}
-        className="flex-1 page-enter"
-        style={curtain.phase === "reveal" ? { animationDelay: "260ms" } : undefined}
+        className={`flex-1 ${leaving ? "page-leave" : "page-enter"}`}
       >
         {activePage === "home" && (
           <div>
             {/* ==================== 1. HERO SECTION ==================== */}
-            <div className="relative h-[100dvh] md:h-auto md:min-h-[max(100svh,700px)] flex flex-col justify-start md:justify-center px-[clamp(20px,5vw,96px)] pt-[max(118px,17dvh)] md:pt-0 overflow-hidden bg-[#0a0a0a] select-none">
+            <div className="relative h-[100dvh] md:h-auto md:min-h-[max(100svh,700px)] flex flex-col justify-start md:justify-center px-[clamp(20px,5vw,96px)] pt-[max(132px,20dvh)] md:pt-0 overflow-hidden bg-[#0a0a0a] select-none">
               {/* Lanyard ID card hanging on the right (drops in on entrance) */}
               <IdCardLanyard lang={lang} isReady={!isLoading} />
 
               {/* Left-aligned headline block, in front of the card (pointer-events-none so the card stays draggable) */}
               <div className="relative z-20 pointer-events-none w-full md:max-w-[66vw]">
-                <p
-                  key={`eyebrow-${lang}-${isLoading}`}
-                  className="hero-word flex items-center gap-2.5 mb-5 sm:mb-7 text-[11px] sm:text-xs font-mono uppercase tracking-[0.2em] text-[#f1eec0]/55"
-                >
-                  <span className="w-2 h-2 rounded-full bg-[#27c93f] shadow-[0_0_10px_#27c93f] shrink-0" />
-                  {lang === "en"
-                    ? "system & business analyst · jakarta"
-                    : "system & business analyst · jakarta"}
-                </p>
-
                 <h1
                   key={`${mode}-${lang}-${isLoading}`}
                   className="text-left text-[clamp(46px,5.6vw,112px)] [@media(max-height:700px)_and_(max-width:639px)]:text-[38px] leading-[0.98] tracking-[-0.015em] font-stamp lowercase"
@@ -344,19 +322,9 @@ export default function App() {
                   </span>
                 </h1>
 
-                <p
-                  key={`sub-${lang}-${isLoading}`}
-                  className="hero-word hidden [@media(min-height:740px)]:block sm:block mt-5 sm:mt-7 max-w-[44ch] text-[14px] sm:text-[clamp(15px,1.15vw,18px)] leading-relaxed text-[#f1eec0]/60 font-ui"
-                  style={{ animationDelay: "650ms" }}
-                >
-                  {lang === "en"
-                    ? "Core banking, treasury & enterprise systems — from BRDs and as-is / to-be flows to end-to-end quality validation."
-                    : "Core banking, treasury & sistem enterprise — dari BRD dan alur as-is / to-be hingga validasi kualitas end-to-end."}
-                </p>
-
                 <div
                   key={`cta-${lang}-${isLoading}`}
-                  className="hero-word hidden sm:flex flex-wrap items-center gap-3 mt-8 w-fit pointer-events-auto"
+                  className="hero-word hidden sm:flex flex-wrap items-center gap-3 mt-10 w-fit pointer-events-auto"
                   style={{ animationDelay: "740ms" }}
                 >
                   <button
@@ -597,8 +565,10 @@ export default function App() {
 
             {/* ==================== 4. FEATURED CASE STUDIES LIST ==================== */}
             <div>
-              {featuredProjects.map((project) => (
+              {featuredProjects.map((project, i) => (
                 <FeaturedProjectSection
+                  index={i}
+                  total={featuredProjects.length}
                   key={project.id}
                   project={project}
                   lang={lang}
