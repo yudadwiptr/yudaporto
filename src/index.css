@@ -1,0 +1,225 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --background: #0a0a0a;
+  --cream: #f1eec0;
+  --foreground: #f1eec0;
+  --accent-red: #ea4530;
+  --accent-blue: #3aa1d8;
+  --font-stamp: "Anton", Impact, sans-serif;
+  --font-display: "Archivo", Arial, sans-serif;
+  --font-ui: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-accent-serif: "Instrument Serif", Georgia, serif;
+  --nav-top: calc(clamp(10px, 1.4vw, 18px) + clamp(6px, 1.4vw, 18px) + 56px);
+  --nav-bottom: calc(clamp(10px, 1.4vw, 18px) + clamp(30px, 4.2vw, 44px));
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-ui);
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-ui);
+  overflow-x: clip;
+  margin: 0;
+}
+
+::selection {
+  background: var(--accent-red);
+  color: var(--cream);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Typography Helper Classes */
+.font-stamp {
+  font-family: var(--font-stamp);
+  letter-spacing: -0.015em;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-ui {
+  font-family: var(--font-ui);
+}
+
+.font-accent-serif {
+  font-family: var(--font-accent-serif);
+}
+
+/* 4-Corner Fixed Navigation Underline (Exact Kenji Lambert transition) */
+.nav-link {
+  display: inline-block;
+  position: relative;
+}
+
+.nav-link::after {
+  content: "";
+  transform-origin: 0 50%;
+  background: currentColor;
+  width: 100%;
+  height: 4px;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  position: absolute;
+  bottom: 0.06em;
+  left: 0;
+  transform: scaleX(0);
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after,
+.nav-link[data-active="true"]::after {
+  transform: scaleX(1);
+}
+
+/* Hero Word Staggered Blur-In Animation */
+@keyframes heroWordIn {
+  0% {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(34px) rotate(-4deg) scale(0.94);
+  }
+  60% {
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+.hero-word {
+  opacity: 0;
+  animation: 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards heroWordIn;
+}
+
+/* Scroll Hint Bounce */
+@keyframes scrollHintBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.scroll-hint {
+  animation: 1.6s ease-in-out infinite scrollHintBounce;
+}
+
+/* Infinite Marquee */
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee,
+.animate-marquee-slow {
+  will-change: transform;
+  width: max-content;
+  animation-name: marquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.animate-marquee {
+  animation-duration: 24s;
+}
+
+.animate-marquee-slow {
+  animation-duration: 44s;
+}
+
+.animate-marquee:hover,
+.animate-marquee-slow:hover {
+  animation-play-state: paused;
+}
+
+/* Playful Sticker Wiggle on Hover */
+@keyframes tremorPeca {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(4deg) scale(1.06);
+  }
+  75% {
+    transform: rotate(-4deg) scale(1.06);
+  }
+}
+
+.sticker-hover:hover {
+  animation: 0.48s ease-in-out tremorPeca;
+}
+
+/* Custom Scrollbar for horizontal galleries */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Cursor Dot */
+@media (pointer: fine) {
+  .cursor-dot {
+    background: var(--accent-blue);
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: difference;
+    outline-offset: 5px;
+    will-change: transform;
+    border-radius: 999px;
+    outline: 1.5px solid transparent;
+    width: 16px;
+    height: 16px;
+    transition:
+      background-color 0.15s,
+      border-radius 0.15s,
+      width 0.15s,
+      height 0.15s,
+      outline-color 0.15s,
+      outline-offset 0.15s;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+
+  .cursor-dot.is-active {
+    background: var(--accent-red);
+    border-radius: 4px;
+    width: 22px;
+    height: 22px;
+  }
+
+  .cursor-dot.is-drag {
+    outline-color: var(--accent-blue);
+    outline-offset: 7px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
