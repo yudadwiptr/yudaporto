@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://yudadwiputra.com/sitemap.xml
+Sitemap: https://yudadp.vercel.app/sitemap.xml
 

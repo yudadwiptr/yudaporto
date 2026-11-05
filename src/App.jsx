@@ -19,7 +19,8 @@ import {
   PROJECTS_AGENCY,
 } from "./data/portfolioData";
 
-// ---------- Hash routing: #/ , #/work , #/about , #/studio , #/contact , #/<page>/<caseId> ----------
+// ---------- Path routing: / , /work , /about , /studio , /contact , /work/<caseId> ----------
+// Vercel rewrites every non-file path to index.html (see vercel.json).
 const PAGES = ["home", "work", "about", "studio", "contact"];
 const ALL_PROJECTS = [...PROJECTS_PERSONAL, ...PROJECTS_AGENCY];
 
@@ -31,23 +32,45 @@ const PAGE_TITLES = {
   contact: "Contact — Yuda Dwi Putra",
 };
 
-function parseHash() {
-  const raw = window.location.hash.replace(/^#\/?/, "");
-  const [seg0 = "", seg1 = ""] = raw.split("/").map((s) => {
-    try {
-      return decodeURIComponent(s);
-    } catch {
-      return s;
-    }
-  });
-  const page = PAGES.includes(seg0) ? seg0 : "home";
-  const caseId = ALL_PROJECTS.some((p) => p.id === seg1) ? seg1 : null;
-  return { page, caseId };
+const pagePath = (page) => (page === "home" || !PAGES.includes(page) ? "/" : `/${page}`);
+const casePath = (id) => `/work/${encodeURIComponent(id)}`;
+
+function splitPath(raw) {
+  return raw
+    .split("/")
+    .filter(Boolean)
+    .map((s) => {
+      try {
+        return decodeURIComponent(s);
+      } catch {
+        return s;
+      }
+    });
 }
 
-function buildHash(page, caseId) {
-  if (caseId) return `#/${page}/${encodeURIComponent(caseId)}`;
-  return page === "home" ? "#/" : `#/${page}`;
+function routeFromSegments([seg0 = "", seg1 = ""], bgPage) {
+  if (seg0 === "work" && ALL_PROJECTS.some((p) => p.id === seg1)) {
+    // Case study: keep the page it was opened from underneath, if we know it
+    return { page: PAGES.includes(bgPage) ? bgPage : "work", caseId: seg1 };
+  }
+  // Old hash links used "#/home/<id>" or "#/about/<id>" for cases
+  if (ALL_PROJECTS.some((p) => p.id === seg1)) {
+    return { page: PAGES.includes(seg0) ? seg0 : "home", caseId: seg1 };
+  }
+  return { page: PAGES.includes(seg0) ? seg0 : "home", caseId: null };
+}
+
+function readLocation() {
+  return routeFromSegments(splitPath(window.location.pathname), window.history.state?.bg);
+}
+
+// One-time upgrade of legacy hash URLs (#/about, #about, #/work/<id>) to clean paths
+function upgradeLegacyHash() {
+  const hash = window.location.hash;
+  if (!hash || !/^#\/?[a-z]/i.test(hash)) return;
+  const route = routeFromSegments(splitPath(hash.replace(/^#\/?/, "")));
+  const url = route.caseId ? casePath(route.caseId) : pagePath(route.page);
+  window.history.replaceState(route.caseId ? { bg: route.page } : null, "", url);
 }
 
 const storage = {
@@ -73,7 +96,10 @@ export default function App() {
   );
   const [mode, setMode] = useState("personal"); // "personal" | "agency"
   const [presetIndex, setPresetIndex] = useState(2);
-  const [route, setRoute] = useState(parseHash);
+  const [route, setRoute] = useState(() => {
+    upgradeLegacyHash();
+    return readLocation();
+  });
   const activePage = route.page;
 
   // Preloader plays once per browser session
@@ -94,11 +120,20 @@ export default function App() {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  // Keep route in sync with the address bar (back / forward / shared links)
+  // Keep route in sync with the address bar (back / forward)
   useEffect(() => {
-    const onHash = () => setRoute(parseHash());
+    const onPop = () => setRoute(readLocation());
+    // An old "#/about"-style link opened inside an already-loaded tab
+    const onHash = () => {
+      upgradeLegacyHash();
+      setRoute(readLocation());
+    };
+    window.addEventListener("popstate", onPop);
     window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
+    return () => {
+      window.removeEventListener("popstate", onPop);
+      window.removeEventListener("hashchange", onHash);
+    };
   }, []);
 
   // New page → start at the top, update the tab title
@@ -112,10 +147,19 @@ export default function App() {
     document.title = PAGE_TITLES[activePage] || PAGE_TITLES.home;
   }, [activePage]);
 
-  const setActivePage = useCallback((page) => {
-    const target = buildHash(PAGES.includes(page) ? page : "home");
-    if (window.location.hash !== target) window.location.hash = target;
+  const go = useCallback((url, state = null, replace = false) => {
+    if (replace) window.history.replaceState(state, "", url);
+    else window.history.pushState(state, "", url);
+    setRoute(readLocation());
   }, []);
+
+  const setActivePage = useCallback(
+    (page) => {
+      const target = pagePath(page);
+      if (window.location.pathname !== target) go(target);
+    },
+    [go]
+  );
 
   // Case study modal lives in the URL too, so it can be shared and closed with Back
   const caseOpenedInApp = useRef(false);
@@ -123,19 +167,18 @@ export default function App() {
     (project) => {
       if (!project) return;
       caseOpenedInApp.current = true;
-      window.location.hash = buildHash(activePage, project.id);
+      go(casePath(project.id), { bg: activePage });
     },
-    [activePage]
+    [activePage, go]
   );
   const closeCase = useCallback(() => {
     if (caseOpenedInApp.current) {
       caseOpenedInApp.current = false;
       window.history.back();
     } else {
-      window.history.replaceState(null, "", buildHash(activePage));
-      setRoute(parseHash());
+      go(pagePath(activePage), null, true);
     }
-  }, [activePage]);
+  }, [activePage, go]);
 
   // Modal closed by any means (browser Back included) → next close must not go back in history
   useEffect(() => {
