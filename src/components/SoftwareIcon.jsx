@@ -236,6 +236,20 @@ export default function SoftwareIcon({ name, className = "w-7 h-7" }) {
         </svg>
       );
 
+    case "filezillapro": {
+      // FileZilla mark with a PRO tag, like the FileZilla Pro app icon
+      const fz = BRAND_ICONS.filezilla;
+      return (
+        <svg viewBox="0 0 24 24" className={className} role="img" aria-label="FileZilla Pro">
+          <path d={fz.path} fill={fz.color} />
+          <rect x="10.2" y="16.6" width="13.3" height="6.6" rx="1.6" fill="#ffffff" stroke="#0a0a0a" strokeWidth="0.8" />
+          <text x="16.85" y="21.55" textAnchor="middle" fontSize="5" fontWeight="900" fontFamily="Arial, sans-serif" fill="#BF0000">
+            PRO
+          </text>
+        </svg>
+      );
+    }
+
     default: {
       const brand = BRAND_ICONS[key];
       if (brand) {

@@ -414,22 +414,30 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
               <div className="w-8 h-1.5 sm:h-2 rounded-full bg-[#0a0a0a]/90 border border-black/40 shadow-inner" />
             </div>
 
-            <div className="text-center leading-[0.92] tracking-[-0.02em] text-[#f1eec0] drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)] pt-0.5 sm:pt-1">
-              <div className="text-[21px] sm:text-[27px] font-extrabold font-ui lowercase">yuda</div>
-              <div className="text-[18px] sm:text-[24px] font-extrabold font-ui lowercase">dwi putra</div>
+            {/* ID photo */}
+            <div className="flex-1 min-h-0 flex items-center justify-center pt-1.5 sm:pt-2">
+              <div className="h-full max-h-[100px] sm:max-h-[124px] aspect-[3/4] rounded-[8px] sm:rounded-[10px] overflow-hidden bg-white ring-2 ring-[#f1eec0]/90 shadow-[0_6px_14px_rgba(0,0,0,0.3)]">
+                <img
+                  src="/yuda-photo-id.jpg"
+                  alt="Yuda Dwi Putra"
+                  draggable="false"
+                  width="480"
+                  height="640"
+                  className="w-full h-full object-cover pointer-events-none select-none"
+                />
+              </div>
             </div>
 
-            <div className="relative w-full flex-1 flex items-center justify-center py-0.5 sm:py-1 overflow-hidden">
-              <img
-                src="/yudaenamel.png"
-                alt="Yuda Dwi Putra Enamel Badge"
-                draggable="false"
-                className="max-h-[105px] sm:max-h-[136px] w-auto object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.4)] pointer-events-none select-none"
-              />
+            <div className="text-center leading-[0.92] tracking-[-0.02em] text-[#f1eec0] drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)] pt-1.5 sm:pt-2">
+              <div className="text-[19px] sm:text-[23px] font-extrabold font-ui lowercase">yuda</div>
+              <div className="text-[16px] sm:text-[20px] font-extrabold font-ui lowercase">dwi putra</div>
             </div>
 
-            <div className="text-center text-[8.5px] sm:text-[10px] font-bold text-[#0a0a0a]/80 tracking-wider font-mono">
-              OPEN TO WORK
+            <div className="flex justify-center pt-1.5">
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#0a0a0a]/85 px-2 py-[3px] text-[7.5px] sm:text-[8.5px] font-bold text-[#f1eec0] tracking-wider font-mono">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#27c93f]" />
+                OPEN TO WORK
+              </span>
             </div>
           </div>
 

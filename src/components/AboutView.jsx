@@ -456,20 +456,43 @@ export default function AboutView({ lang, setActivePage }) {
             title={lang === "en" ? "awards & honors" : "penghargaan & prestasi"}
             meta={lang === "en" ? "5× first place" : "5× juara 1"}
           />
-          <div className="divide-y divide-[#f1eec0]/12 border-y border-[#f1eec0]/12">
+          <div>
+          {/* Column labels (desktop) */}
+          <div className="hidden md:grid grid-cols-[150px_minmax(0,1.5fr)_minmax(0,1fr)_200px] gap-6 px-2 pb-3 text-[11px] font-mono uppercase tracking-[0.14em] text-[#f1eec0]/35 border-b border-[#f1eec0]/12">
+            <span>{lang === "en" ? "date" : "tanggal"}</span>
+            <span>{lang === "en" ? "award" : "penghargaan"}</span>
+            <span>{lang === "en" ? "scope" : "lingkup"}</span>
+            <span className="text-right">{lang === "en" ? "organisation" : "instansi"}</span>
+          </div>
+          <div className="divide-y divide-[#f1eec0]/12 border-b border-[#f1eec0]/12 border-t md:border-t-0">
             {RECOGNITION_LIST.map((rec, idx) => (
               <div
                 key={idx}
-                className="py-4 sm:py-5 grid sm:grid-cols-[1.4fr_1fr_auto_auto] gap-1 sm:gap-6 items-baseline sm:px-2"
+                className="group grid md:grid-cols-[150px_minmax(0,1.5fr)_minmax(0,1fr)_200px] md:items-center gap-x-6 gap-y-2 py-5 md:px-2 hover:bg-white/[0.02] transition-colors"
               >
-                <div className="text-base sm:text-lg font-medium text-[#f1eec0]">
-                  <strong className="font-bold text-[#ea4530]">{rec.tier}</strong>, {rec.category[lang]}
+                {/* Mobile meta line */}
+                <div className="md:hidden flex items-center justify-between gap-3 text-xs font-mono">
+                  <span className="text-[#f1eec0]/45">{rec.year}</span>
+                  <span className="text-[#3aa1d8] font-sans font-semibold truncate">{rec.org}</span>
                 </div>
-                <div className="text-sm text-[#f1eec0]/70">{rec.work}</div>
-                <div className="text-xs text-[#3aa1d8] font-semibold">{rec.org}</div>
-                <div className="text-xs font-mono text-[#f1eec0]/45 sm:text-right">{rec.year}</div>
+
+                <div className="hidden md:block text-xs font-mono text-[#f1eec0]/45">{rec.year}</div>
+
+                <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 min-w-0">
+                  <span className="justify-self-start whitespace-nowrap rounded-full bg-[#ea4530]/15 px-2.5 py-1 text-[11px] font-mono font-bold text-[#ea4530]">
+                    {rec.tier[lang]}
+                  </span>
+                  <span className="text-base sm:text-lg font-semibold text-[#f1eec0] leading-snug group-hover:text-[#3aa1d8] transition-colors">
+                    {rec.category[lang]}
+                  </span>
+                </div>
+
+                <div className="text-sm text-[#f1eec0]/65">{rec.work}</div>
+
+                <div className="hidden md:block text-sm text-[#3aa1d8] font-semibold text-right truncate">{rec.org}</div>
               </div>
             ))}
+          </div>
           </div>
         </section>
 
