@@ -114,6 +114,57 @@ body {
   animation: 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards heroWordIn;
 }
 
+/* Page transition (enter). Fill mode "backwards" leaves no transform behind,
+   so fixed-position modals inside <main> are not affected once it finishes. */
+@keyframes pageEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: pageEnter 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* Lanyard "tap to flip" hint */
+@keyframes hintIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.flip-hint {
+  animation: hintIn 0.5s ease-out 2.4s backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .page-enter,
+  .hero-word,
+  .flip-hint {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
+  .animate-marquee,
+  .animate-marquee-slow,
+  .scroll-hint {
+    animation-play-state: paused !important;
+  }
+}
+
 /* Scroll Hint Bounce */
 @keyframes scrollHintBounce {
 

@@ -56,6 +56,12 @@ export default function FrameNav({
         aria-label="Primary"
         className="fixed left-0 right-0 top-0 z-50 flex items-start justify-between px-[clamp(17px,2.9vw,34px)] py-[clamp(12px,1.7vw,22px)] pointer-events-none bg-gradient-to-b from-[#0a0a0a]/90 via-[#0a0a0a]/40 to-transparent pb-8"
       >
+        {/* Soft frosted backdrop that fades out toward the content */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 backdrop-blur-md pointer-events-none [mask-image:linear-gradient(to_bottom,black_45%,transparent)]"
+        />
+
         {/* Top-Left Brand Poster Mark with interactive living eyes */}
         <button
           ref={logoRef}
@@ -205,6 +211,10 @@ export default function FrameNav({
         aria-label="Secondary"
         className="fixed left-0 right-0 bottom-0 z-50 flex items-end justify-between px-[clamp(17px,2.9vw,34px)] py-[clamp(12px,1.7vw,22px)] pt-10 pointer-events-none bg-gradient-to-t from-[#0a0a0a]/95 via-[#0a0a0a]/55 to-transparent"
       >
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 backdrop-blur-md pointer-events-none [mask-image:linear-gradient(to_top,black_45%,transparent)]"
+        />
         <button
           type="button"
           onClick={() => {

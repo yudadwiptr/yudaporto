@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CustomCursor from "./components/CustomCursor";
 import Preloader from "./components/Preloader";
 import FrameNav from "./components/FrameNav";
@@ -11,7 +11,7 @@ import AboutView from "./components/AboutView";
 import WorkArchiveView from "./components/WorkArchiveView";
 import StudioLabView from "./components/StudioLabView";
 import ContactView from "./components/ContactView";
-import { ArrowUpRight } from "./components/Icons";
+import { ArrowUpRight, ArrowRight } from "./components/Icons";
 import {
   HERO_PRESETS,
   CLIENT_MARQUEE,
@@ -19,21 +19,139 @@ import {
   PROJECTS_AGENCY,
 } from "./data/portfolioData";
 
-export default function App() {
-  const [lang, setLang] = useState("en"); // "en" | "id"
-  const [mode, setMode] = useState("personal"); // "personal" | "agency"
-  const [presetIndex, setPresetIndex] = useState(2); // Option 03 selected by default
-  const [activePage, setActivePage] = useState("home"); // "home" | "work" | "about" | "studio" | "contact"
-  const [selectedProject, setSelectedProject] = useState(null);
+// ---------- Hash routing: #/ , #/work , #/about , #/studio , #/contact , #/<page>/<caseId> ----------
+const PAGES = ["home", "work", "about", "studio", "contact"];
+const ALL_PROJECTS = [...PROJECTS_PERSONAL, ...PROJECTS_AGENCY];
 
-  // Opening Defect Hunter Bug Preloader
-  const [isLoading, setIsLoading] = useState(true);
+const PAGE_TITLES = {
+  home: "Yuda Dwi Putra — System & Business Analyst | Core Banking & Treasury",
+  work: "Work — Yuda Dwi Putra",
+  about: "About — Yuda Dwi Putra",
+  studio: "Yuma Studio — Yuda Dwi Putra",
+  contact: "Contact — Yuda Dwi Putra",
+};
+
+function parseHash() {
+  const raw = window.location.hash.replace(/^#\/?/, "");
+  const [seg0 = "", seg1 = ""] = raw.split("/").map((s) => {
+    try {
+      return decodeURIComponent(s);
+    } catch {
+      return s;
+    }
+  });
+  const page = PAGES.includes(seg0) ? seg0 : "home";
+  const caseId = ALL_PROJECTS.some((p) => p.id === seg1) ? seg1 : null;
+  return { page, caseId };
+}
+
+function buildHash(page, caseId) {
+  if (caseId) return `#/${page}/${encodeURIComponent(caseId)}`;
+  return page === "home" ? "#/" : `#/${page}`;
+}
+
+const storage = {
+  get(store, key) {
+    try {
+      return window[store].getItem(key);
+    } catch {
+      return null;
+    }
+  },
+  set(store, key, value) {
+    try {
+      window[store].setItem(key, value);
+    } catch {
+      /* storage unavailable (private mode) — ignore */
+    }
+  },
+};
+
+export default function App() {
+  const [lang, setLangState] = useState(() =>
+    storage.get("localStorage", "ydp:lang") === "id" ? "id" : "en"
+  );
+  const [mode, setMode] = useState("personal"); // "personal" | "agency"
+  const [presetIndex, setPresetIndex] = useState(2);
+  const [route, setRoute] = useState(parseHash);
+  const activePage = route.page;
+
+  // Preloader plays once per browser session
+  const [isLoading, setIsLoading] = useState(
+    () => storage.get("sessionStorage", "ydp:intro") !== "1"
+  );
+  const finishIntro = useCallback(() => {
+    setIsLoading(false);
+    storage.set("sessionStorage", "ydp:intro", "1");
+  }, []);
+
+  const setLang = useCallback((next) => {
+    setLangState(next);
+    storage.set("localStorage", "ydp:lang", next);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  // Keep route in sync with the address bar (back / forward / shared links)
+  useEffect(() => {
+    const onHash = () => setRoute(parseHash());
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  // New page → start at the top, update the tab title
+  const firstPageRef = useRef(true);
+  useEffect(() => {
+    if (firstPageRef.current) {
+      firstPageRef.current = false;
+    } else {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+    document.title = PAGE_TITLES[activePage] || PAGE_TITLES.home;
+  }, [activePage]);
+
+  const setActivePage = useCallback((page) => {
+    const target = buildHash(PAGES.includes(page) ? page : "home");
+    if (window.location.hash !== target) window.location.hash = target;
+  }, []);
+
+  // Case study modal lives in the URL too, so it can be shared and closed with Back
+  const caseOpenedInApp = useRef(false);
+  const openCase = useCallback(
+    (project) => {
+      if (!project) return;
+      caseOpenedInApp.current = true;
+      window.location.hash = buildHash(activePage, project.id);
+    },
+    [activePage]
+  );
+  const closeCase = useCallback(() => {
+    if (caseOpenedInApp.current) {
+      caseOpenedInApp.current = false;
+      window.history.back();
+    } else {
+      window.history.replaceState(null, "", buildHash(activePage));
+      setRoute(parseHash());
+    }
+  }, [activePage]);
+
+  // Modal closed by any means (browser Back included) → next close must not go back in history
+  useEffect(() => {
+    if (!route.caseId) caseOpenedInApp.current = false;
+  }, [route.caseId]);
+
+  const selectedProject = useMemo(
+    () => ALL_PROJECTS.find((p) => p.id === route.caseId) || null,
+    [route.caseId]
+  );
 
   const presets = HERO_PRESETS[mode] || HERO_PRESETS.personal;
   const activePreset = presets[presetIndex % presets.length] || presets[0];
   const heroCopy = activePreset[lang];
 
-  // Auto-rotate hero copy smoothly without manual 01 02 03 buttons
+  // Auto-rotate hero copy
   useEffect(() => {
     const timer = setInterval(() => {
       setPresetIndex((prev) => (prev + 1) % presets.length);
@@ -50,7 +168,7 @@ export default function App() {
       {/* Opening Preloader Screen (Defect Hunter Bug) */}
       <Preloader
         isOpen={isLoading}
-        onComplete={() => setIsLoading(false)}
+        onComplete={finishIntro}
         lang={lang}
       />
 
@@ -66,7 +184,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main id="conteudo" className="flex-1">
+      <main id="conteudo" key={activePage} className="flex-1 page-enter">
         {activePage === "home" && (
           <div>
             {/* ==================== 1. HERO SECTION ==================== */}
@@ -88,7 +206,7 @@ export default function App() {
 
                 <h1
                   key={`${mode}-${lang}-${isLoading}`}
-                  className="text-left text-[clamp(46px,5.6vw,112px)] leading-[0.98] tracking-[-0.015em] font-stamp lowercase"
+                  className="text-left text-[clamp(46px,5.6vw,112px)] [@media(max-height:700px)_and_(max-width:639px)]:text-[38px] leading-[0.98] tracking-[-0.015em] font-stamp lowercase"
                 >
                   <span className="block">
                     <span
@@ -149,13 +267,36 @@ export default function App() {
 
                 <p
                   key={`sub-${lang}-${isLoading}`}
-                  className="hero-word hidden sm:block mt-7 max-w-[44ch] text-[clamp(15px,1.15vw,18px)] leading-relaxed text-[#f1eec0]/60 font-ui"
+                  className="hero-word hidden [@media(min-height:740px)]:block sm:block mt-5 sm:mt-7 max-w-[44ch] text-[14px] sm:text-[clamp(15px,1.15vw,18px)] leading-relaxed text-[#f1eec0]/60 font-ui"
                   style={{ animationDelay: "650ms" }}
                 >
                   {lang === "en"
                     ? "Core banking, treasury & enterprise systems — from BRDs and as-is / to-be flows to end-to-end quality validation."
                     : "Core banking, treasury & sistem enterprise — dari BRD dan alur as-is / to-be hingga validasi kualitas end-to-end."}
                 </p>
+
+                <div
+                  key={`cta-${lang}-${isLoading}`}
+                  className="hero-word hidden sm:flex flex-wrap items-center gap-3 mt-8 w-fit pointer-events-auto"
+                  style={{ animationDelay: "740ms" }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setActivePage("work")}
+                    className="inline-flex items-center gap-2 rounded-full bg-[#ea4530] text-[#f1eec0] px-5 py-3 text-sm font-bold lowercase hover:bg-[#f1eec0] hover:text-[#0a0a0a] transition-colors cursor-pointer"
+                  >
+                    <span>{lang === "en" ? "see selected work" : "lihat karya pilihan"}</span>
+                    <ArrowUpRight />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActivePage("contact")}
+                    className="inline-flex items-center gap-2 rounded-full border border-[#f1eec0]/25 text-[#f1eec0] px-5 py-3 text-sm font-bold lowercase hover:border-[#3aa1d8] hover:text-[#3aa1d8] transition-colors cursor-pointer"
+                  >
+                    <span>{lang === "en" ? "get in touch" : "hubungi saya"}</span>
+                    <ArrowRight />
+                  </button>
+                </div>
               </div>
 
               {/* Scroll hint (desktop) */}
@@ -382,7 +523,7 @@ export default function App() {
                   key={project.id}
                   project={project}
                   lang={lang}
-                  onOpenCase={setSelectedProject}
+                  onOpenCase={openCase}
                 />
               ))}
             </div>
@@ -417,7 +558,7 @@ export default function App() {
           <WorkArchiveView
             projects={allProjects}
             lang={lang}
-            onOpenCase={setSelectedProject}
+            onOpenCase={openCase}
           />
         )}
 
@@ -446,7 +587,7 @@ export default function App() {
       <CaseStudyModal
         project={selectedProject}
         lang={lang}
-        onClose={() => setSelectedProject(null)}
+        onClose={closeCase}
       />
     </div>
   );

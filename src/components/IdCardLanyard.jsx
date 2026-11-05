@@ -42,7 +42,7 @@ function computeLayout(w, h) {
   // Mobile: hang the card in the lower part of the hero so the headline stays readable,
   // while keeping it clear of the bottom navigation bar.
   const baseY = isMobile
-    ? clamp(h - cardH - 92, h * 0.5, h * 0.62)
+    ? clamp(h - cardH - 84, h * 0.5, h * 0.66)
     : h * 0.54;
   return {
     w,
@@ -68,6 +68,7 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
 
   const [isDragging, setIsDragging] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [showHint, setShowHint] = useState(true);
   const [viewport, setViewport] = useState(() => ({
     w: typeof window !== "undefined" ? window.innerWidth : 1280,
     h: typeof window !== "undefined" ? window.innerHeight : 800,
@@ -258,6 +259,7 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
     p.downTime = p.lastMoveT;
     p.dragDistance = 0;
     setIsDragging(true);
+    setShowHint(false);
     wake();
 
     const onMove = (ev) => {
@@ -383,6 +385,18 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
           isDragging ? "cursor-grabbing" : "cursor-grab"
         }`}
       >
+        {/* One-time interaction hint under the card */}
+        {showHint && isReady && (
+          <span
+            aria-hidden="true"
+            className="flip-hint absolute left-0 right-0 top-full mt-3 flex justify-center pointer-events-none"
+          >
+            <span className="whitespace-nowrap rounded-full border border-[#f1eec0]/15 bg-[#0a0a0a]/80 backdrop-blur-sm px-2.5 py-1 text-[10px] font-mono lowercase tracking-wide text-[#f1eec0]/65">
+              {lang === "en" ? "tap to flip · pull me" : "ketuk untuk balik · tarik aku"}
+            </span>
+          </span>
+        )}
+
         {/* Card 3D flip container */}
         <div
           className="relative w-full h-full transition-transform duration-500"

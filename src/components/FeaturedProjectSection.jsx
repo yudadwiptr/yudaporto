@@ -71,13 +71,13 @@ export default function FeaturedProjectSection({
 
         {/* 3-Column Grid: Title (1.55fr) | Year & Client (auto) | Single-Idea Copy (1.15fr) */}
         <div className="grid md:grid-cols-[1.55fr_auto_1.15fr] gap-x-[clamp(20px,3vw,44px)] gap-y-3 items-start">
-          <h3 className="text-[clamp(28px,4.8vw,56px)] leading-[1.02] tracking-[-0.02em] mb-2 md:mb-0 text-balance">
+          <h3 className="font-stamp lowercase text-[clamp(34px,4.6vw,64px)] leading-[0.96] mb-2 md:mb-0 text-balance">
             <button
               type="button"
               onClick={() => onOpenCase(project)}
               className="text-left hover:text-[#ea4530] transition-colors cursor-pointer"
             >
-              <strong className="font-black">{project.title}</strong>
+              {project.title}
             </button>
           </h3>
 
