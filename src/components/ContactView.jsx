@@ -39,8 +39,8 @@ export default function ContactView({ lang }) {
 
         <p className="text-base sm:text-lg text-[#f1eec0]/75 max-w-xl mx-auto">
           {lang === "en"
-            ? "Need a Business Analyst, System Analyst, or QA Leader for Core Banking, Treasury or Enterprise Modernization? Reach out directly via email or WhatsApp."
-            : "Butuh Business Analyst, System Analyst, atau QA Leader untuk Core Banking, Treasury atau Modernisasi Enterprise? Hubungi langsung lewat email atau WhatsApp."}
+            ? "Need a Business Analyst, System Analyst, or QA Leader for core banking & treasury, wholesale digital banking, payments & H2H integration, or enterprise modernisation? Reach out directly via email or WhatsApp."
+            : "Butuh Business Analyst, System Analyst, atau QA Leader untuk core banking & treasury, wholesale digital banking, payments & integrasi H2H, atau modernisasi enterprise? Hubungi langsung lewat email atau WhatsApp."}
         </p>
 
         {/* Big Email Pill + WhatsApp + Copy Button */}

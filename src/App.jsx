@@ -28,7 +28,7 @@ const PAGE_LEAVE_MS = 220;
 const ALL_PROJECTS = [...PROJECTS_PERSONAL, ...PROJECTS_AGENCY];
 
 const PAGE_TITLES = {
-  home: "Yuda Dwi Putra — System & Business Analyst | Core Banking & Treasury",
+  home: "Yuda Dwi Putra — System & Business Analyst | Banking & Financial Systems",
   work: "Work — Yuda Dwi Putra",
   about: "About — Yuda Dwi Putra",
   studio: "Yuma Studio — Yuda Dwi Putra",
@@ -381,9 +381,10 @@ export default function App() {
                     <>
                       I&apos;m <strong className="font-bold text-[#f1eec0]">Yuda Dwi Putra</strong>, a{" "}
                       <strong className="font-bold text-[#3aa1d8]">System &amp; Business Analyst</strong> for{" "}
-                      <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">core banking and treasury</em>.
-                      I turn complex banking processes into clear BRDs, as-is / to-be flows and specs, then validate them
-                      end to end, from digital channel to host. <span className="whitespace-nowrap">6+ years</span> in financial software, including{" "}
+                      <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">banking &amp; financial systems</em>,
+                      from core banking and treasury to wholesale digital banking and payments. I turn complex banking
+                      processes into clear BRDs, as-is / to-be flows and specs, then validate them end to end as an
+                      ISTQB-certified tester, from digital channel to host. <span className="whitespace-nowrap">6+ years</span> in financial software, including{" "}
                       <strong className="font-bold text-[#ea4530]">5 years at <span className="whitespace-nowrap">PT Bank Mandiri (KOPRA)</span></strong>, now modernising
                       systems for <strong className="font-bold text-[#3aa1d8] whitespace-nowrap">TNI AL</strong> and{" "}
                       <strong className="font-bold text-[#ea4530] whitespace-nowrap">PT SMI</strong> at <span className="whitespace-nowrap">PT Adi Data Informatika</span>.{" "}
@@ -396,10 +397,11 @@ export default function App() {
                   ) : (
                     <>
                       Saya <strong className="font-bold text-[#f1eec0]">Yuda Dwi Putra</strong>,{" "}
-                      <strong className="font-bold text-[#3aa1d8]">System &amp; Business Analyst</strong> di bidang{" "}
-                      <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">core banking dan treasury</em>.
-                      Saya mengubah proses perbankan yang kompleks menjadi BRD, alur as-is / to-be, dan spesifikasi yang
-                      jelas, lalu memvalidasinya end-to-end, dari kanal digital sampai host. <span className="whitespace-nowrap">6+ tahun</span> di software finansial,
+                      <strong className="font-bold text-[#3aa1d8]">System &amp; Business Analyst</strong> untuk{" "}
+                      <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">sistem perbankan &amp; keuangan</em>,
+                      dari core banking dan treasury hingga wholesale digital banking dan payments. Saya mengubah proses
+                      perbankan yang kompleks menjadi BRD, alur as-is / to-be, dan spesifikasi yang jelas, lalu
+                      memvalidasinya end-to-end sebagai ISTQB-certified tester, dari kanal digital sampai host. <span className="whitespace-nowrap">6+ tahun</span> di software finansial,
                       termasuk <strong className="font-bold text-[#ea4530]">5 tahun di <span className="whitespace-nowrap">PT Bank Mandiri (KOPRA)</span></strong>, kini
                       memodernisasi sistem untuk <strong className="font-bold text-[#3aa1d8] whitespace-nowrap">TNI AL</strong> dan{" "}
                       <strong className="font-bold text-[#ea4530] whitespace-nowrap">PT SMI</strong> bersama <span className="whitespace-nowrap">PT Adi Data Informatika</span>.{" "}

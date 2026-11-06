@@ -241,8 +241,8 @@ export default function AboutView({ lang, setActivePage }) {
           </div>
           <p className="mt-6 text-[15px] sm:text-base text-[#f1eec0]/70 leading-relaxed max-w-3xl">
             {lang === "en"
-              ? "Including 5 years at PT Bank Mandiri on the KOPRA wholesale banking platform. Strong hands-on exposure to core banking and treasury domains: branch and host transactions (BDS, Host/AS400), account & ledger posting, multi-currency & Non-IDR accounts, FX (e-FX), remittance, custody, escrow, cash management, balance forecasting, trade finance, and BI-FAST payments."
-              : "Termasuk 5 tahun di PT Bank Mandiri pada platform wholesale banking KOPRA. Berpengalaman mendalam pada domain core banking & treasury: transaksi cabang dan host (BDS, Host/AS400), pembukuan akun & buku besar, rekening multi-currency & Non-IDR, FX (e-FX), remitansi, kustodi, escrow, cash management, balance forecasting, trade finance, dan pembayaran BI-FAST."}
+              ? "Including 5 years at PT Bank Mandiri on the KOPRA wholesale banking platform. Hands-on across three areas: core banking & treasury (branch and host transactions on BDS / Host AS400, account & ledger posting, multi-currency & Non-IDR accounts, e-FX, balance forecasting), wholesale digital banking (cash management, trade finance & bank guarantees, supply chain financing, custody, escrow) and payments & integration (BI-FAST, H2H / API, remittance)."
+              : "Termasuk 5 tahun di PT Bank Mandiri pada platform wholesale banking KOPRA. Berpengalaman langsung di tiga area: core banking & treasury (transaksi cabang dan host di BDS / Host AS400, pembukuan akun & buku besar, rekening multi-currency & Non-IDR, e-FX, balance forecasting), wholesale digital banking (cash management, trade finance & bank garansi, supply chain financing, kustodi, escrow), serta payments & integrasi (BI-FAST, H2H / API, remitansi)."}
           </p>
         </div>
 
@@ -507,8 +507,8 @@ export default function AboutView({ lang, setActivePage }) {
             </h3>
             <p className="text-sm sm:text-base text-[#f1eec0]/70 leading-relaxed">
               {lang === "en"
-                ? "Need a System & Business Analyst or QA Leader for Core Banking, Treasury, or Enterprise Modernization? Let's connect."
-                : "Butuh System & Business Analyst atau QA Leader untuk Core Banking, Treasury, atau Modernisasi Sistem? Mari berdiskusi."}
+                ? "Need a System & Business Analyst or QA Leader for core banking & treasury, wholesale digital banking, payments & H2H integration, or enterprise modernisation? Let's connect."
+                : "Butuh System & Business Analyst atau QA Leader untuk core banking & treasury, wholesale digital banking, payments & integrasi H2H, atau modernisasi sistem? Mari berdiskusi."}
             </p>
             <p className="text-xs font-mono text-[#3aa1d8] break-words">
               yudadwiputra@gmail.com · +62 895 2521 4959
