@@ -477,22 +477,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Floating Right "all works" Pill */}
-                <div className="absolute inset-0 hidden md:flex items-center pointer-events-none justify-end pr-[clamp(18px,4vw,40px)]">
-                  <div className="pointer-events-auto">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setActivePage("work");
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                      className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-tight rounded-full px-4 py-2 transition-colors shadow-lg bg-[#ea4530] text-[#f1eec0] hover:bg-[#f1eec0] hover:text-[#0a0a0a] cursor-pointer lowercase"
-                    >
-                      <span>{lang === "en" ? "all works" : "semua proyek"}</span>
-                      <ArrowUpRight />
-                    </button>
-                  </div>
-                </div>
               </div>
             </section>
 
