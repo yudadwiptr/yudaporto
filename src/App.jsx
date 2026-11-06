@@ -375,115 +375,38 @@ export default function App() {
 
             {/* ==================== 2. BIO STATEMENT + SOFTWARE & QA MARQUEE ==================== */}
             <section className="relative pt-24 sm:pt-32 md:pt-40 pb-12 sm:pb-16 flex flex-col overflow-hidden">
-              <div className="px-5 sm:px-8 md:px-12 mb-14 sm:mb-20 md:mb-24">
-                <div className="text-[clamp(19px,min(3.2vw,4.2vh),36px)] leading-[1.38] sm:leading-[1.3] tracking-tight max-w-[23ch] sm:max-w-[30ch] md:max-w-[42ch] mx-auto text-center">
+              <div className="px-[clamp(20px,5vw,96px)] mb-16 sm:mb-20 md:mb-28">
+                <p className="text-left text-[clamp(22px,2.7vw,42px)] leading-[1.3] tracking-[-0.01em] text-[#f1eec0]/85 max-w-[34ch] text-pretty">
                   {lang === "en" ? (
                     <>
-                      <span className="text-[#ea4530] font-bold">* </span>
-                      I&apos;m{" "}
-                      <strong className="font-bold text-[#f1eec0]">
-                        Yuda Dwi Putra
-                      </strong>
-                      , a{" "}
-                      <strong className="font-bold text-[#3aa1d8]">
-                        System &amp; Business Analyst
-                      </strong>{" "}
-                      who moves between{" "}
-                      <em className="font-accent-serif italic font-normal text-[1.12em]">
-                        core banking,
-                      </em>{" "}
-                      <em className="font-accent-serif italic font-normal text-[1.12em]">
-                        treasury &amp; e-FX,
-                      </em>{" "}
-                      <em className="font-accent-serif italic font-normal text-[1.12em]">
-                        functional specifications
-                      </em>{" "}
-                      and{" "}
-                      <strong className="font-bold text-[#ea4530]">
-                        end-to-end quality validation
-                      </strong>{" "}
-                      — translating complex banking processes into clear BRDs,
-                      as-is / to-be flows, and reliable host integrations. With{" "}
-                      <strong className="font-bold text-[#f1eec0]">
-                        6+ years
-                      </strong>{" "}
-                      in financial software delivery, including{" "}
-                      <strong className="font-bold text-[#3aa1d8]">
-                        5 years at PT Bank Mandiri (KOPRA)
-                      </strong>{" "}
-                      and enterprise modernization at{" "}
-                      <strong className="font-bold text-[#ea4530]">
-                        PT Adi Data Informatika
-                      </strong>{" "}
-                      for{" "}
-                      <strong className="font-bold text-[#3aa1d8]">
-                        TNI AL (TABPLIN)
-                      </strong>{" "}
-                      &amp;{" "}
-                      <strong className="font-bold text-[#ea4530]">
-                        PT SMI
-                      </strong>
-                      . Make yourself at{" "}
-                      <span className="inline-block bg-[#ea4530] text-[#0a0a0a] rounded-full px-[0.5em] py-[0.05em] text-[0.76em] font-bold align-[0.06em]">
+                      I&apos;m <strong className="font-bold text-[#f1eec0]">Yuda Dwi Putra</strong>, a{" "}
+                      <strong className="font-bold text-[#3aa1d8]">System &amp; Business Analyst</strong> for{" "}
+                      <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">core banking and treasury</em>.
+                      I turn complex banking processes into clear BRDs, as-is / to-be flows and specs, then validate them
+                      end to end, from digital channel to host. 6+ years in financial software, including{" "}
+                      <strong className="font-bold text-[#ea4530]">5 at PT Bank Mandiri (KOPRA)</strong>, now modernising
+                      systems for TNI AL and PT SMI at PT Adi Data Informatika. Make yourself at{" "}
+                      <span className="inline-block bg-[#ea4530] text-[#0a0a0a] rounded-full px-[0.45em] py-[0.02em] text-[0.74em] font-bold align-[0.08em]">
                         home
                       </span>
                       !
                     </>
                   ) : (
                     <>
-                      <span className="text-[#ea4530] font-bold">* </span>
-                      Saya{" "}
-                      <strong className="font-bold text-[#f1eec0]">
-                        Yuda Dwi Putra
-                      </strong>
-                      , seorang{" "}
-                      <strong className="font-bold text-[#3aa1d8]">
-                        System &amp; Business Analyst
-                      </strong>{" "}
-                      yang bergerak di antara{" "}
-                      <em className="font-accent-serif italic font-normal text-[1.12em]">
-                        core banking,
-                      </em>{" "}
-                      <em className="font-accent-serif italic font-normal text-[1.12em]">
-                        treasury &amp; e-FX,
-                      </em>{" "}
-                      <em className="font-accent-serif italic font-normal text-[1.12em]">
-                        spesifikasi fungsional
-                      </em>{" "}
-                      dan{" "}
-                      <strong className="font-bold text-[#ea4530]">
-                        validasi kualitas end-to-end
-                      </strong>{" "}
-                      — menerjemahkan proses bisnis perbankan yang kompleks
-                      menjadi BRD, alur proses, dan integrasi host yang jernih.
-                      Berbekal{" "}
-                      <strong className="font-bold text-[#f1eec0]">
-                        6+ tahun
-                      </strong>{" "}
-                      di industri finansial, termasuk{" "}
-                      <strong className="font-bold text-[#3aa1d8]">
-                        5 tahun di PT Bank Mandiri (KOPRA)
-                      </strong>{" "}
-                      serta modernisasi sistem di{" "}
-                      <strong className="font-bold text-[#ea4530]">
-                        PT Adi Data Informatika
-                      </strong>{" "}
-                      untuk{" "}
-                      <strong className="font-bold text-[#3aa1d8]">
-                        TNI AL (TABPLIN)
-                      </strong>{" "}
-                      &amp;{" "}
-                      <strong className="font-bold text-[#ea4530]">
-                        PT SMI
-                      </strong>
-                      . Anggap rumah{" "}
-                      <span className="inline-block bg-[#ea4530] text-[#0a0a0a] rounded-full px-[0.5em] py-[0.05em] text-[0.76em] font-bold align-[0.06em]">
+                      Saya <strong className="font-bold text-[#f1eec0]">Yuda Dwi Putra</strong>,{" "}
+                      <strong className="font-bold text-[#3aa1d8]">System &amp; Business Analyst</strong> di bidang{" "}
+                      <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">core banking dan treasury</em>.
+                      Saya mengubah proses perbankan yang kompleks menjadi BRD, alur as-is / to-be, dan spesifikasi yang
+                      jelas, lalu memvalidasinya end-to-end, dari kanal digital sampai host. 6+ tahun di software finansial,
+                      termasuk <strong className="font-bold text-[#ea4530]">5 tahun di PT Bank Mandiri (KOPRA)</strong>, kini
+                      memodernisasi sistem untuk TNI AL dan PT SMI bersama PT Adi Data Informatika. Anggap rumah{" "}
+                      <span className="inline-block bg-[#ea4530] text-[#0a0a0a] rounded-full px-[0.45em] py-[0.02em] text-[0.74em] font-bold align-[0.08em]">
                         sendiri
                       </span>
                       !
                     </>
                   )}
-                </div>
+                </p>
               </div>
 
               {/* Software & QA Tools Infinite Marquee with 3D Icons */}

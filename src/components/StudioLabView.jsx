@@ -17,29 +17,41 @@ const SERVICES = [
     Icon: GlobeIcon,
     color: "#3aa1d8",
     hover: "hover:border-[#3aa1d8]/40",
-    title: "Website Bisnis & Profil",
-    desc: "Next.js, Tailwind CSS, animasi halus, dan SEO prima untuk kredibilitas bisnis.",
+    title: { en: "Business & Company Websites", id: "Website Bisnis & Profil" },
+    desc: {
+      en: "Next.js, Tailwind CSS, smooth animation and solid SEO for a credible brand.",
+      id: "Next.js, Tailwind CSS, animasi halus, dan SEO prima untuk kredibilitas bisnis.",
+    },
   },
   {
     Icon: InviteIcon,
     color: "#ea4530",
     hover: "hover:border-[#ea4530]/40",
-    title: "Undangan Online",
-    desc: "RSVP real-time, musik latar, kisah cinta, hitung mundur, dan amplop digital.",
+    title: { en: "Digital Invitations", id: "Undangan Online" },
+    desc: {
+      en: "Live RSVP, background music, love story, countdown and a digital gift envelope.",
+      id: "RSVP real-time, musik latar, kisah cinta, hitung mundur, dan amplop digital.",
+    },
   },
   {
     Icon: CartIcon,
     color: "#f1eec0",
     hover: "hover:border-[#f1eec0]/40",
-    title: "Toko Online & WA",
-    desc: "Katalog produk elegan dengan sistem pemesanan langsung otomatis ke WhatsApp.",
+    title: { en: "Online Stores + WhatsApp", id: "Toko Online & WA" },
+    desc: {
+      en: "Clean product catalogues with orders sent straight to WhatsApp.",
+      id: "Katalog produk elegan dengan sistem pemesanan langsung otomatis ke WhatsApp.",
+    },
   },
   {
     Icon: BoltIcon,
     color: "#3aa1d8",
     hover: "hover:border-[#3aa1d8]/40",
-    title: "Custom Web App",
-    desc: "Dashboard analitik, portal internal, form interaktif, dan integrasi API.",
+    title: { en: "Custom Web Apps", id: "Custom Web App" },
+    desc: {
+      en: "Analytics dashboards, internal portals, interactive forms and API integrations.",
+      id: "Dashboard analitik, portal internal, form interaktif, dan integrasi API.",
+    },
   },
 ];
 
@@ -130,7 +142,7 @@ export default function StudioLabView({
                 href="https://yumastudio.digital/"
                 target="_blank"
                 rel="noopener noreferrer"
-                title="Buka https://yumastudio.digital/"
+                title={lang === "en" ? "Open https://yumastudio.digital/" : "Buka https://yumastudio.digital/"}
                 className="group flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-[#161616] border border-[#f1eec0]/15 text-[11px] sm:text-xs font-mono text-[#f1eec0]/80 hover:border-[#3aa1d8] hover:text-[#f1eec0] transition-colors max-w-md w-full min-w-0 justify-center"
               >
                 <LockIcon className="text-[#27c93f]" />
@@ -156,7 +168,7 @@ export default function StudioLabView({
               >
                 <img
                   src="/yumastudio-preview.jpg"
-                  alt="Yuma Studio Official Website Preview - Kami Merancang Website"
+                  alt="Yuma Studio website preview"
                   className="w-full h-auto object-cover object-top transition-transform duration-500 group-hover:scale-[1.015]"
                 />
                 {/* Floating overlay on hover */}
@@ -172,7 +184,7 @@ export default function StudioLabView({
               <button
                 type="button"
                 onClick={() => setScreenshotModal(true)}
-                title="Zoom Screenshot"
+                title={lang === "en" ? "Zoom screenshot" : "Perbesar screenshot"}
                 className="absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-black/75 hover:bg-black text-[#f1eec0] border border-[#f1eec0]/20 text-xs font-mono transition-colors flex items-center gap-1.5 cursor-pointer"
               >
                 <ExpandIcon />
@@ -187,7 +199,9 @@ export default function StudioLabView({
                   Yu Mau Bikin Apa?
                 </span>
                 <h3 className="font-stamp text-2xl sm:text-3xl text-[#f1eec0] lowercase">
-                  kami merancang website yang bikin bisnismu naik kelas
+                  {lang === "en"
+                    ? "we design websites that take your business up a level"
+                    : "kami merancang website yang bikin bisnismu naik kelas"}
                 </h3>
                 <p className="text-sm sm:text-base text-[#f1eec0]/75 leading-relaxed">
                   {lang === "en"
@@ -200,7 +214,7 @@ export default function StudioLabView({
               <div className="grid grid-cols-1 min-[420px]:grid-cols-2 lg:grid-cols-4 gap-3.5">
                 {SERVICES.map(({ Icon, color, hover, title, desc }) => (
                   <div
-                    key={title}
+                    key={title.en}
                     className={`p-4 rounded-xl bg-[#0a0a0a] border border-[#f1eec0]/12 space-y-2 transition-colors ${hover}`}
                   >
                     <div
@@ -209,8 +223,8 @@ export default function StudioLabView({
                     >
                       <Icon className="text-[18px]" />
                     </div>
-                    <div className="font-bold text-sm text-[#f1eec0]">{title}</div>
-                    <p className="text-xs text-[#f1eec0]/60 leading-snug">{desc}</p>
+                    <div className="font-bold text-sm text-[#f1eec0]">{title[lang]}</div>
+                    <p className="text-xs text-[#f1eec0]/60 leading-snug">{desc[lang]}</p>
                   </div>
                 ))}
               </div>
@@ -235,7 +249,7 @@ export default function StudioLabView({
                     className="px-5 py-3 rounded-full bg-[#0a0a0a] border border-[#f1eec0]/20 text-[#f1eec0] font-bold text-xs sm:text-sm hover:border-[#27c93f] hover:text-[#27c93f] transition-colors lowercase flex items-center justify-center gap-2 w-full sm:w-auto"
                   >
                     <ChatIcon className="text-[1.15em]" />
-                    <span>Hubungi via WhatsApp</span>
+                    <span>{lang === "en" ? "chat on WhatsApp" : "hubungi via WhatsApp"}</span>
                   </a>
                 </div>
 
@@ -292,14 +306,14 @@ export default function StudioLabView({
               />
             </div>
             <div className="p-3 bg-[#121212] border-t border-[#f1eec0]/15 flex items-center justify-between gap-3 text-xs text-[#f1eec0]/70">
-              <span className="truncate">Yuma Studio Official Website Preview</span>
+              <span className="truncate">{lang === "en" ? "Yuma Studio website preview" : "Pratinjau website Yuma Studio"}</span>
               <a
                 href="https://yumastudio.digital/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-1.5 rounded-full bg-[#ea4530] text-[#f1eec0] font-bold hover:bg-[#f1eec0] hover:text-[#0a0a0a] transition-colors inline-flex items-center gap-1.5 shrink-0"
               >
-                <span>Kunjungi Website</span>
+                <span>{lang === "en" ? "Visit website" : "Kunjungi website"}</span>
                 <ArrowUpRight />
               </a>
             </div>
