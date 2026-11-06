@@ -61,6 +61,11 @@ function computeLayout(w, h) {
     anchorX: baseX,
     anchorY: -60,
     strapW: isMobile ? 14 : 20,
+    // Strap tab that threads through the card slot (px above the card's top edge)
+    tabTop: 4,
+    // Grommet sits on the flexible strap, this far above the card edge
+    grommetLift: isMobile ? 13 : 17,
+    grommetR: isMobile ? 4.6 : 6,
   };
 }
 
@@ -69,9 +74,9 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
   const cardRef = useRef(null);
   const strapRef = useRef(null);
   const strapHiRef = useRef(null);
+  const grommetRef = useRef(null);
   const strapShadowRef = useRef(null);
   const ropeRef = useRef(null);
-  const claspRef = useRef(null);
   const rafRef = useRef(0);
   const lastTimeRef = useRef(0);
 
@@ -105,17 +110,21 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
   });
 
   // ---- Rope -------------------------------------------------------------
+  // The simulated strap ends where the card-mounted strap tab begins (2px overlap
+  // hides the seam); the tab swings with the card around its top centre.
   const ropeEnd = () => {
     const p = physicsRef.current;
     const L = layoutRef.current;
-    return [L.baseX + p.x, L.baseY + p.y - 18];
+    const a = (p.rot * Math.PI) / 180;
+    const r = L.tabTop - 2;
+    return [L.baseX + p.x + Math.sin(a) * r, L.baseY + p.y - Math.cos(a) * r];
   };
 
   // (Re)build the strap as a straight line to the clasp, bowed sideways if slack
   const initRope = useCallback((endVy = 0) => {
     const L = layoutRef.current;
     const [ex, ey] = ropeEnd();
-    const restLen = L.baseY - 18 - L.anchorY;
+    const restLen = L.baseY - (L.tabTop - 2) - L.anchorY;
     const seg = restLen / (ROPE_N - 1);
     const d = Math.hypot(ex - L.anchorX, ey - L.anchorY);
     const bow = 0.35 * Math.sqrt(Math.max(0, restLen * restLen - d * d));
@@ -221,18 +230,33 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
     const d = ropePath();
     strapRef.current?.setAttribute("d", d);
     strapHiRef.current?.setAttribute("d", d);
+
+    // Grommet: walk back along the strap from its end and sit there, aligned with it
+    if (grommetRef.current && ropeRef.current) {
+      const { px, py } = ropeRef.current;
+      let need = L.grommetLift;
+      let gx = px[ROPE_N - 1];
+      let gy = py[ROPE_N - 1];
+      let ang = 0;
+      for (let i = ROPE_N - 1; i > 0; i--) {
+        const dx = px[i - 1] - px[i];
+        const dy = py[i - 1] - py[i];
+        const len = Math.hypot(dx, dy) || 1e-6;
+        ang = (Math.atan2(dx, -dy) * 180) / Math.PI;
+        if (len >= need) {
+          gx = px[i] + (dx * need) / len;
+          gy = py[i] + (dy * need) / len;
+          need = 0;
+          break;
+        }
+        need -= len;
+        gx = px[i - 1];
+        gy = py[i - 1];
+      }
+      grommetRef.current.setAttribute("transform", `translate(${gx.toFixed(1)} ${gy.toFixed(1)}) rotate(${ang.toFixed(1)})`);
+    }
     strapShadowRef.current?.setAttribute("d", d);
 
-    // Clasp follows the strap's last segment, blended with the card tilt
-    const r = ropeRef.current;
-    const n = ROPE_N - 1;
-    const strapAngle = (Math.atan2(-(r.px[n] - r.px[n - 1]), r.py[n] - r.py[n - 1]) * 180) / Math.PI;
-    if (claspRef.current) {
-      claspRef.current.setAttribute(
-        "transform",
-        `translate(${clipX} ${clipY}) rotate(${clamp(strapAngle * 0.6 + p.rot * 0.4, -60, 60)})`
-      );
-    }
     if (cardRef.current) {
       cardRef.current.style.transform = `translate3d(${clipX}px, ${clipY}px, 0) translateX(-50%) rotate(${p.rot}deg)`;
     }
@@ -447,11 +471,12 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
           stroke="rgba(0,0,0,0.45)"
           strokeWidth={strapW + 2}
           strokeLinejoin="round"
+          strokeLinecap="round"
           transform="translate(2 3)"
         />
 
         {/* Strap ribbon (flexible) */}
-        <path ref={strapRef} fill="none" stroke="#d93b24" strokeWidth={strapW} strokeLinejoin="round" />
+        <path ref={strapRef} fill="none" stroke="#d93b24" strokeWidth={strapW} strokeLinejoin="round" strokeLinecap="round" />
         {/* Woven sheen down the middle of the ribbon */}
         <path
           ref={strapHiRef}
@@ -460,24 +485,25 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
           strokeOpacity="0.55"
           strokeWidth={Math.max(3, strapW * 0.36)}
           strokeLinejoin="round"
+          strokeLinecap="round"
         />
 
-        {/* Metal lobster clasp */}
-        <g ref={claspRef}>
-          <rect
-            x={isMobile ? -9 : -12}
-            y="-22"
-            width={isMobile ? 18 : 24}
-            height="8"
-            rx="2"
-            fill="#a8291a"
-            stroke="#5e160c"
-            strokeWidth="1.2"
-          />
-          <ellipse cx="0" cy="-12" rx="6.5" ry="4.5" fill="none" stroke="#9a9a9a" strokeWidth="2.2" />
-          <rect x="-3.5" y="-9" width="7" height="8" rx="1.5" fill="#6a6a6a" stroke="#b5b5b5" strokeWidth="1" />
-          <path d="M-2.5 -2 L2.5 -2 L3 7 C3 10 -3 10 -3 7 Z" fill="#555" stroke="#c8c8c8" strokeWidth="1.2" />
+        {/* Metal grommet punched through the strap (positioned along the strap each frame) */}
+        <defs>
+          <radialGradient id="grommetMetal" cx="38%" cy="32%" r="70%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="40%" stopColor="#cfcfcf" />
+            <stop offset="78%" stopColor="#7f7f7f" />
+            <stop offset="100%" stopColor="#4a4a4a" />
+          </radialGradient>
+        </defs>
+        <g ref={grommetRef}>
+          <circle r={layout.grommetR + 0.8} cy="0.9" fill="rgba(0,0,0,0.35)" />
+          <circle r={layout.grommetR} fill="url(#grommetMetal)" />
+          <circle r={layout.grommetR * 0.5} fill="#0a0a0a" />
+          <circle r={layout.grommetR * 0.5} fill="none" stroke="rgba(0,0,0,0.6)" strokeWidth="0.8" />
         </g>
+
       </svg>
 
       {/* Draggable ID card (behind the headline) */}
@@ -506,6 +532,21 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
           </span>
         )}
 
+        {/* Strap tab: folds over the top edge (2px under the strap end) and threads into the slot */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 -translate-x-1/2 z-20 w-[14px] -top-[4px] h-[18.5px] sm:w-[20px] sm:h-[22px]"
+        >
+          {/* ribbon (same colours as the simulated strap: base + centre sheen) */}
+          <span className="absolute inset-0 bg-[#d93b24] rounded-b-[3px]" />
+          <span className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[36%] bg-[#f4614a]/55" />
+          {/* edge stitching */}
+          <span className="absolute inset-y-0.5 left-[2px] border-l border-dashed border-[#f7a08f]/50" />
+          <span className="absolute inset-y-0.5 right-[2px] border-r border-dashed border-[#f7a08f]/50" />
+          {/* shading where it disappears into the slot */}
+          <span className="absolute inset-x-0 bottom-0 h-[6px] rounded-b-[3px] bg-gradient-to-b from-transparent to-black/45" />
+        </div>
+
         {/* Card 3D flip container */}
         <div
           className="relative w-full h-full transition-transform duration-500"
@@ -532,8 +573,8 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
               className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[132%] max-w-none h-auto pointer-events-none select-none"
             />
 
-            {/* Lanyard slot */}
-            <span className="absolute top-2 sm:top-2.5 left-1/2 -translate-x-1/2 w-9 sm:w-10 h-[7px] sm:h-2 rounded-full bg-[#0a0a0a]/85 shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)]" />
+            {/* Strap slot cut through the card */}
+            <span className="absolute left-1/2 -translate-x-1/2 top-[10px] w-[22px] h-[7px] sm:top-[12px] sm:w-[30px] sm:h-[9px] rounded-full bg-[#0a0a0a] shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.9)] ring-1 ring-white/25" />
 
             {/* Dark fade for the name block */}
             <span className="absolute inset-x-0 bottom-0 h-[58%] bg-gradient-to-t from-[#07121c] via-[#07121c]/85 to-transparent" />
@@ -558,7 +599,8 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
           >
             <div>
               <div className="flex flex-col items-center mb-1.5 sm:mb-2">
-                <div className="w-8 h-1.5 sm:h-2 rounded-full bg-[#0a0a0a] shadow-inner" />
+                <div className="w-8 h-1.5 sm:h-2 invisible" aria-hidden="true" />
+                <span className="absolute left-1/2 -translate-x-1/2 top-[10px] w-[22px] h-[7px] sm:top-[12px] sm:w-[30px] sm:h-[9px] rounded-full bg-[#0a0a0a] shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.9)] ring-1 ring-black/10" />
               </div>
               <div className="w-full flex items-center justify-between border-b border-[#0a0a0a]/15 pb-1 gap-1">
 
