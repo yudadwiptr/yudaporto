@@ -386,7 +386,7 @@ export default function App() {
                       <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">banking &amp; financial systems</em>.
                       I turn complex processes into clear BRDs and specs, then validate them end to end as an{" "}
                       <span className="inline-block bg-[#3aa1d8] text-[#0a0a0a] rounded-full px-[0.45em] py-[0.02em] text-[0.74em] font-bold align-[0.08em] whitespace-nowrap">ISTQB®</span>-certified tester. <span className="whitespace-nowrap">6+ years</span> in financial software, including{" "}
-                      <strong className="font-bold text-[#ea4530]">5 years at <span className="whitespace-nowrap">PT Bank Mandiri (KOPRA)</span></strong>, now
+                      <strong className="font-bold text-[#ea4530]">5 years at <span className="whitespace-nowrap">PT Bank Mandiri</span> <span className="whitespace-nowrap">(Persero) Tbk</span></strong>, now
                       modernising systems for <strong className="font-bold text-[#3aa1d8] whitespace-nowrap">TNI AL</strong> and{" "}
                       <strong className="font-bold text-[#ea4530] whitespace-nowrap">PT SMI</strong> at{" "}
                       <span className="whitespace-nowrap">PT Adi Data Informatika</span>.{" "}
@@ -404,7 +404,7 @@ export default function App() {
                       <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">sistem perbankan &amp; keuangan</em>.
                       Saya mengubah proses yang kompleks menjadi BRD dan spesifikasi yang jelas, lalu memvalidasinya
                       end-to-end sebagai tester bersertifikat <span className="inline-block bg-[#3aa1d8] text-[#0a0a0a] rounded-full px-[0.45em] py-[0.02em] text-[0.74em] font-bold align-[0.08em] whitespace-nowrap">ISTQB®</span>. <span className="whitespace-nowrap">6+ tahun</span> di software finansial,
-                      termasuk <strong className="font-bold text-[#ea4530]">5 tahun di <span className="whitespace-nowrap">PT Bank Mandiri (KOPRA)</span></strong>, kini
+                      termasuk <strong className="font-bold text-[#ea4530]">5 tahun di <span className="whitespace-nowrap">PT Bank Mandiri</span> <span className="whitespace-nowrap">(Persero) Tbk</span></strong>, kini
                       memodernisasi sistem untuk <strong className="font-bold text-[#3aa1d8] whitespace-nowrap">TNI AL</strong> dan{" "}
                       <strong className="font-bold text-[#ea4530] whitespace-nowrap">PT SMI</strong> bersama{" "}
                       <span className="whitespace-nowrap">PT Adi Data Informatika</span>.{" "}
