@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 import { BRAND_ICONS } from "./brandIcons";
 
 /**
@@ -8,6 +8,7 @@ import { BRAND_ICONS } from "./brandIcons";
  */
 export default function SoftwareIcon({ name, className = "w-7 h-7" }) {
   const key = String(name).toLowerCase().replace(/[^a-z0-9]/g, "");
+  const gradientId = `brand-grad-${useId().replace(/:/g, "")}`;
 
   switch (key) {
     case "nextjs":
@@ -255,7 +256,20 @@ export default function SoftwareIcon({ name, className = "w-7 h-7" }) {
       if (brand) {
         return (
           <svg viewBox="0 0 24 24" className={className} role="img" aria-label={brand.title}>
-            <path d={brand.path} fill={brand.color} />
+            {brand.gradient && (
+              <defs>
+                <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+                  {brand.gradient.map((c, i) => (
+                    <stop key={c} offset={`${(i / (brand.gradient.length - 1)) * 100}%`} stopColor={c} />
+                  ))}
+                </linearGradient>
+              </defs>
+            )}
+            <path
+              d={brand.path}
+              fill={brand.gradient ? `url(#${gradientId})` : brand.color}
+              fillRule={key === "antigravity" ? "evenodd" : undefined}
+            />
           </svg>
         );
       }

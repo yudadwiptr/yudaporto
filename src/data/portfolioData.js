@@ -121,6 +121,12 @@ export const SOFTWARE_MARQUEE = [
   { name: "Next.js", tag: "Frontend", id: "nextjs" },
   { name: "Tailwind CSS", tag: "Styling", id: "tailwindcss" },
   { name: "Photoshop", tag: "Visual Craft", id: "photoshop" },
+  { name: "Vercel", tag: "Hosting", id: "vercel" },
+  { name: "Netlify", tag: "Hosting", id: "netlify" },
+  { name: "Supabase", tag: "Backend & Database", id: "supabase" },
+  { name: "Claude", tag: "AI Assistant", id: "claude" },
+  { name: "Antigravity", tag: "AI IDE", id: "antigravity" },
+  { name: "Gemini", tag: "AI Assistant", id: "googlegemini" },
 ];
 
 export const CLIENT_MARQUEE = SOFTWARE_MARQUEE;

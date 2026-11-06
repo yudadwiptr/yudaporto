@@ -418,6 +418,7 @@ export default function App() {
 
               {/* Software & QA tools marquee: auto-scrolls, drag / swipe to scrub and fling */}
               <DraggableMarquee
+                secondsPerLoop={95}
                 className="py-8 border-y border-[#f1eec0]/8"
                 style={{
                   maskImage:
