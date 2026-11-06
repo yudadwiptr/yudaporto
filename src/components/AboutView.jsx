@@ -5,6 +5,8 @@ import {
   SKILLS_GROUPS,
   ISTQB_CREDENTIAL,
   CERTIFICATIONS_LIST,
+  CV_URL,
+  CV_FILENAME,
 } from "../data/portfolioData";
 import {
   ArrowUpRight,
@@ -12,6 +14,7 @@ import {
   ArrowLeft,
   CloseIcon,
   ExpandIcon,
+  DownloadIcon,
   Dot,
 } from "./Icons";
 
@@ -511,6 +514,15 @@ export default function AboutView({ lang, setActivePage }) {
               yudadwiputra@gmail.com · +62 895 2521 4959
             </p>
           </div>
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <a
+            href={CV_URL}
+            download={CV_FILENAME}
+            className="text-xs sm:text-sm font-bold rounded-full px-5 py-3 border border-[#f1eec0]/25 text-[#f1eec0] hover:border-[#3aa1d8] hover:text-[#3aa1d8] transition-colors lowercase inline-flex items-center gap-1.5"
+          >
+            <DownloadIcon />
+            <span>{lang === "en" ? "download cv" : "unduh cv"}</span>
+          </a>
           <button
             type="button"
             onClick={() => {
@@ -522,6 +534,7 @@ export default function AboutView({ lang, setActivePage }) {
             <span>{lang === "en" ? "contact page" : "halaman kontak"}</span>
             <ArrowRight />
           </button>
+          </div>
         </div>
       </div>
 

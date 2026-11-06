@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { ArrowUpRight, CheckIcon } from "./Icons";
+import { ArrowUpRight, CheckIcon, DownloadIcon } from "./Icons";
+import { CV_URL, CV_FILENAME } from "../data/portfolioData";
 
 export default function ContactView({ lang }) {
   const [copied, setCopied] = useState(false);
@@ -74,6 +75,14 @@ export default function ContactView({ lang }) {
               <span>{lang === "en" ? "copy email" : "salin email"}</span>
             )}
           </button>
+          <a
+            href={CV_URL}
+            download={CV_FILENAME}
+            className="inline-flex items-center gap-2 text-xs font-bold px-5 py-3.5 sm:py-4 rounded-full bg-[#f1eec0] text-[#0a0a0a] hover:bg-[#3aa1d8] transition-colors lowercase"
+          >
+            <DownloadIcon />
+            <span>{lang === "en" ? "download cv (pdf)" : "unduh cv (pdf)"}</span>
+          </a>
         </div>
 
         {/* Social Links Row */}

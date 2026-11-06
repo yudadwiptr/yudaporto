@@ -109,6 +109,14 @@ export const BoltIcon = (p) => (
   </Svg>
 );
 
+export const DownloadIcon = (p) => (
+  <Svg strokeWidth={2.4} {...p}>
+    <path d="M12 4v11" />
+    <path d="m7 10.5 5 5 5-5" />
+    <path d="M5 20h14" />
+  </Svg>
+);
+
 // Small round bullet separator (replaces "•")
 export const Dot = ({ className = "" }) => (
   <span

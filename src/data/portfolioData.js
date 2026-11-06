@@ -1,3 +1,7 @@
+// Public CV (PDF) offered as a download across the site
+export const CV_URL = "/cv/Yuda-Dwi-Putra-CV.pdf";
+export const CV_FILENAME = "Yuda-Dwi-Putra-CV.pdf";
+
 export const HERO_PRESETS = {
   personal: [
     {

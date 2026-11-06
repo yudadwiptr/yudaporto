@@ -11,12 +11,14 @@ import AboutView from "./components/AboutView";
 import WorkArchiveView from "./components/WorkArchiveView";
 import StudioLabView from "./components/StudioLabView";
 import ContactView from "./components/ContactView";
-import { ArrowUpRight, ArrowRight } from "./components/Icons";
+import { ArrowUpRight, ArrowRight, DownloadIcon } from "./components/Icons";
 import {
   HERO_PRESETS,
   CLIENT_MARQUEE,
   PROJECTS_PERSONAL,
   PROJECTS_AGENCY,
+  CV_URL,
+  CV_FILENAME,
 } from "./data/portfolioData";
 
 // ---------- Path routing: / , /work , /about , /studio , /contact , /work/<caseId> ----------
@@ -263,7 +265,7 @@ export default function App() {
               <div className="relative z-20 pointer-events-none w-full md:max-w-[66vw]">
                 <h1
                   key={`${mode}-${lang}-${isLoading}`}
-                  className="text-left text-[clamp(46px,5.6vw,112px)] [@media(max-height:700px)_and_(max-width:639px)]:text-[38px] leading-[0.98] tracking-[-0.015em] font-stamp lowercase"
+                  className="text-left text-[clamp(50px,6.3vw,124px)] [@media(max-height:700px)_and_(max-width:639px)]:text-[42px] leading-[0.98] tracking-[-0.015em] font-stamp lowercase"
                 >
                   <span className="block">
                     <span
@@ -343,6 +345,14 @@ export default function App() {
                     <span>{lang === "en" ? "get in touch" : "hubungi saya"}</span>
                     <ArrowRight />
                   </button>
+                  <a
+                    href={CV_URL}
+                    download={CV_FILENAME}
+                    className="inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-bold lowercase text-[#f1eec0]/80 hover:text-[#3aa1d8] transition-colors"
+                  >
+                    <DownloadIcon />
+                    <span>{lang === "en" ? "download cv" : "unduh cv"}</span>
+                  </a>
                 </div>
               </div>
 

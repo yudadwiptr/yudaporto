@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { ArrowUpRight, ArrowRight, CheckIcon } from "./Icons";
+import { ArrowUpRight, ArrowRight, CheckIcon, DownloadIcon } from "./Icons";
+import { CV_URL, CV_FILENAME } from "../data/portfolioData";
 
 export default function FooterSection({ lang, setActivePage }) {
   const [copied, setCopied] = useState(false);
@@ -63,7 +64,15 @@ export default function FooterSection({ lang, setActivePage }) {
           </ul>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <a
+            href={CV_URL}
+            download={CV_FILENAME}
+            className="inline-flex min-h-[44px] items-center gap-1.5 text-xs sm:text-sm tracking-wide text-[#f1eec0]/60 hover:text-[#f1eec0] lowercase"
+          >
+            <DownloadIcon />
+            <span>{lang === "en" ? "download cv" : "unduh cv"}</span>
+          </a>
           <button
             type="button"
             onClick={() => {
