@@ -4,6 +4,7 @@ import Preloader from "./components/Preloader";
 import FrameNav from "./components/FrameNav";
 import IdCardLanyard from "./components/IdCardLanyard";
 import SoftwareIcon from "./components/SoftwareIcon";
+import DraggableMarquee from "./components/DraggableMarquee";
 import FeaturedProjectSection from "./components/FeaturedProjectSection";
 import CaseStudyModal from "./components/CaseStudyModal";
 import FooterSection from "./components/FooterSection";
@@ -415,9 +416,9 @@ export default function App() {
                 </p>
               </div>
 
-              {/* Software & QA Tools Infinite Marquee with 3D Icons */}
-              <div
-                className="overflow-hidden whitespace-nowrap select-none py-8 border-y border-[#f1eec0]/8"
+              {/* Software & QA tools marquee: auto-scrolls, drag / swipe to scrub and fling */}
+              <DraggableMarquee
+                className="py-8 border-y border-[#f1eec0]/8"
                 style={{
                   maskImage:
                     "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
@@ -425,28 +426,21 @@ export default function App() {
                     "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
                 }}
               >
-                <div className="flex animate-marquee-slow">
-                  {[0, 1].map((dup) => (
+                <span className="flex items-center gap-[clamp(28px,5vw,56px)] pr-[clamp(28px,5vw,56px)]">
+                  {CLIENT_MARQUEE.map((tool, idx) => (
                     <span
-                      key={dup}
-                      className="flex items-center gap-[clamp(28px,5vw,56px)] shrink-0 pr-[clamp(28px,5vw,56px)]"
+                      key={idx}
+                      className="flex items-center gap-3 text-base sm:text-lg md:text-xl font-semibold tracking-tight text-[#f1eec0]/50 hover:text-[#f1eec0] transition-colors whitespace-nowrap group"
                     >
-                      {CLIENT_MARQUEE.map((tool, idx) => (
-                        <span
-                          key={idx}
-                          className="flex items-center gap-3 text-base sm:text-lg md:text-xl font-semibold tracking-tight text-[#f1eec0]/50 hover:text-[#f1eec0] transition-colors whitespace-nowrap group"
-                        >
-                          <SoftwareIcon
-                            name={tool.id || tool.name}
-                            className="w-6 h-6 sm:w-7 sm:h-7 shrink-0 transition-transform duration-300 group-hover:scale-110"
-                          />
-                          <span className="font-ui">{tool.name}</span>
-                        </span>
-                      ))}
+                      <SoftwareIcon
+                        name={tool.id || tool.name}
+                        className="w-6 h-6 sm:w-7 sm:h-7 shrink-0 transition-transform duration-300 group-hover:scale-110"
+                      />
+                      <span className="font-ui">{tool.name}</span>
                     </span>
                   ))}
-                </div>
-              </div>
+                </span>
+              </DraggableMarquee>
             </section>
 
             {/* ==================== 3. FEATURED WORKS MARQUEE HEADER ==================== */}
