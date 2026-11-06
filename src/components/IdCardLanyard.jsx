@@ -24,6 +24,13 @@ const ROT_HZ = 0.85; // card tilt pendulum
 const ROT_DAMPING = 0.2;
 const STEP = 1 / 240;
 
+// Flexible strap: a verlet rope between the fixed anchor and the clasp
+const ROPE_N = 18; // points
+const ROPE_GRAVITY = 1800; // px/s^2
+const ROPE_DAMP = 0.992; // velocity kept per 1/240 s step
+const ROPE_ITERS = 14; // constraint passes per step
+const ROPE_BEND = 1.55; // min distance between i and i+2, in segments (gives the strap some stiffness)
+
 const omega = (hz) => 2 * Math.PI * hz;
 const K_Y = omega(STRAP_HZ) ** 2;
 const C_Y = 2 * STRAP_DAMPING * omega(STRAP_HZ);
@@ -61,7 +68,9 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
   const containerRef = useRef(null);
   const cardRef = useRef(null);
   const strapRef = useRef(null);
+  const strapHiRef = useRef(null);
   const strapShadowRef = useRef(null);
+  const ropeRef = useRef(null);
   const claspRef = useRef(null);
   const rafRef = useRef(0);
   const lastTimeRef = useRef(0);
@@ -95,6 +104,112 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
     dragDistance: 0,
   });
 
+  // ---- Rope -------------------------------------------------------------
+  const ropeEnd = () => {
+    const p = physicsRef.current;
+    const L = layoutRef.current;
+    return [L.baseX + p.x, L.baseY + p.y - 18];
+  };
+
+  // (Re)build the strap as a straight line to the clasp, bowed sideways if slack
+  const initRope = useCallback((endVy = 0) => {
+    const L = layoutRef.current;
+    const [ex, ey] = ropeEnd();
+    const restLen = L.baseY - 18 - L.anchorY;
+    const seg = restLen / (ROPE_N - 1);
+    const d = Math.hypot(ex - L.anchorX, ey - L.anchorY);
+    const bow = 0.35 * Math.sqrt(Math.max(0, restLen * restLen - d * d));
+    const px = new Float64Array(ROPE_N);
+    const py = new Float64Array(ROPE_N);
+    const ox = new Float64Array(ROPE_N);
+    const oy = new Float64Array(ROPE_N);
+    for (let i = 0; i < ROPE_N; i++) {
+      const t = i / (ROPE_N - 1);
+      px[i] = L.anchorX + (ex - L.anchorX) * t + Math.sin(Math.PI * t) * bow;
+      py[i] = L.anchorY + (ey - L.anchorY) * t;
+      ox[i] = px[i];
+      oy[i] = py[i] - endVy * t * STEP;
+    }
+    ropeRef.current = { px, py, ox, oy, seg };
+  }, []);
+
+  // One verlet step; returns how far the strap moved (used for sleeping)
+  const stepRope = (dt) => {
+    const r = ropeRef.current;
+    if (!r) return 0;
+    const L = layoutRef.current;
+    const { px, py, ox, oy, seg } = r;
+    const last = ROPE_N - 1;
+    const g = ROPE_GRAVITY * dt * dt;
+    const damp = Math.pow(ROPE_DAMP, dt / STEP);
+    let moved = 0;
+    for (let i = 1; i < last; i++) {
+      const vx = (px[i] - ox[i]) * damp;
+      const vy = (py[i] - oy[i]) * damp;
+      ox[i] = px[i];
+      oy[i] = py[i];
+      px[i] += vx;
+      py[i] += vy + g;
+      moved = Math.max(moved, Math.abs(vx) + Math.abs(vy));
+    }
+    const [ex, ey] = ropeEnd();
+    const pin = () => {
+      px[0] = L.anchorX;
+      py[0] = L.anchorY;
+      px[last] = ex;
+      py[last] = ey;
+    };
+    pin();
+    const minBend = seg * ROPE_BEND;
+    for (let k = 0; k < ROPE_ITERS; k++) {
+      // Length: a strap does not stretch, but it can go slack
+      for (let i = 0; i < last; i++) {
+        const dx = px[i + 1] - px[i];
+        const dy = py[i + 1] - py[i];
+        const d = Math.hypot(dx, dy) || 1e-6;
+        if (d <= seg) continue;
+        const f = (d - seg) / d;
+        const w0 = i === 0 ? 0 : i + 1 === last ? 1 : 0.5;
+        const w1 = i + 1 === last ? 0 : i === 0 ? 1 : 0.5;
+        px[i] += dx * f * w0;
+        py[i] += dy * f * w0;
+        px[i + 1] -= dx * f * w1;
+        py[i + 1] -= dy * f * w1;
+      }
+      // Bending stiffness: keep i and i+2 apart so slack bows instead of folding
+      for (let i = 0; i < last - 1; i++) {
+        const dx = px[i + 2] - px[i];
+        const dy = py[i + 2] - py[i];
+        const d = Math.hypot(dx, dy) || 1e-6;
+        if (d >= minBend) continue;
+        const f = (d - minBend) / d;
+        const w0 = i === 0 ? 0 : i + 2 === last ? 1 : 0.5;
+        const w1 = i + 2 === last ? 0 : i === 0 ? 1 : 0.5;
+        px[i] += dx * f * w0;
+        py[i] += dy * f * w0;
+        px[i + 2] -= dx * f * w1;
+        py[i + 2] -= dy * f * w1;
+      }
+      pin();
+    }
+    return moved;
+  };
+
+  // Smooth path through the rope points (midpoint quadratic curves)
+  const ropePath = () => {
+    const r = ropeRef.current;
+    if (!r) return "";
+    const { px, py } = r;
+    let d = `M${px[0].toFixed(1)} ${py[0].toFixed(1)}`;
+    for (let i = 1; i < ROPE_N - 1; i++) {
+      const mx = (px[i] + px[i + 1]) / 2;
+      const my = (py[i] + py[i + 1]) / 2;
+      d += ` Q${px[i].toFixed(1)} ${py[i].toFixed(1)} ${mx.toFixed(1)} ${my.toFixed(1)}`;
+    }
+    d += ` L${px[ROPE_N - 1].toFixed(1)} ${py[ROPE_N - 1].toFixed(1)}`;
+    return d;
+  };
+
   // ---- DOM writer -------------------------------------------------------
   const apply = useCallback(() => {
     const p = physicsRef.current;
@@ -102,33 +217,26 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
     const clipX = L.baseX + p.x;
     const clipY = L.baseY + p.y;
 
-    const dx = clipX - L.anchorX;
-    const dy = clipY - 18 - L.anchorY;
-    const len = Math.max(0, Math.hypot(dx, dy));
-    const angle = (Math.atan2(-dx, dy) * 180) / Math.PI;
-    const strapTransform = `translate(${L.anchorX} ${L.anchorY}) rotate(${angle})`;
+    if (!ropeRef.current) initRope();
+    const d = ropePath();
+    strapRef.current?.setAttribute("d", d);
+    strapHiRef.current?.setAttribute("d", d);
+    strapShadowRef.current?.setAttribute("d", d);
 
-    if (strapRef.current) {
-      strapRef.current.setAttribute("transform", strapTransform);
-      strapRef.current.firstChild?.setAttribute("height", len);
-    }
-    if (strapShadowRef.current) {
-      strapShadowRef.current.setAttribute(
-        "transform",
-        `translate(${L.anchorX + 2} ${L.anchorY + 3}) rotate(${angle})`
-      );
-      strapShadowRef.current.setAttribute("height", len);
-    }
+    // Clasp follows the strap's last segment, blended with the card tilt
+    const r = ropeRef.current;
+    const n = ROPE_N - 1;
+    const strapAngle = (Math.atan2(-(r.px[n] - r.px[n - 1]), r.py[n] - r.py[n - 1]) * 180) / Math.PI;
     if (claspRef.current) {
       claspRef.current.setAttribute(
         "transform",
-        `translate(${clipX} ${clipY}) rotate(${p.rot * 0.45})`
+        `translate(${clipX} ${clipY}) rotate(${clamp(strapAngle * 0.6 + p.rot * 0.4, -60, 60)})`
       );
     }
     if (cardRef.current) {
       cardRef.current.style.transform = `translate3d(${clipX}px, ${clipY}px, 0) translateX(-50%) rotate(${p.rot}deg)`;
     }
-  }, []);
+  }, [initRope]);
 
   // ---- Physics loop -----------------------------------------------------
   const integrate = (p, dt) => {
@@ -162,14 +270,16 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
       const elapsed = Math.min(0.05, (now - (lastTimeRef.current || now)) / 1000);
       lastTimeRef.current = now;
 
-      if (!p.dragging && !p.parked) {
+      let ropeMoved = 0;
+      if (!p.parked) {
         let remaining = elapsed;
         while (remaining > 1e-6) {
           const dt = Math.min(STEP, remaining);
-          integrate(p, dt);
+          if (!p.dragging) integrate(p, dt);
+          ropeMoved = Math.max(ropeMoved, stepRope(dt));
           remaining -= dt;
         }
-        if (isSettled(p)) {
+        if (!p.dragging && isSettled(p) && ropeMoved < 0.02) {
           p.x = p.y = p.vx = p.vy = p.rot = p.vRot = 0;
           apply();
           rafRef.current = 0;
@@ -212,8 +322,9 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
   useLayoutEffect(() => {
     const p = physicsRef.current;
     if (p.parked) p.y = -(layout.baseY + layout.cardH + 120);
+    initRope();
     apply();
-  }, [layout.baseX, layout.baseY, layout.cardH, apply]);
+  }, [layout.baseX, layout.baseY, layout.cardH, apply, initRope]);
 
   // ---- Entrance drop ----------------------------------------------------
   useEffect(() => {
@@ -227,6 +338,7 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
       p.parked = false;
       if (reduceMotion) {
         p.x = p.y = p.vx = p.vy = p.rot = p.vRot = 0;
+        initRope();
         apply();
         return;
       }
@@ -238,10 +350,11 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
       p.vx = 0;
       p.rot = L.isMobile ? -3 : -5;
       p.vRot = 0;
+      initRope(p.vy);
       wake();
     }, 180);
     return () => clearTimeout(timer);
-  }, [isReady, apply, wake]);
+  }, [isReady, apply, wake, initRope]);
 
   // ---- Dragging ---------------------------------------------------------
   const handlePointerDown = (e) => {
@@ -327,30 +440,27 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
         viewBox={`0 0 ${viewport.w} ${viewport.h}`}
         aria-hidden="true"
       >
-        <defs>
-          <linearGradient id="lanyardRed" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#9e2414" />
-            <stop offset="18%" stopColor="#d7381f" />
-            <stop offset="50%" stopColor="#ef4a31" />
-            <stop offset="82%" stopColor="#d7381f" />
-            <stop offset="100%" stopColor="#8f2012" />
-          </linearGradient>
-        </defs>
-
         {/* Soft shadow behind the strap */}
-        <rect
+        <path
           ref={strapShadowRef}
-          x={-(strapW + 2) / 2}
-          y="0"
-          width={strapW + 2}
-          height="0"
-          fill="rgba(0,0,0,0.45)"
+          fill="none"
+          stroke="rgba(0,0,0,0.45)"
+          strokeWidth={strapW + 2}
+          strokeLinejoin="round"
+          transform="translate(2 3)"
         />
 
-        {/* Strap ribbon */}
-        <g ref={strapRef}>
-          <rect x={-strapW / 2} y="0" width={strapW} height="0" fill="url(#lanyardRed)" />
-        </g>
+        {/* Strap ribbon (flexible) */}
+        <path ref={strapRef} fill="none" stroke="#d93b24" strokeWidth={strapW} strokeLinejoin="round" />
+        {/* Woven sheen down the middle of the ribbon */}
+        <path
+          ref={strapHiRef}
+          fill="none"
+          stroke="#f4614a"
+          strokeOpacity="0.55"
+          strokeWidth={Math.max(3, strapW * 0.36)}
+          strokeLinejoin="round"
+        />
 
         {/* Metal lobster clasp */}
         <g ref={claspRef}>
@@ -381,9 +491,8 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
             : "Tarik ke bawah & lepas untuk membal! (Atau klik untuk balik)"
         }
         style={{ transformOrigin: "50% 0%", willChange: "transform" }}
-        className={`pointer-events-auto absolute left-0 top-0 w-[146px] h-[210px] sm:w-[172px] sm:h-[246px] touch-none select-none z-10 ${
-          isDragging ? "cursor-grabbing" : "cursor-grab"
-        }`}
+        className={`pointer-events-auto absolute left-0 top-0 w-[146px] h-[210px] sm:w-[172px] sm:h-[246px] touch-none select-none z-10 ${isDragging ? "cursor-grabbing" : "cursor-grab"
+          }`}
       >
         {/* One-time interaction hint under the card */}
         {showHint && isReady && (
@@ -452,21 +561,19 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
                 <div className="w-8 h-1.5 sm:h-2 rounded-full bg-[#0a0a0a] shadow-inner" />
               </div>
               <div className="w-full flex items-center justify-between border-b border-[#0a0a0a]/15 pb-1 gap-1">
-                <span className="text-[8px] sm:text-[8.5px] font-mono tracking-wider font-extrabold text-[#0a0a0a]/70 uppercase truncate">
-                  ID BADGE // VERIFIED
-                </span>
+
                 <span className="px-1.5 py-0.5 bg-[#ea4530] text-[#f1eec0] rounded-[3px] text-[7.5px] sm:text-[8px] font-mono font-bold tracking-tight shrink-0">
                   ISTQB® CTFL
                 </span>
               </div>
             </div>
 
-            <div className="space-y-0.5 text-left pt-0.5">
-              <div className="text-[13px] sm:text-[15px] font-extrabold font-ui leading-none tracking-tight text-[#0a0a0a] lowercase">
-                yuda dwi putra
+            <div className="space-y-1 text-left pt-0.5">
+              <div className="text-[12px] sm:text-[14px] font-extrabold font-ui leading-[1.05] tracking-tight text-[#0a0a0a]">
+                System &amp; Business Analyst
               </div>
               <div className="text-[8.5px] sm:text-[9.5px] font-bold text-[#ea4530] font-mono tracking-tight uppercase leading-tight">
-                System &amp; Business Analyst
+                Software Engineer · QA Lead
               </div>
             </div>
 
