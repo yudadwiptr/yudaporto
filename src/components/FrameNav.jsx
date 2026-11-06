@@ -73,7 +73,7 @@ export default function FrameNav({
           }}
           onMouseEnter={cycleLogoColor}
           title="Yuda Dwi Putra — Home (Eyes follow your cursor!)"
-          className="-mt-[clamp(2px,0.6vw,7px)] -ml-[clamp(2px,0.7vw,10px)] group relative block w-[56px] h-[56px] sm:w-[78px] sm:h-[78px] text-left focus:outline-none pointer-events-auto cursor-pointer"
+          className="-mt-[clamp(2px,0.6vw,7px)] -ml-[4px] sm:-ml-[5px] group relative block w-[46px] h-[46px] sm:w-[60px] sm:h-[60px] text-left focus:outline-none pointer-events-auto cursor-pointer"
         >
           <svg
             viewBox="0 0 120 120"
@@ -88,7 +88,7 @@ export default function FrameNav({
               rx="22"
               fill="#0a0a0a"
               stroke={logoAccent}
-              strokeWidth="5"
+              strokeWidth="4.5"
             />
 
             {/* Inner Y Monogram */}
