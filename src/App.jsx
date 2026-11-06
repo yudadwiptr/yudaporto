@@ -376,20 +376,22 @@ export default function App() {
             {/* ==================== 2. BIO STATEMENT + SOFTWARE & QA MARQUEE ==================== */}
             <section className="relative pt-24 sm:pt-32 md:pt-40 pb-12 sm:pb-16 flex flex-col overflow-hidden">
               <div className="px-[clamp(20px,5vw,96px)] mb-16 sm:mb-20 md:mb-28">
-                <p className="text-left text-[clamp(22px,2.7vw,42px)] leading-[1.3] tracking-[-0.01em] text-[#f1eec0]/85 max-w-[34ch] text-pretty">
+                <p className="text-center mx-auto text-[clamp(22px,2.7vw,42px)] leading-[1.3] tracking-[-0.01em] text-[#f1eec0]/85 max-w-[36ch] text-balance">
                   {lang === "en" ? (
                     <>
                       I&apos;m <strong className="font-bold text-[#f1eec0]">Yuda Dwi Putra</strong>, a{" "}
                       <strong className="font-bold text-[#3aa1d8]">System &amp; Business Analyst</strong> for{" "}
                       <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">core banking and treasury</em>.
                       I turn complex banking processes into clear BRDs, as-is / to-be flows and specs, then validate them
-                      end to end, from digital channel to host. 6+ years in financial software, including{" "}
-                      <strong className="font-bold text-[#ea4530]">5 at PT Bank Mandiri (KOPRA)</strong>, now modernising
-                      systems for TNI AL and PT SMI at PT Adi Data Informatika. Make yourself at{" "}
+                      end to end, from digital channel to host. <span className="whitespace-nowrap">6+ years</span> in financial software, including{" "}
+                      <strong className="font-bold text-[#ea4530]">5 years at <span className="whitespace-nowrap">PT Bank Mandiri (KOPRA)</span></strong>, now modernising
+                      systems for <strong className="font-bold text-[#3aa1d8] whitespace-nowrap">TNI AL</strong> and{" "}
+                      <strong className="font-bold text-[#ea4530] whitespace-nowrap">PT SMI</strong> at <span className="whitespace-nowrap">PT Adi Data Informatika</span>.{" "}
+                      <span className="whitespace-nowrap">Make yourself at{" "}
                       <span className="inline-block bg-[#ea4530] text-[#0a0a0a] rounded-full px-[0.45em] py-[0.02em] text-[0.74em] font-bold align-[0.08em]">
                         home
                       </span>
-                      !
+                      !</span>
                     </>
                   ) : (
                     <>
@@ -397,13 +399,15 @@ export default function App() {
                       <strong className="font-bold text-[#3aa1d8]">System &amp; Business Analyst</strong> di bidang{" "}
                       <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">core banking dan treasury</em>.
                       Saya mengubah proses perbankan yang kompleks menjadi BRD, alur as-is / to-be, dan spesifikasi yang
-                      jelas, lalu memvalidasinya end-to-end, dari kanal digital sampai host. 6+ tahun di software finansial,
-                      termasuk <strong className="font-bold text-[#ea4530]">5 tahun di PT Bank Mandiri (KOPRA)</strong>, kini
-                      memodernisasi sistem untuk TNI AL dan PT SMI bersama PT Adi Data Informatika. Anggap rumah{" "}
+                      jelas, lalu memvalidasinya end-to-end, dari kanal digital sampai host. <span className="whitespace-nowrap">6+ tahun</span> di software finansial,
+                      termasuk <strong className="font-bold text-[#ea4530]">5 tahun di <span className="whitespace-nowrap">PT Bank Mandiri (KOPRA)</span></strong>, kini
+                      memodernisasi sistem untuk <strong className="font-bold text-[#3aa1d8] whitespace-nowrap">TNI AL</strong> dan{" "}
+                      <strong className="font-bold text-[#ea4530] whitespace-nowrap">PT SMI</strong> bersama <span className="whitespace-nowrap">PT Adi Data Informatika</span>.{" "}
+                      <span className="whitespace-nowrap">Anggap rumah{" "}
                       <span className="inline-block bg-[#ea4530] text-[#0a0a0a] rounded-full px-[0.45em] py-[0.02em] text-[0.74em] font-bold align-[0.08em]">
                         sendiri
                       </span>
-                      !
+                      !</span>
                     </>
                   )}
                 </p>
