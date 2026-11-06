@@ -333,22 +333,27 @@ export const PROJECTS_PERSONAL = [
     featured: true,
     year: "2026",
     client: "TNI Angkatan Laut",
-    category: "Business Analysis",
+    category: "Analysis & Engineering",
     tags: [
+      { en: "Built Solo, End to End", id: "Dibangun Sendiri, End-to-End", tone: "cream" },
       { en: "Business Analysis (BRD)", id: "Analisis Bisnis (BRD)", tone: "cream" },
       { en: "Legacy Reverse-Engineering", id: "Reverse-Engineering Legacy", tone: "blue" },
       { en: "H2H API & Settlement", id: "Integrasi API & Settlement", tone: "red" },
     ],
     title: "TABPLIN — Tabungan Disiplin TNI AL",
     summary: {
-      en: "TABPLIN (Tabungan Disiplin) is the Indonesian Navy's discipline savings programme, modernised with PT Bank Mandiri as settlement bank. A 1987 text-based ledger moves into a modern web platform for ~80,000 members without losing a cent of interest logic: daily accrual, leap-year divisors, tax rules, payroll auto-debit, inquiry, registration, disbursement and API integration.",
-      id: "TABPLIN (Tabungan Disiplin) adalah program tabungan disiplin TNI Angkatan Laut yang dimodernisasi bersama PT Bank Mandiri sebagai bank penyelesai. Buku besar berbasis teks tahun 1987 dipindahkan ke platform web modern untuk ~80.000 anggota tanpa kehilangan presisi rumus bunga: akrual harian, pembagi tahun kabisat, aturan pajak, auto-debit gaji, inquiry, registrasi, pencairan, dan integrasi API.",
+      en: "TABPLIN (Tabungan Disiplin) is the Indonesian Navy's discipline savings programme, modernised with PT Bank Mandiri as settlement bank. A 1987 text-based ledger moves into a modern web platform for ~80,000 members without losing a cent of interest logic: daily accrual, leap-year divisors, tax rules, payroll auto-debit, inquiry, registration, disbursement and API integration. Built solo end to end, from requirement gathering and system design to coding and testing.",
+      id: "TABPLIN (Tabungan Disiplin) adalah program tabungan disiplin TNI Angkatan Laut yang dimodernisasi bersama PT Bank Mandiri sebagai bank penyelesai. Buku besar berbasis teks tahun 1987 dipindahkan ke platform web modern untuk ~80.000 anggota tanpa kehilangan presisi rumus bunga: akrual harian, pembagi tahun kabisat, aturan pajak, auto-debit gaji, inquiry, registrasi, pencairan, dan integrasi API. Dikerjakan sendiri end-to-end, dari requirement gathering dan desain sistem hingga coding dan testing.",
     },
     singleIdea: {
       en: "Reverse-engineering a 1987 ledger into a modern savings platform for 80,000+ Navy personnel.",
       id: "Reverse-engineering buku besar tahun 1987 menjadi platform tabungan modern untuk 80.000+ personel TNI AL.",
     },
     highlights: [
+      {
+        en: "Built solo end to end: requirement gathering, system design, coding and testing.",
+        id: "Dikerjakan sendiri end-to-end: requirement gathering, desain sistem, coding, dan testing.",
+      },
       {
         en: "Reverse-engineered the original source code: daily interest accrual, leap-year divisor and tax rules.",
         id: "Reverse-engineering source code asli: akrual bunga harian, pembagi tahun kabisat, dan aturan pajak.",
@@ -478,15 +483,15 @@ export const PROJECTS_AGENCY = PROJECTS_PERSONAL.filter((p) => p.featured);
 export const EXPERIENCE_LIST = [
   {
     role: {
-      en: "Business Analyst",
-      id: "Business Analyst",
+      en: "Business Analyst & Software Engineer",
+      id: "Business Analyst & Software Engineer",
     },
     company: "PT Adi Data Informatika – TNI AL (TABPLIN)",
     period: { en: "Aug 2026 - Present", id: "Agu 2026 - Sekarang" },
     highlight: "#ea4530",
     bullets: {
-      en: "Reverse-engineered 1987 legacy savings ledger (daily interest accrual, leap-year divisor, tax rules); designed end-to-end payroll auto-debit, inquiry, registration, disbursement & PT Bank Mandiri API integration for 112 accounts (~80,000 members).",
-      id: "Reverse-engineering buku besar tabungan tahun 1987 (rumus bunga harian, tahun kabisat, pajak); merancang alur end-to-end auto-debit gaji, inquiry, registrasi, pencairan & integrasi API PT Bank Mandiri untuk 112 akun (~80.000 anggota).",
+      en: "Built TABPLIN solo end to end: requirement gathering, system design, coding and testing. Reverse-engineered 1987 legacy savings ledger (daily interest accrual, leap-year divisor, tax rules); designed end-to-end payroll auto-debit, inquiry, registration, disbursement & PT Bank Mandiri API integration for 112 accounts (~80,000 members).",
+      id: "Membangun TABPLIN sendiri end-to-end: requirement gathering, desain sistem, coding, dan testing. Reverse-engineering buku besar tabungan tahun 1987 (rumus bunga harian, tahun kabisat, pajak); merancang alur end-to-end auto-debit gaji, inquiry, registrasi, pencairan & integrasi API PT Bank Mandiri untuk 112 akun (~80.000 anggota).",
     },
   },
   {

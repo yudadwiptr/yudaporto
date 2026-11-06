@@ -381,14 +381,15 @@ export default function App() {
                   {lang === "en" ? (
                     <>
                       I&apos;m <strong className="font-bold text-[#f1eec0]">Yuda Dwi Putra</strong>, a{" "}
-                      <strong className="font-bold text-[#3aa1d8]">System &amp; Business Analyst</strong> for{" "}
-                      <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">banking &amp; financial systems</em>,
-                      from core banking and treasury to wholesale digital banking and payments. I turn complex banking
-                      processes into clear BRDs, as-is / to-be flows and specs, then validate them end to end as an
-                      ISTQB-certified tester, from digital channel to host. <span className="whitespace-nowrap">6+ years</span> in financial software, including{" "}
-                      <strong className="font-bold text-[#ea4530]">5 years at <span className="whitespace-nowrap">PT Bank Mandiri (KOPRA)</span></strong>, now modernising
-                      systems for <strong className="font-bold text-[#3aa1d8] whitespace-nowrap">TNI AL</strong> and{" "}
-                      <strong className="font-bold text-[#ea4530] whitespace-nowrap">PT SMI</strong> at <span className="whitespace-nowrap">PT Adi Data Informatika</span>.{" "}
+                      <strong className="font-bold text-[#3aa1d8]">System &amp; Business Analyst</strong> and{" "}
+                      <strong className="font-bold text-[#3aa1d8] whitespace-nowrap">software engineer</strong> for{" "}
+                      <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">banking &amp; financial systems</em>.
+                      I turn complex processes into clear BRDs and specs, then validate them end to end as an{" "}
+                      <span className="inline-block bg-[#3aa1d8] text-[#0a0a0a] rounded-full px-[0.45em] py-[0.02em] text-[0.74em] font-bold align-[0.08em] whitespace-nowrap">ISTQB®</span>-certified tester. <span className="whitespace-nowrap">6+ years</span> in financial software, including{" "}
+                      <strong className="font-bold text-[#ea4530]">5 years at <span className="whitespace-nowrap">PT Bank Mandiri (KOPRA)</span></strong>.
+                      For <strong className="font-bold text-[#3aa1d8] whitespace-nowrap">TNI AL</strong> I built TABPLIN solo, from
+                      requirements and design to code and testing, and I analyse systems for{" "}
+                      <strong className="font-bold text-[#ea4530] whitespace-nowrap">PT SMI</strong>.{" "}
                       <span className="whitespace-nowrap">Make yourself at{" "}
                       <span className="inline-block bg-[#ea4530] text-[#0a0a0a] rounded-full px-[0.45em] py-[0.02em] text-[0.74em] font-bold align-[0.08em]">
                         home
@@ -398,14 +399,15 @@ export default function App() {
                   ) : (
                     <>
                       Saya <strong className="font-bold text-[#f1eec0]">Yuda Dwi Putra</strong>,{" "}
-                      <strong className="font-bold text-[#3aa1d8]">System &amp; Business Analyst</strong> untuk{" "}
-                      <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">sistem perbankan &amp; keuangan</em>,
-                      dari core banking dan treasury hingga wholesale digital banking dan payments. Saya mengubah proses
-                      perbankan yang kompleks menjadi BRD, alur as-is / to-be, dan spesifikasi yang jelas, lalu
-                      memvalidasinya end-to-end sebagai ISTQB-certified tester, dari kanal digital sampai host. <span className="whitespace-nowrap">6+ tahun</span> di software finansial,
-                      termasuk <strong className="font-bold text-[#ea4530]">5 tahun di <span className="whitespace-nowrap">PT Bank Mandiri (KOPRA)</span></strong>, kini
-                      memodernisasi sistem untuk <strong className="font-bold text-[#3aa1d8] whitespace-nowrap">TNI AL</strong> dan{" "}
-                      <strong className="font-bold text-[#ea4530] whitespace-nowrap">PT SMI</strong> bersama <span className="whitespace-nowrap">PT Adi Data Informatika</span>.{" "}
+                      <strong className="font-bold text-[#3aa1d8]">System &amp; Business Analyst</strong> sekaligus{" "}
+                      <strong className="font-bold text-[#3aa1d8] whitespace-nowrap">software engineer</strong> untuk{" "}
+                      <em className="font-accent-serif italic font-normal text-[1.1em] text-[#f1eec0]">sistem perbankan &amp; keuangan</em>.
+                      Saya mengubah proses yang kompleks menjadi BRD dan spesifikasi yang jelas, lalu memvalidasinya
+                      end-to-end sebagai tester bersertifikat <span className="inline-block bg-[#3aa1d8] text-[#0a0a0a] rounded-full px-[0.45em] py-[0.02em] text-[0.74em] font-bold align-[0.08em] whitespace-nowrap">ISTQB®</span>. <span className="whitespace-nowrap">6+ tahun</span> di software finansial,
+                      termasuk <strong className="font-bold text-[#ea4530]">5 tahun di <span className="whitespace-nowrap">PT Bank Mandiri (KOPRA)</span></strong>.
+                      Untuk <strong className="font-bold text-[#3aa1d8] whitespace-nowrap">TNI AL</strong> saya membangun TABPLIN sendiri, dari
+                      requirement dan desain hingga coding dan testing, serta menganalisis sistem untuk{" "}
+                      <strong className="font-bold text-[#ea4530] whitespace-nowrap">PT SMI</strong>.{" "}
                       <span className="whitespace-nowrap">Anggap rumah{" "}
                       <span className="inline-block bg-[#ea4530] text-[#0a0a0a] rounded-full px-[0.45em] py-[0.02em] text-[0.74em] font-bold align-[0.08em]">
                         sendiri
