@@ -40,6 +40,14 @@ const C_X = 2 * SWAY_DAMPING * omega(SWAY_HZ);
 const K_R = omega(ROT_HZ) ** 2;
 const C_R = 2 * ROT_DAMPING * omega(ROT_HZ);
 
+// Spin around the strap axis (rotateY): a twisted strap acts like a torsion spring
+const YAW_HZ = 0.75;
+const YAW_DAMPING = 0.32;
+const K_YAW = omega(YAW_HZ) ** 2;
+const C_YAW = 2 * YAW_DAMPING * omega(YAW_HZ);
+const SPIN_PER_PX = 1.1; // deg/s of spin per px/s of sideways throw
+const MAX_SPIN = 2200; // deg/s
+
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
 function computeLayout(w, h) {
@@ -72,6 +80,8 @@ function computeLayout(w, h) {
 export default function IdCardLanyard({ lang = "en", isReady = true }) {
   const containerRef = useRef(null);
   const cardRef = useRef(null);
+  const flipRef = useRef(null);
+  const tabRef = useRef(null);
   const strapRef = useRef(null);
   const strapHiRef = useRef(null);
   const grommetRef = useRef(null);
@@ -81,7 +91,6 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
   const lastTimeRef = useRef(0);
 
   const [isDragging, setIsDragging] = useState(false);
-  const [isFlipped, setIsFlipped] = useState(false);
   const [showHint, setShowHint] = useState(true);
   const [viewport, setViewport] = useState(() => ({
     w: typeof window !== "undefined" ? window.innerWidth : 1280,
@@ -100,6 +109,9 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
     vy: 0,
     rot: 0,
     vRot: 0,
+    yaw: 0, // deg around the vertical axis (0 = front, 180 = back)
+    vYaw: 0,
+    flipped: false, // side the card wants to settle on
     dragging: false,
     parked: true,
     grabDX: 0,
@@ -260,6 +272,14 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
     if (cardRef.current) {
       cardRef.current.style.transform = `translate3d(${clipX}px, ${clipY}px, 0) translateX(-50%) rotate(${p.rot}deg)`;
     }
+    if (flipRef.current) {
+      flipRef.current.style.transform = `rotateY(${p.yaw.toFixed(2)}deg)`;
+    }
+    if (tabRef.current) {
+      // the short strap tab twists with the card: narrows as the card turns edge-on
+      const c = Math.abs(Math.cos((p.yaw * Math.PI) / 180));
+      tabRef.current.style.transform = `scaleX(${(0.35 + 0.65 * c).toFixed(3)})`;
+    }
   }, [initRope]);
 
   // ---- Physics loop -----------------------------------------------------
@@ -280,7 +300,20 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
     p.rot += p.vRot * dt;
   };
 
+  // Nearest yaw (0/180 + k*360) for the side the card should rest on
+  const yawTarget = (p) => {
+    const base = p.flipped ? 180 : 0;
+    return base + 360 * Math.round((p.yaw - base) / 360);
+  };
+  const integrateYaw = (p, dt) => {
+    const a = -K_YAW * (p.yaw - yawTarget(p)) - C_YAW * p.vYaw;
+    p.vYaw += a * dt;
+    p.yaw += p.vYaw * dt;
+  };
+
   const isSettled = (p) =>
+    Math.abs(p.yaw - yawTarget(p)) < 0.2 &&
+    Math.abs(p.vYaw) < 1 &&
     Math.abs(p.x) < 0.05 &&
     Math.abs(p.y) < 0.05 &&
     Math.abs(p.vx) < 0.5 &&
@@ -300,11 +333,14 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
         while (remaining > 1e-6) {
           const dt = Math.min(STEP, remaining);
           if (!p.dragging) integrate(p, dt);
+          integrateYaw(p, dt);
           ropeMoved = Math.max(ropeMoved, stepRope(dt));
           remaining -= dt;
         }
         if (!p.dragging && isSettled(p) && ropeMoved < 0.02) {
           p.x = p.y = p.vx = p.vy = p.rot = p.vRot = 0;
+          p.yaw = p.flipped ? 180 : 0;
+          p.vYaw = 0;
           apply();
           rafRef.current = 0;
           lastTimeRef.current = 0;
@@ -374,6 +410,7 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
       p.vx = 0;
       p.rot = L.isMobile ? -3 : -5;
       p.vRot = 0;
+      p.vYaw = L.isMobile ? 70 : 90;
       initRope(p.vy);
       wake();
     }, 180);
@@ -433,8 +470,9 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
       window.removeEventListener("pointercancel", onUp);
 
       // Quick tap without dragging flips the card
-      if (p.dragDistance < 8 && performance.now() - p.downTime < 320) {
-        setIsFlipped((prev) => !prev);
+      const isTap = p.dragDistance < 8 && performance.now() - p.downTime < 320;
+      if (isTap) {
+        p.flipped = !p.flipped;
       }
       // Velocity is stale if the pointer rested before release
       if (performance.now() - p.lastMoveT > 80) {
@@ -443,6 +481,14 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
       }
       p.vx = clamp(p.vx, -2400, 2400);
       p.vy = clamp(p.vy, -2400, 2400);
+      const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+      if (reduceMotion) {
+        p.yaw = yawTarget(p);
+        p.vYaw = 0;
+      } else if (!isTap) {
+        // sideways throw spins the card around its strap
+        p.vYaw = clamp(p.vYaw + p.vx * SPIN_PER_PX, -MAX_SPIN, MAX_SPIN);
+      }
       wake();
     };
 
@@ -516,7 +562,7 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
             ? "Pull down & release to snap! (Or click to flip)"
             : "Tarik ke bawah & lepas untuk membal! (Atau klik untuk balik)"
         }
-        style={{ transformOrigin: "50% 0%", willChange: "transform" }}
+        style={{ transformOrigin: "50% 0%", willChange: "transform", perspective: "900px" }}
         className={`pointer-events-auto absolute left-0 top-0 w-[146px] h-[210px] sm:w-[172px] sm:h-[246px] touch-none select-none z-10 ${isDragging ? "cursor-grabbing" : "cursor-grab"
           }`}
       >
@@ -534,6 +580,7 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
 
         {/* Strap tab: folds over the top edge (2px under the strap end) and threads into the slot */}
         <div
+          ref={tabRef}
           aria-hidden="true"
           className="pointer-events-none absolute left-1/2 -translate-x-1/2 z-20 w-[14px] -top-[4px] h-[18.5px] sm:w-[20px] sm:h-[22px]"
         >
@@ -549,10 +596,10 @@ export default function IdCardLanyard({ lang = "en", isReady = true }) {
 
         {/* Card 3D flip container */}
         <div
-          className="relative w-full h-full transition-transform duration-500"
+          ref={flipRef}
+          className="relative w-full h-full will-change-transform"
           style={{
             transformStyle: "preserve-3d",
-            transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
           }}
         >
           {/* ==================== FRONT: full-bleed photo badge ==================== */}
