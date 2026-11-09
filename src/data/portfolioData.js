@@ -486,7 +486,7 @@ export const EXPERIENCE_LIST = [
       en: "Business Analyst & Software Engineer",
       id: "Business Analyst & Software Engineer",
     },
-    company: "PT Adi Data Informatika – TNI AL (TABPLIN)",
+    company: "PT Adi Data Informatika – TNI ANGKATAN LAUT",
     period: { en: "Aug 2026 - Present", id: "Agu 2026 - Sekarang" },
     highlight: "#ea4530",
     bullets: {
@@ -525,7 +525,7 @@ export const EXPERIENCE_LIST = [
       en: "Quality Assurance Leader",
       id: "Quality Assurance Leader",
     },
-    company: "PT Bank Mandiri (Persero) Tbk. – Wholesale Banking (KOPRA)",
+    company: "PT Bank Mandiri (Persero) Tbk.",
     period: { en: "May 2022 - Dec 2024", id: "Mei 2022 - Des 2024" },
     highlight: "#ea4530",
     bullets: {
