@@ -599,6 +599,22 @@ export const RECOGNITION_LIST = [
   },
 ];
 
+// Testimonials from people Yuda has worked with.
+// Only add a quote here once that person has read and approved the wording
+// (and agreed to their name, title and institution being shown).
+// The section on About stays hidden while this list is empty.
+// Shape:
+// {
+//   name: "Full Name",
+//   role: { en: "Job title", id: "Jabatan" },
+//   org: "Institution",
+//   accent: "#3aa1d8",               // institution colour (initials badge)
+//   context: { en: "KOPRA", id: "KOPRA" }, // project worked on together
+//   quote: { en: "…", id: "…" },
+//   linkedin: "https://www.linkedin.com/in/…", // optional
+// }
+export const TESTIMONIALS = [];
+
 export const ISTQB_CREDENTIAL = {
   title: "ISTQB® Certified Tester, Foundation Level (2018)",
   badge: "ISTQB® CTFL",

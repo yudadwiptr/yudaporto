@@ -28,3 +28,6 @@ dist-ssr
 public/work/*.jfif
 public/work/*.png
 public/yuda-profile-photo.png
+
+# Testimonial drafts awaiting approval (never publish)
+drafts/

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   EXPERIENCE_LIST,
   RECOGNITION_LIST,
+  TESTIMONIALS,
   SKILLS_GROUPS,
   ISTQB_CREDENTIAL,
   CERTIFICATIONS_LIST,
@@ -126,6 +127,73 @@ function CertCard({ cert, lang, onOpen }) {
         </div>
       </div>
     </button>
+  );
+}
+
+function initials(name) {
+  const words = name
+    .replace(/,.*$/, "") // drop academic suffixes after a comma
+    .replace(/\(.*?\)/g, "")
+    .split(/\s+/)
+    .filter((w) => /^[A-Z]/.test(w) && !/^(Kolonel|Letkol|Mayor|Laut|Dr|Ir)\.?$/.test(w));
+  const first = words[0]?.[0] || "";
+  const last = words.length > 1 ? words[words.length - 1][0] : "";
+  return (first + last).toUpperCase();
+}
+
+function TestimonialCard({ t, lang }) {
+  const accent = t.accent || "#f1eec0";
+  return (
+    <figure
+      style={{ "--accent": accent }}
+      className="break-inside-avoid mb-4 sm:mb-5 rounded-2xl border border-[#f1eec0]/12 bg-[#121212] p-5 sm:p-6 flex flex-col gap-5 transition-colors hover:border-[color:var(--accent)]/60"
+    >
+      <span
+        aria-hidden="true"
+        className="font-accent-serif text-[56px] leading-[0.6] h-6 select-none"
+        style={{ color: accent }}
+      >
+        &ldquo;
+      </span>
+      <blockquote className="font-accent-serif text-[19px] sm:text-[21px] leading-[1.38] text-[#f1eec0]/90 text-pretty">
+        {t.quote[lang]}
+      </blockquote>
+      <figcaption className="flex items-center gap-3 pt-4 border-t border-dashed border-[#f1eec0]/15">
+        <span
+          aria-hidden="true"
+          className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-[13px] font-bold text-[#0a0a0a]"
+          style={{ backgroundColor: accent }}
+        >
+          {initials(t.name)}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="flex items-center gap-1.5 font-bold text-sm text-[#f1eec0] leading-snug">
+            {t.linkedin ? (
+              <a
+                href={t.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[color:var(--accent)] transition-colors"
+              >
+                {t.name}
+                <ArrowUpRight className="inline ml-0.5 text-[10px] opacity-60" />
+              </a>
+            ) : (
+              t.name
+            )}
+          </span>
+          <span className="block text-xs text-[#f1eec0]/55 leading-snug">
+            {t.role[lang]} · <span style={{ color: accent }}>{t.org}</span>
+          </span>
+          {t.context && (
+            <span className="block mt-1 text-[10px] font-mono uppercase tracking-[0.12em] text-[#f1eec0]/40">
+              {lang === "en" ? "worked together on " : "bekerja sama di "}
+              {t.context[lang]}
+            </span>
+          )}
+        </span>
+      </figcaption>
+    </figure>
   );
 }
 
@@ -279,6 +347,21 @@ export default function AboutView({ lang, setActivePage }) {
             ))}
           </div>
         </section>
+
+        {/* ==================== TESTIMONIALS ==================== */}
+        {TESTIMONIALS.length > 0 && (
+          <section className="space-y-7">
+            <SectionHeader
+              eyebrow={lang === "en" ? "kind words" : "kata mereka"}
+              title={lang === "en" ? "from people i've worked with" : "dari rekan kerja"}
+            />
+            <div className="columns-1 md:columns-2 lg:columns-3 gap-4 sm:gap-5">
+              {TESTIMONIALS.map((t) => (
+                <TestimonialCard key={t.name} t={t} lang={lang} />
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* ==================== SKILLS ==================== */}
         <section className="space-y-7">
