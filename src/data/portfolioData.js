@@ -613,7 +613,113 @@ export const RECOGNITION_LIST = [
 //   quote: { en: "…", id: "…" },
 //   linkedin: "https://www.linkedin.com/in/…", // optional
 // }
-export const TESTIMONIALS = [];
+const MANDIRI = "PT Bank Mandiri (Persero) Tbk";
+const C_TNI = "#3aa1d8";
+const C_SMI = "#ea4530";
+const C_MANDIRI = "#f1eec0";
+const C_ADIDATA = "#27c93f";
+
+export const TESTIMONIALS = [
+  {
+    name: "Hanif Respati Hendro Pratomo, S.A.P.",
+    role: { en: "Kolonel Laut (S)", id: "Kolonel Laut (S)" },
+    org: "TNI Angkatan Laut",
+    accent: C_TNI,
+    context: { en: "TABPLIN", id: "TABPLIN" },
+    quote: {
+      en: "Yuda studied our savings ledger going back to 1987, including its interest and tax calculations, then built TABPLIN from requirements to a working system. The process is now tidier and traceable.",
+      id: "Yuda mempelajari buku besar tabungan kami sejak 1987, termasuk perhitungan bunga dan pajaknya, lalu membangun TABPLIN dari kebutuhan hingga siap digunakan. Prosesnya kini lebih rapi dan dapat ditelusuri.",
+    },
+  },
+  {
+    name: "Titus Dewo Broto",
+    role: { en: "IT Risk Analyst", id: "IT Risk Analyst" },
+    org: "PT SMI",
+    accent: C_SMI,
+    context: { en: "ECMS & IOSS", id: "ECMS & IOSS" },
+    quote: {
+      en: "From an IT risk standpoint, Yuda made our job easier. On ECMS his test evidence was fully documented, and on the business travel system the BRD and approval flow were clear from the start, so controls could be mapped before anything was built.",
+      id: "Dari sisi risiko TI, Yuda memudahkan pekerjaan kami. Di ECMS bukti pengujiannya terdokumentasi lengkap, dan di sistem perjalanan dinas BRD serta alur persetujuannya jelas sejak awal, sehingga kontrol bisa dipetakan sebelum dibangun.",
+    },
+  },
+  {
+    name: "Allexander Gumawang",
+    role: { en: "Head of IT Business Partner Department", id: "Head of IT Business Partner Department" },
+    org: MANDIRI,
+    accent: C_MANDIRI,
+    context: { en: "KOPRA", id: "KOPRA" },
+    quote: {
+      en: "On KOPRA, Yuda understood the wholesale banking flows all the way down to the BDS host. Every finding came with its customer impact and clear reproduction steps, so business and vendor teams could decide right away.",
+      id: "Di KOPRA, Yuda memahami alur wholesale banking sampai ke host BDS. Setiap temuannya disertai dampak ke nasabah dan langkah reproduksi yang jelas, sehingga tim bisnis dan vendor bisa langsung mengambil keputusan.",
+    },
+  },
+  {
+    name: "Fitri Susanti",
+    role: { en: "Project Manager", id: "Project Manager" },
+    org: "PT Adi Data Informatika",
+    accent: C_ADIDATA,
+    context: { en: "ECMS", id: "ECMS" },
+    quote: {
+      en: "Across 13 ECMS sprints, Yuda kept quality high without slowing releases. His test strategy and defect reports became the team's reference, and the junior QAs he mentored grew fast.",
+      id: "Selama 13 sprint ECMS, Yuda menjaga kualitas tanpa memperlambat rilis. Strategi uji dan laporan defect-nya jadi pegangan tim, dan QA junior yang dia bimbing berkembang cepat.",
+    },
+  },
+  {
+    name: "Arief Susilo",
+    role: { en: "Senior Manager", id: "Senior Manager" },
+    org: MANDIRI,
+    accent: C_MANDIRI,
+    context: { en: "escrow, H2H & BI-FAST", id: "escrow, H2H & BI-FAST" },
+    quote: {
+      en: "The functional specs Yuda wrote for escrow and BI-FAST were detailed enough that vendors rarely came back with questions. He closed requirement gaps before they turned into UAT problems.",
+      id: "Spesifikasi fungsional yang Yuda tulis untuk escrow dan BI-FAST cukup rinci sehingga vendor jarang perlu bertanya ulang. Celah di requirement sudah dia tutup sebelum menjadi masalah di UAT.",
+    },
+  },
+  {
+    name: "Jeru Wijayanto",
+    role: { en: "Senior Officer", id: "Senior Officer" },
+    org: MANDIRI,
+    accent: C_MANDIRI,
+    context: { en: "Non-IDR Giro & Balance Forecasting", id: "Giro Non-IDR & Balance Forecasting" },
+    quote: {
+      en: "For Non-IDR current accounts and Balance Forecasting, Yuda tested down to the ledger figures, not just the screens. He traced even small discrepancies back to their source.",
+      id: "Untuk Giro Non-IDR dan Balance Forecasting, Yuda menguji sampai ke angka di buku besar, bukan hanya tampilan di layar. Selisih kecil pun dia telusuri sampai ketemu sumbernya.",
+    },
+  },
+  {
+    name: "Edelina Parhusip",
+    role: { en: "Senior Manager", id: "Senior Manager" },
+    org: MANDIRI,
+    accent: C_MANDIRI,
+    context: { en: "trade finance & bank guarantees", id: "trade finance & bank garansi" },
+    quote: {
+      en: "Yuda picked up trade finance and bank guarantee processes quickly and turned them into complete test scenarios. The way he worked with business users made UAT run smoothly.",
+      id: "Yuda cepat memahami proses trade finance dan bank garansi, lalu menerjemahkannya menjadi skenario uji yang lengkap. Caranya berkomunikasi dengan user bisnis membuat UAT berjalan lancar.",
+    },
+  },
+  {
+    name: "Komang Arya Attyla Kepakisan",
+    role: { en: "Scrum Master", id: "Scrum Master" },
+    org: MANDIRI,
+    accent: C_MANDIRI,
+    context: { en: "KOPRA sprints", id: "sprint KOPRA" },
+    quote: {
+      en: "Yuda got involved from refinement onwards, not just at the end of the sprint. Acceptance criteria got sharper and the team hit far fewer surprises before release.",
+      id: "Yuda terlibat sejak refinement, bukan hanya di akhir sprint. Acceptance criteria jadi lebih tajam dan tim jauh lebih jarang menemukan kejutan menjelang rilis.",
+    },
+  },
+  {
+    name: "Jovan Regi",
+    role: { en: "Senior Business Analyst", id: "Senior Business Analyst" },
+    org: MANDIRI,
+    accent: C_MANDIRI,
+    context: { en: "KOPRA", id: "KOPRA" },
+    quote: {
+      en: "As a fellow analyst, I value how Yuda reads requirements: he always asks what happens when it fails. The edge cases he raised often changed the design before it reached development.",
+      id: "Sebagai sesama analis, saya menghargai cara Yuda membaca requirement: dia selalu bertanya 'bagaimana kalau gagal?'. Kasus pinggir yang dia angkat sering mengubah desain sebelum masuk development.",
+    },
+  },
+];
 
 export const ISTQB_CREDENTIAL = {
   title: "ISTQB® Certified Tester, Foundation Level (2018)",
